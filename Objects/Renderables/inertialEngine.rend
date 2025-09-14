@@ -1,0 +1,82 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Mesh/inertialEngine.fbx",
+         "minViewSize" : 20,
+         "subMeshList" : [
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/interactive/obj_interactive_controller_03_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/interactive/obj_interactive_controller_03_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/interactive/obj_interactive_controller_03_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/interactive/obj_interactive_electricengine_03_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/interactive/obj_interactive_electricengine_03_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/interactive/obj_interactive_electricengine_03_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/interactive/obj_interactive_gasengine_03_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/interactive/obj_interactive_gasengine_03_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/interactive/obj_interactive_gasengine_03_nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}

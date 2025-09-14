@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            it can be a status indicator or serve as an ornament. It can change the color and brightness level<br/>
+            can be controlled sequentially as an addressable LED strip<br/>
+            LED indexing goes from 0 to ((number of LEDs) - 1)<br/>
+            component name - led
+        </p>
+
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>led.setColor(index, color) - sets the color of the LED</span></li>
+            <li><span>led.setGlow(index, multiplier) - sets the LED brightness multiplier from 0 to 1 (usually visible only at night)</span></li>
+            <li><span>led.getStripLength():number - returns the number of LEDs in the chain</span></li>
+        </ul>
+
+        
+        <pre>
+            <code class="language-lua" style="width: fit-content;">local rainbows = 1 --the number of rainbows on the strip
+
+local colors = require("colors")
+local leds = getComponent("led")
+local count = leds.getStripLength()
+
+function callback_loop()
+    local offset = getUptime() / 8
+    for i = 0, count - 1 do
+        leds.setColor(i, sm.color.new(colors.hsvToRgb((((i * rainbows) - offset) / (count - 1)) % 1, 1, 1)))
+    end
+end</code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

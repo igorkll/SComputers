@@ -1,0 +1,461 @@
+{
+   "partList" : [
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay_micro.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 1.25,
+               "rotate" : 2,
+               "v" : 2.0,
+               "wide" : 0.00005,
+               "x" : 16,
+               "y" : 16,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "cf242987-3572-47df-9c58-3ef645141385"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay_micro.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 1.25,
+               "rotate" : 2,
+               "v" : 1.0,
+               "wide" : 0.00005,
+               "x" : 32,
+               "y" : 32,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "59aef7e7-baad-4cb9-adbc-ce80030ca632"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay_micro.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 1.25,
+               "rotate" : 2,
+               "v" : 0.50,
+               "wide" : 0.00005,
+               "x" : 64,
+               "y" : 64,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "68fee925-4057-4e95-a411-d4725245c2ed"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay_micro.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 1.25,
+               "rotate" : 2,
+               "v" : 0.25,
+               "wide" : 0.00005,
+               "x" : 128,
+               "y" : 128,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "1d70e85b-45f1-4882-b359-09fbbfba305e"
+      },
+
+
+
+
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay_mini.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 3,
+               "rotate" : 2,
+               "v" : 6.0,
+               "wide" : 0.00005,
+               "x" : 16,
+               "y" : 16,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "98221d58-7aad-450f-abc3-f325da34514d"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay_mini.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 3,
+               "rotate" : 2,
+               "v" : 3.0,
+               "wide" : 0.00005,
+               "x" : 32,
+               "y" : 32,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "69d5f621-4afe-461b-b6e0-378ef677b725"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay_mini.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 3,
+               "rotate" : 2,
+               "v" : 1.50,
+               "wide" : 0.00005,
+               "x" : 64,
+               "y" : 64,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "c53c677c-fbba-490b-a64d-d5ce0edc3e22"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay_mini.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 3,
+               "rotate" : 2,
+               "v" : 0.750,
+               "wide" : 0.00005,
+               "x" : 128,
+               "y" : 128,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "09458a14-6fcd-45cb-aa5c-3890aaf6ddad"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay_mini.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 3,
+               "rotate" : 2,
+               "v" : 0.3750,
+               "wide" : 0.00005,
+               "x" : 256,
+               "y" : 256,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "showInInventory" : true,
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "7e9cb8c1-1353-4b45-a67f-7a771f365703"
+      },
+
+
+
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 3,
+               "rotate" : 2,
+               "v" : 8,
+               "wide" : 0.00005,
+               "x" : 16,
+               "y" : 16,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "2e8390f8-746b-4d17-a2ef-19ff1faa51d3"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 3,
+               "rotate" : 2,
+               "v" : 4.0,
+               "wide" : 0.00005,
+               "x" : 32,
+               "y" : 32,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "4c6fe32b-3555-4dba-88c7-614b3601605e"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 3,
+               "rotate" : 2,
+               "v" : 2.0,
+               "wide" : 0.00005,
+               "x" : 64,
+               "y" : 64,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "af787ebd-1557-493b-8d89-09fcb7c9edac"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 3,
+               "rotate" : 2,
+               "v" : 1.0,
+               "wide" : 0.00005,
+               "x" : 128,
+               "y" : 128,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "ec26d383-28c3-49d3-a100-e41c02331cbf"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holodisplay.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "glass" : true,
+               "noDoubleEffect" : true,
+               "allowOffsets" : true,
+               "noRotateEffects" : true,
+               "altFromEuler" : true,
+               "noTouch" : true,
+               "offset" : 3,
+               "rotate" : 2,
+               "v" : 0.50,
+               "wide" : 0.00005,
+               "x" : 256,
+               "y" : 256,
+               "zpos" : 0
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "showInInventory" : true,
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "171803b0-14b5-4fc7-81ff-57ec8d2abfd0"
+      }
+   ]
+}

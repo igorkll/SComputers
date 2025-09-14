@@ -1,0 +1,121 @@
+{
+   "toolList" : [
+      {
+         "autoTool" : true,
+         "name" : "service_tool",
+         "previewRenderable" : "$GAME_DATA/Character/Char_Tools/char_connecttool_preview.rend",
+         "previewRotation" : [ 1, 0, 0, 0, 0, -1, 0, 1, 0 ],
+         "script" : {
+            "class" : "servicetool",
+            "data" : {},
+            "file" : "$CONTENT_DATA/Scripts/Tools/servicetool.lua"
+         },
+         "showInInventory" : false,
+         "uuid" : "3bfcfb4c-100d-425d-8bb6-b710ea26cff0"
+      },
+	{
+         "autoTool" : true,
+         "name" : "service_tool",
+         "previewRenderable" : "$GAME_DATA/Character/Char_Tools/char_connecttool_preview.rend",
+         "previewRotation" : [ 1, 0, 0, 0, 0, -1, 0, 1, 0 ],
+         "script" : {
+            "class" : "wasd_autotool",
+            "data" : {},
+            "file" : "$CONTENT_DATA/Scripts/Tools/wasd_autotool.lua"
+         },
+         "showInInventory" : false,
+         "uuid" : "a2d77364-3e8c-4ac8-9e4d-42a36ae23023"
+      },
+	  
+      
+      {
+         "autoTool" : false,
+         "name" : "stylus",
+         "previewRenderable" : "$CONTENT_DATA/Tools/Renderables/stylus.rend",
+         "previewRotation" : [ 1, 0, 0, 0, 0, -1, 0, 1, 0 ],
+         "script" : {
+            "class" : "stylus",
+            "data" : {},
+            "file" : "$CONTENT_DATA/Scripts/Tools/stylus.lua"
+         },
+         "showInInventory" : false,
+         "uuid" : "7f3e227c-345a-4c28-8775-f6c011b80127"
+      },
+      {
+         "name" : "tablet 32S",
+         "previewRenderable" : "$CONTENT_DATA/Tools/Renderables/t1.rend",
+         "previewRotation" : [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ],
+         "script" : {
+            "class" : "tablet",
+            "data" : {
+               "screenV" : 4.0,
+               "screenX" : 32,
+               "screenY" : 32
+            },
+            "file" : "$CONTENT_DATA/Scripts/tools/tablet.lua"
+         },
+         "showInInventory" : false,
+         "uuid" : "3aa0151f-a3d6-48b1-9a7e-2328aa1bfe36"
+      },
+      {
+         "name" : "tablet 64",
+         "previewRenderable" : "$CONTENT_DATA/Tools/Renderables/t2.rend",
+         "previewRotation" : [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ],
+         "script" : {
+            "class" : "tablet",
+            "data" : {
+               "fsSize" : 65536,
+               "screenV" : 2.0,
+               "screenX" : 64,
+               "screenY" : 64
+            },
+            "file" : "$CONTENT_DATA/Scripts/tools/tablet.lua"
+         },
+         "showInInventory" : false,
+         "uuid" : "178a9ec6-f5d9-4842-aa5b-5307f6822f46"
+      },
+      {
+         "name" : "tablet 128",
+         "previewRenderable" : "$CONTENT_DATA/Tools/Renderables/t3.rend",
+         "previewRotation" : [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ],
+         "script" : {
+            "class" : "tablet",
+            "data" : {
+               "fsSize" : 65536,
+               "screenV" : 1.0,
+               "screenX" : 128,
+               "screenY" : 128
+            },
+            "file" : "$CONTENT_DATA/Scripts/tools/tablet.lua"
+         },
+         "showInInventory" : false,
+         "uuid" : "9f4d34ef-61c8-4cc6-96bc-74aa1ce002ed"
+      },
+      {
+         "name" : "",
+         "previewRenderable" : "$CONTENT_DATA/Tools/Renderables/pt0.rend",
+         "previewRotation" : [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ],
+         "script" : {
+            "class" : "PermissionTool",
+            "data" : {
+               "survival" : true
+            },
+            "file" : "$CONTENT_DATA/Scripts/tools/PermissionTool.lua"
+         },
+         "showInInventory" : false,
+         "uuid" : "db358391-f914-4e08-af92-5de0c7e32976"
+      },
+      {
+         "name" : "",
+         "previewRenderable" : "$CONTENT_DATA/Tools/Renderables/pt1.rend",
+         "previewRotation" : [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ],
+         "script" : {
+            "class" : "PermissionTool",
+            "data" : {},
+            "file" : "$CONTENT_DATA/Scripts/tools/PermissionTool.lua"
+         },
+         "showInInventory" : false,
+         "uuid" : "3d37b254-dbaa-4be2-9a0d-ce1e24315c08"
+      }
+   ]
+}

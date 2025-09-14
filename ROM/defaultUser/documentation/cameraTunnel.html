@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+        <p class="text">
+            this component allows you to connect cameras via an antenna<br/>
+            press E to set the channel. to work, make sure that the antenna frequencies and tunnel channel match<br/>
+            make sure that the camera on the sending side is connected to the tunnel and the tunnel to the antenna<br/>
+            make sure that the antenna on the receiving side is connected to the tunnel and the tunnel is connected to the computer<br/>
+            this component completely borrows its API from the camera so that programs working with the camera can use this component<br/>
+            despite the API being identical to the <a href="camera.html" class="hyper">camera</a>, this component has several methods of its own<br/>
+            component name - camera<br/>
+        </p>
+
+        <p class="text">additional methods (in the camera api provided by this block):</p>
+        <ul class="list">
+            <li><span>isCameraAvailable():boolean - returns true if there is a connection to the camera</span></li>
+            <li><span>setCameraChannel(number:0-31) - sets the camera channel from 0 to 31</span></li>
+            <li><span>getCameraChannel():number - returns the set channel</span></li>
+            <li><span>isChannelBusy(number):boolean - returns true if the channel passed to the method already has an image transmitting device that may cause a transmission conflict. It can also be used to search for a transmitter</span></li>
+        </ul>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

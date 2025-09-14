@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            allows you to read data from the seat<br/>
+            you can use this component to create smart vehicles.<br/>
+            component name - wasd
+        </p>
+
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>wasd.isSeated():boolean - returns true if there is someone in the seat</span></li>
+            <li><span>wasd.isW():boolean - returns true if the W button is pressed</span></li>
+            <li><span>wasd.isS():boolean - returns true if the S button is pressed</span></li>
+            <li><span>wasd.isA():boolean - returns true if the A button is pressed</span></li>
+            <li><span>wasd.isD():boolean - returns true if the D button is pressed</span></li>
+            <li><span>wasd.getADvalue():float - returns float from -1 to 1. in fact, the angle of the steering wheel</span></li>
+            <li><span>wasd.getWSvalue():float - returns a value from -1 to 1, that is, the direction of the desired movement</span></li>
+			<li><span>wasd.isMouseL():boolean - returns the state of the left mouse button while the player is in the seat (it often only works with betterAPI)</span></li>
+			<li><span>wasd.isMouseC():boolean - returns the state of the middle mouse button (requires betterAPI)</span></li>
+			<li><span>wasd.isMouseR():boolean - returns the state of the right mouse button while the player is in the seat (it often only works with betterAPI)</span></li>
+			<li><span>wasd.isQ():boolean - outputs a pulse signal when the Q button is pressed in the seat (if you have any mod installed that uses this (for example, fant mod), it will only work with betterAPI)</span></li>
+			<li><span>wasd.isR():boolean - outputs a pulse signal when the R button is pressed in the seat (if you have any mod installed that uses this (for example, fant mod), it will only work with betterAPI)</span></li>
+        </ul>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

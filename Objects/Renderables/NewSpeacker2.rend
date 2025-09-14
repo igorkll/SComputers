@@ -1,0 +1,14 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Mesh/new_speaker/speaker_large.obj",
+         "minViewSize" : 20,
+         "subMeshList" : [
+            {
+               "material" : "Dif",
+               "textureList" : [ "$CONTENT_DATA/Objects/Mesh/new_speaker/speaker_large_dif.tga", "", "" ]
+            }
+         ]
+      }
+   ]
+}

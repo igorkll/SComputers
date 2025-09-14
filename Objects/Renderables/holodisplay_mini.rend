@@ -1,0 +1,18 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Mesh/holodisplay_mini.fbx",
+         "minViewSize" : 20,
+         "subMeshList" : [
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/holoprojector/dif.png",
+                  "$CONTENT_DATA/Objects/Textures/holoprojector/asg.tga",
+                  "$CONTENT_DATA/Objects/Textures/holoprojector/nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}

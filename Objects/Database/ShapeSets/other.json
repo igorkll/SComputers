@@ -1,0 +1,929 @@
+{
+   "partList" : [
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Camera.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "RaycastCamera",
+            "filename" : "$CONTENT_DATA/Scripts/RaycastCamera.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "+X-X+Y-Y-Z",
+         "uuid" : "e99397c7-f055-45a7-92f2-b6850dc6d073"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/StepperMotor_mini.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "StepperMotor",
+            "data" : {
+               "i" : 300,
+               "survival" : true,
+               "v" : 25
+            },
+            "filename" : "$CONTENT_DATA/Scripts/StepperMotor.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "All",
+         "uuid" : "b5efb918-088d-4a75-a3a1-a652e49d7511"
+      },
+      {
+         "box" : {
+            "x" : 2,
+            "y" : 2,
+            "z" : 2
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/StepperMotor.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "StepperMotor",
+            "data" : {
+               "i" : 1000,
+               "survival" : true,
+               "v" : 100
+            },
+            "filename" : "$CONTENT_DATA/Scripts/StepperMotor.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "All",
+         "uuid" : "9604ecbd-abff-4bcd-b77e-ce3421379a4f"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "c400a6",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/StepperMotor_mini.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "StepperMotor",
+            "filename" : "$CONTENT_DATA/Scripts/StepperMotor.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "All",
+         "uuid" : "99195c6c-951a-4f2e-87d4-39708a7334b1"
+      },
+      {
+         "box" : {
+            "x" : 2,
+            "y" : 2,
+            "z" : 2
+         },
+         "color" : "c400a6",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/StepperMotor.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "StepperMotor",
+            "filename" : "$CONTENT_DATA/Scripts/StepperMotor.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "All",
+         "uuid" : "66355447-8900-412c-b03c-12c85e0587ef"
+      },
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 1,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 1,
+            "density" : 7,
+            "durability" : 1,
+            "friction" : 5
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holoprojector.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "holoprojector",
+            "data" : {
+               "maxlocalscale" : 4,
+               "maxoffset" : 16,
+               "maxscale" : 0.50,
+               "maxvoxeloffset" : 16,
+               "maxvoxels" : 1024
+            },
+            "filename" : "$CONTENT_DATA/Scripts/holoprojector.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Z+Z-Y",
+         "uuid" : "06da2ef1-d444-4e87-aed2-4021b1bfc20f"
+      },
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 1,
+            "z" : 3
+         },
+         "color" : "c400a6",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 1,
+            "density" : 7,
+            "durability" : 1,
+            "friction" : 5
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holoprojector.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "holoprojector",
+            "filename" : "$CONTENT_DATA/Scripts/holoprojector.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Z+Z-Y",
+         "uuid" : "3c46e9e5-2875-47b4-8668-005a0768c992"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 1,
+            "density" : 7,
+            "durability" : 1,
+            "friction" : 5
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holoprojector_mini.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "holoprojector",
+            "data" : {
+               "maxlocalscale" : 4,
+               "maxoffset" : 8,
+               "maxscale" : 0.250,
+               "maxvoxeloffset" : 8,
+               "maxvoxels" : 256
+            },
+            "filename" : "$CONTENT_DATA/Scripts/holoprojector.lua"
+         },
+         "stackSize" : 10,
+         "uuid" : "82bddce1-94ae-4559-ab7a-05d8f2b90fec"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "c400a6",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 1,
+            "density" : 7,
+            "durability" : 1,
+            "friction" : 5
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/holoprojector_mini.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "holoprojector",
+            "filename" : "$CONTENT_DATA/Scripts/holoprojector.lua"
+         },
+         "stackSize" : 10,
+         "uuid" : "68749ef7-4c99-4e11-8c33-46652bc7ec9d"
+      },
+      {
+         "box" : {
+            "x" : 2,
+            "y" : 2,
+            "z" : 2
+         },
+         "color" : "161616",
+         "flammable" : false,
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 6,
+            "density" : 4,
+            "durability" : 4,
+            "friction" : 4
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/synthesizer.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "synthesizer",
+            "filename" : "$CONTENT_DATA/Scripts/synthesizer.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "+Y-Y-Z+X-X",
+         "uuid" : "331fe852-9e4a-48ba-8235-dde17b5de3a4"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "161616",
+         "flammable" : false,
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 6,
+            "density" : 4,
+            "durability" : 4,
+            "friction" : 4
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/small_synthesizer.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "synthesizer",
+            "filename" : "$CONTENT_DATA/Scripts/synthesizer.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "+Y-Y-Z+X-X",
+         "uuid" : "179d660d-4792-48c6-86d6-3a19cf354823"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "000000",
+         "flammable" : false,
+         "physicsMaterial" : "Glass",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 4,
+            "durability" : 1,
+            "friction" : 1
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/led.rend",
+         "restrictions" : {
+            "paintable" : false
+         },
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "led",
+            "filename" : "$CONTENT_DATA/Scripts/led.lua"
+         },
+         "stackSize" : 10,
+         "uuid" : "94c8b309-b6fb-40f8-90bb-b5c3ac28bacd"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "1e8efa",
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/gps.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "gps",
+            "data" : {
+               "scifi" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/gps.lua"
+         },
+         "stackSize" : 10,
+         "uuid" : "c2f7fa83-264f-4f00-8b12-829279ad609d"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "1e8efa",
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/gps.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "gps",
+            "data" : {
+               "creative" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/gps.lua"
+         },
+         "showInInventory" : false,
+         "stackSize" : 10,
+         "uuid" : "cadc5226-3e96-43e7-9630-3507f9652350"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "1e8efa",
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/gpstag.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "gpstag",
+            "data" : {
+               "scifi" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/gpstag.lua"
+         },
+         "stackSize" : 10,
+         "uuid" : "fd678469-4f6a-4c40-96ff-15d156c8a58a"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/keyboard.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "keyboard",
+            "data" : {
+               "scifi" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/keyboard.lua"
+         },
+         "stackSize" : 10,
+         "uuid" : "81f9080a-12b1-4fd7-9710-91d9434ef156"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "0da37d",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/WASD.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "wasd",
+            "filename" : "$CONTENT_DATA/Scripts/wasd.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "9d071ead-c24e-42e5-b4ad-67d709e9a4ab"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "1bae07",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/cameraControl.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "cameraControl",
+            "filename" : "$CONTENT_DATA/Scripts/cameraControl.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "bf1212b3-3aeb-45f6-b08b-80cfc7cc0e42"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "8a05a6",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/reboot.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "reboot",
+            "filename" : "$CONTENT_DATA/Scripts/reboot.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "773d90ee-2f5e-4415-998c-90f4cfe12a77"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "b3e000",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/CameraTunnel.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "CameraTunnel",
+            "filename" : "$CONTENT_DATA/Scripts/Networking/CameraTunnel.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "126a5046-f203-438d-abd5-a9b2acfd1044"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "303030",
+         "density" : 400.0,
+         "flammable" : true,
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 6,
+            "durability" : 6,
+            "friction" : 5
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NewSpeacker1.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "synthesizer",
+            "filename" : "$CONTENT_DATA/Scripts/synthesizer.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "f3a2d5e3-70c9-4d76-bdb5-f5ccd2403a25"
+      },
+      {
+         "box" : {
+            "x" : 2,
+            "y" : 2,
+            "z" : 1
+         },
+         "color" : "303030",
+         "density" : 400.0,
+         "flammable" : true,
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 6,
+            "durability" : 6,
+            "friction" : 5
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NewSpeacker2.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "synthesizer",
+            "filename" : "$CONTENT_DATA/Scripts/synthesizer.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "c83e0e11-6ac1-48fb-a2c6-256f8128b4a6"
+      },
+      {
+         "color" : "de8300",
+         "flammable" : true,
+         "hull" : {
+            "margin" : 0.10,
+            "pointList" : [
+               {
+                  "x" : 1.0,
+                  "y" : -1.0,
+                  "z" : 1.0
+               },
+               {
+                  "x" : 1.0,
+                  "y" : -1.0,
+                  "z" : -1.0
+               },
+               {
+                  "x" : -1.0,
+                  "y" : -1.0,
+                  "z" : 1.0
+               },
+               {
+                  "x" : -1.0,
+                  "y" : -1.0,
+                  "z" : -1.0
+               }
+            ],
+            "x" : 4,
+            "y" : 1,
+            "z" : 1
+         },
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 6,
+            "density" : 4,
+            "durability" : 6,
+            "friction" : 5
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/newKeyboard2.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "keyboard",
+            "filename" : "$CONTENT_DATA/Scripts/keyboard.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "sticky" : "-Y",
+         "uuid" : "6f7bd3f2-1be2-47ad-a778-5be60778cfb2"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 3,
+            "z" : 4
+         },
+         "color" : "222222",
+         "density" : 400,
+         "flammable" : true,
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 6,
+            "durability" : 6,
+            "friction" : 5
+         },
+         "renderable" : {
+            "lodList" : [
+               {
+                  "mesh" : "$MOD_DATA/Objects/Mesh/L_Fittings/Fit_XianShiQi_new.fbx",
+                  "pose0" : "$MOD_DATA/Objects/Mesh/L_Fittings/Fit_XianShiQi_new.fbx",
+                  "subMeshList" : [
+                     {
+                        "material" : "PoseAnimDifAsgNor",
+                        "textureList" : [
+                           "$MOD_DATA/Objects/Textures/Legend/CS_SB_dif.png",
+                           "$MOD_DATA/Objects/Textures/Legend/CS_SB_asg.png",
+                           "$MOD_DATA/Objects/Textures/Legend/CS_nor.png"
+                        ]
+                     },
+                     {
+                        "material" : "PoseAnimDifAsgNor",
+                        "textureList" : [
+                           "$MOD_DATA/Objects/Textures/Legend/Fit_Computer_dif.tif",
+                           "$MOD_DATA/Objects/Textures/Legend/Fit_Computer_asg.tif",
+                           "$MOD_DATA/Objects/Textures/Legend/CS_nor.png"
+                        ]
+                     }
+                  ]
+               }
+            ]
+         },
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 1,
+               "x" : 128,
+               "y" : 96,
+               "zpos" : 0.0020
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "showInInventory" : false,
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "fb43bd75-7e24-4054-bb65-ce247fb3400b"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 3,
+            "z" : 4
+         },
+         "color" : "ff0000",
+         "density" : 400,
+         "flammable" : true,
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 6,
+            "durability" : 6,
+            "friction" : 5
+         },
+         "renderable" : {
+            "lodList" : [
+               {
+                  "mesh" : "$MOD_DATA/Objects/Mesh/L_Fittings/Fit_XianShiQi_new.fbx",
+                  "pose0" : "$MOD_DATA/Objects/Mesh/L_Fittings/Fit_XianShiQi_new.fbx",
+                  "subMeshList" : [
+                     {
+                        "material" : "PoseAnimDifAsgNor",
+                        "textureList" : [
+                           "$MOD_DATA/Objects/Textures/Legend/CS_SB_dif.png",
+                           "$MOD_DATA/Objects/Textures/Legend/CS_SB_asg.png",
+                           "$MOD_DATA/Objects/Textures/Legend/CS_nor.png"
+                        ]
+                     },
+                     {
+                        "material" : "PoseAnimDifAsgNor",
+                        "textureList" : [
+                           "$MOD_DATA/Objects/Textures/Legend/Fit_Computer_dif.tif",
+                           "$MOD_DATA/Objects/Textures/Legend/Fit_Computer_asg.tif",
+                           "$MOD_DATA/Objects/Textures/Legend/CS_nor.png"
+                        ]
+                     }
+                  ]
+               }
+            ]
+         },
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "exampleComponent",
+            "filename" : "$CONTENT_DATA/Scripts/exampleComponent.lua"
+         },
+         "showInInventory" : false,
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "9b046798-22c6-4de9-9117-fefa10b15c00"
+      },
+      {
+         "box" : {
+            "x" : 2,
+            "y" : 2,
+            "z" : 2
+         },
+         "color" : "4A4A4A",
+         "name" : "terminal",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 1,
+            "density" : 7,
+            "durability" : 2,
+            "friction" : 6
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/computer.rend",
+         "rotationSet" : "PropZ",
+         "scripted" : {
+            "classname" : "terminal",
+            "filename" : "$CONTENT_DATA/Scripts/terminal.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "sticky" : "-Z-X",
+         "uuid" : "7936702f-092a-4b02-9794-f51abbb42a9f"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 2,
+            "z" : 2
+         },
+         "color" : "4A4A4A",
+         "name" : "terminal",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 1,
+            "density" : 7,
+            "durability" : 2,
+            "friction" : 6
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/computer2.rend",
+         "rotationSet" : "PropZ",
+         "scripted" : {
+            "classname" : "terminal",
+            "filename" : "$CONTENT_DATA/Scripts/terminal.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "sticky" : "-Z+Z+Y-Y-X",
+         "uuid" : "e9e72dbe-8962-4710-aa3e-73313b1aef22"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "4A4A4A",
+         "name" : "terminal",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 1,
+            "density" : 7,
+            "durability" : 2,
+            "friction" : 6
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/mini_terminal.rend",
+         "rotationSet" : "PropZ",
+         "scripted" : {
+            "classname" : "terminal",
+            "filename" : "$CONTENT_DATA/Scripts/terminal.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "uuid" : "2ee8588d-b29c-47f6-9693-fc2607cf3720"
+      },
+      {
+         "box" : {
+            "x" : 4,
+            "y" : 4,
+            "z" : 2
+         },
+         "color" : "888888",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 1,
+            "density" : 10,
+            "durability" : 5,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/inertialEngine.rend",
+         "rotationSet" : "PropZ",
+         "scripted" : {
+            "classname" : "inertialEngine",
+            "filename" : "$CONTENT_DATA/Scripts/inertialEngine.lua"
+         },
+         "uuid" : "1ba4ace4-fc21-4481-bdca-4bd93c295b14"
+      },
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 3,
+            "z" : 1
+         },
+         "color" : "888888",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 1,
+            "density" : 10,
+            "durability" : 5,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/inertialEngineMini.rend",
+         "rotationSet" : "PropZ",
+         "scripted" : {
+            "classname" : "inertialEngine",
+            "filename" : "$CONTENT_DATA/Scripts/inertialEngine.lua"
+         },
+         "uuid" : "f9c63827-0e63-4ed0-b377-5c2d18d8e3e4"
+      },
+      {
+         "box" : {
+            "x" : 4,
+            "y" : 4,
+            "z" : 2
+         },
+         "color" : "c400a6",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 1,
+            "density" : 10,
+            "durability" : 5,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/inertialEngine.rend",
+         "rotationSet" : "PropZ",
+         "scripted" : {
+            "classname" : "inertialEngine",
+            "data" : {
+               "creative" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/inertialEngine.lua"
+         },
+         "uuid" : "eb60707f-f3b2-4381-bc75-a794a9dc70b8"
+      },
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 3,
+            "z" : 1
+         },
+         "color" : "c400a6",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 1,
+            "density" : 10,
+            "durability" : 5,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/inertialEngineMini.rend",
+         "rotationSet" : "PropZ",
+         "scripted" : {
+            "classname" : "inertialEngine",
+            "data" : {
+               "creative" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/inertialEngine.lua"
+         },
+         "uuid" : "13d52b7b-6159-4925-a9f1-7e88c9a4ceb0"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "c400a6",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 1,
+            "density" : 10,
+            "durability" : 5,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/inertialEngineMicro.rend",
+         "rotationSet" : "PropZ",
+         "scripted" : {
+            "classname" : "inertialEngine",
+            "data" : {
+               "creative" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/inertialEngine.lua"
+         },
+         "uuid" : "db579eed-1eb9-4cba-a2d0-b46b46c84dcc"
+      },
+      {
+         "color" : "ffffff",
+         "density" : 1250.0,
+         "hull" : {
+            "col" : "$GAME_DATA/Objects/Collision/obj_interactive_mountablespudgun_col.obj",
+            "x" : 1,
+            "y" : 1,
+            "z" : 4
+         },
+         "physicsMaterial" : "Mechanical",
+         "qualityLevel" : 4,
+         "ratings" : {},
+         "renderable" : "$GAME_DATA/Objects/Renderable/Interactive/obj_interactive_mountablespudgun.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "paintGun",
+            "filename" : "$CONTENT_DATA/Scripts/paintGun.lua"
+         },
+         "sticky" : "-Z-Y+Y-X+X",
+         "uuid" : "f33d5c9a-61f2-418c-9e78-9230794001b0"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "ffffff",
+         "density" : 1250.0,
+         "physicsMaterial" : "Mechanical",
+         "qualityLevel" : 4,
+         "ratings" : {},
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/smallPaintGun.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "paintGun",
+            "filename" : "$CONTENT_DATA/Scripts/paintGun.lua"
+         },
+         "sticky" : "-Z-Y+Y-X+X",
+         "uuid" : "5dfeacad-524f-4913-9490-5cae6265dedc"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "ffffff",
+         "density" : 1250.0,
+         "physicsMaterial" : "Mechanical",
+         "qualityLevel" : 4,
+         "ratings" : {},
+         "renderable" : "$CONTENT_DATA/Objects/Models/chaff_object/renderable3.rend",
+         "rotationSet" : "PropYZ",
+         "showInInventory" : false,
+         "sticky" : "-Z-Y+Y-X+X",
+         "uuid" : "24986ff2-3735-42d5-b3ba-f8c60c3b70bb"
+      }
+   ]
+}

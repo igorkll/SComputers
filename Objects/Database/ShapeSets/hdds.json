@@ -1,0 +1,154 @@
+{
+   "partList" : [
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/small_hdd.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "hdd",
+            "data" : {
+               "size" : 65536
+            },
+            "filename" : "$CONTENT_DATA/Scripts/hdd.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "uuid" : "ec9c9673-177a-47ee-9611-be9ec97427bc"
+      },
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 1,
+            "z" : 2
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/hdd.rend",
+         "rotationSet" : "PropFull",
+         "scripted" : {
+            "classname" : "hdd",
+            "data" : {
+               "size" : 131072
+            },
+            "filename" : "$CONTENT_DATA/Scripts/hdd.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "uuid" : "45151dd5-109a-4f0c-83fb-0fd35afd9020"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "ff6330",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/small_rom_hdd.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "romdisk",
+            "filename" : "$CONTENT_DATA/Scripts/romdisk.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "uuid" : "b7900915-62ca-4fbe-94cd-83cbebe2497d"
+      },
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 1,
+            "z" : 2
+         },
+         "color" : "ff6330",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/rom_hdd.rend",
+         "rotationSet" : "PropFull",
+         "scripted" : {
+            "classname" : "romdisk",
+            "filename" : "$CONTENT_DATA/Scripts/romdisk.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "uuid" : "178040d2-c977-4cdd-96e2-89c541eab7f1"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "f002a8",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/small_creative_hdd.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "hdd",
+            "filename" : "$CONTENT_DATA/Scripts/hdd.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "uuid" : "02cd2199-788c-4d9c-a362-5b2655657768"
+      },
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 1,
+            "z" : 2
+         },
+         "color" : "f002a8",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/creative_hdd.rend",
+         "rotationSet" : "PropFull",
+         "scripted" : {
+            "classname" : "hdd",
+            "filename" : "$CONTENT_DATA/Scripts/hdd.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "uuid" : "6ed15b2a-6407-4330-9b54-acdd855e33da"
+      }
+   ]
+}

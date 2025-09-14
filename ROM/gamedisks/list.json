@@ -1,0 +1,6 @@
+{
+    "scriptableOS": "$CONTENT_DATA/ROM/gamedisks/scriptableOS.json",
+    "pictures": "$CONTENT_DATA/ROM/gamedisks/pics.json",
+    "midi music files": "$CONTENT_DATA/ROM/gamedisks/midis.json",
+    "nbs music files": "$CONTENT_DATA/ROM/gamedisks/nbs.json"
+}

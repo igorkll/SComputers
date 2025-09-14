@@ -1,0 +1,150 @@
+{
+   "partList" : [
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "444444",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NetworkPort.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "NetworkPort",
+            "filename" : "$CONTENT_DATA/Scripts/Networking/NetworkPort.lua"
+         },
+         "stackSize" : 10,
+         "uuid" : "cdf96cb3-3582-43e0-9452-86e774e3c75c"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 7,
+            "z" : 1
+         },
+         "color" : "444444",
+         "physicsMaterial" : "Metal",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Antenna.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "Antenna",
+            "data" : {
+               "radius" : 250
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Networking/Antennas/Antenna.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-Y",
+         "uuid" : "43f8c2f7-cd4f-47c5-ab3a-cbef548e340b"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "555555",
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/SmallAntenna.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "Antenna",
+            "data" : {
+               "radius" : 32,
+               "screen" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Networking/Antennas/Antenna.lua"
+         },
+         "stackSize" : 10,
+         "uuid" : "d933ab9f-0007-4398-ad30-9aab6bac8b0a"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "555555",
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 2,
+            "friction" : 3
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NfcAntenna.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "Antenna",
+            "data" : {
+               "radius" : 4,
+               "screen" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Networking/Antennas/Antenna.lua"
+         },
+         "stackSize" : 10,
+         "uuid" : "65f5fc73-32f7-428f-b0a8-4a99243f4d0d"
+      },
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 1,
+            "z" : 3
+         },
+         "color" : "525252",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 7,
+            "durability" : 4,
+            "friction" : 7
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/WorldAntenna.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "Antenna",
+            "data" : {},
+            "filename" : "$CONTENT_DATA/Scripts/Networking/Antennas/Antenna.lua"
+         },
+         "stackSize" : 10,
+         "uuid" : "0b3292c1-9f5a-4453-9612-c9446c7aa555"
+      },
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 1,
+            "z" : 3
+         },
+         "color" : "525252",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 10,
+            "durability" : 4,
+            "friction" : 7
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/ibridge.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "ibridge",
+            "filename" : "$CONTENT_DATA/Scripts/ibridge.lua"
+         },
+         "showInInventory" : false,
+         "stackSize" : 10,
+         "uuid" : "6b08c951-f207-4280-9470-b7fce56a480a"
+      }
+   ]
+}

@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Widget" skin="BackgroundPopup" position_real="0 0 0.951171875 0.8251953125" name="BackPanel">
+        <Property key="Colour" value="1 1 1"/>
+        <Property key="Alpha" value="1"/>
+        <Widget type="TextBox" skin="TextBox" position_real="0 -0.0011834319526627219 0.82135523613963035 0.0485207100591716" name="Title">
+            <Property key="TextAlign" value="Center"/>
+            <Property key="TextShadow" value="true"/>
+            <Property key="Caption" value="computer configurator"/>
+            <Widget type="Button" skin="SecondaryButton" position_real="0.89375000000000004 0.12195121951219512 0.10000000000000001 0.73170731707317072" name="palette">
+                <Property key="Caption" value="palette"/>
+                <Property key="FontName" value="DejaVuSansFont_13"/>
+                <Property key="TextAlign" value="Center"/>
+            </Widget>
+            <Widget type="Button" skin="SecondaryButton" position_real="0.78749999999999998 0.12195121951219512 0.10000000000000001 0.73170731707317072" name="fontScale">
+                <Property key="Caption" value="font scale"/>
+                <Property key="TextAlign" value="Center"/>
+                <Property key="FontName" value="DejaVuSansFont_13"/>
+            </Widget>
+            <Widget type="Button" skin="PrimaryButton" position_real="0.012500000000000001 0.12195121951219512 0.050000000000000003 0.82926829268292679" name="CloseGui">
+                <Property key="Caption" value="exit"/>
+                <Property key="FontName" value="SM_Label"/>
+                <Property key="TextAlign" value="Center"/>
+            </Widget>
+        </Widget>
+        <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.046201232032854207 0.047337278106508875 0.77002053388090352 0.74556213017751483" name="ScriptData">
+            <Property key="TextAlign" value="Default"/>
+            <Property key="MultiLine" value="true"/>
+            <Property key="MaxTextLength" value="100000"/>
+            <Property key="FontName" value="DejaVuSansFont_15"/>
+            <Property key="TabPrinting" value="true"/>
+        </Widget>
+        <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.010266940451745379 0.79289940828402372 0.80595482546201236 0.17869822485207101" name="ExceptionData">
+            <Property key="TextAlign" value="Default"/>
+            <Property key="MultiLine" value="true"/>
+            <Property key="ReadOnly" value="true"/>
+            <Property key="MaxTextLength" value="100000"/>
+            <Property key="WordWrap" value="true"/>
+            <Property key="FontHeight" value="13"/>
+            <Property key="FontName" value="Default"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.82135523613963035 0.7100591715976331 0.082135523613963035 0.059171597633136092" name="ScriptSave">
+            <Property key="Caption" value="save"/>
+            <Property key="FontName" value="SM_Label"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Colour" value="1 1 1"/>
+            <Property key="Enabled" value="true"/>
+            <Property key="NeedMouse" value="true"/>
+            <Property key="NeedToolTip" value="false"/>
+            <Property key="InheritsPick" value="false"/>
+            <Property key="Depth" value="1"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.93429158110882959 0.72189349112426038 0.061601642710472276 0.023668639053254437">
+            <Property key="Caption" value="always on"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.93429158110882959 0.7751479289940828 0.061601642710472276 0.023668639053254437">
+            <Property key="Caption" value="edit lock"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.82135523613963035 0.76331360946745563 0.082135523613963035 0.059171597633136092" name="reboot">
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="reboot"/>
+            <Property key="FontName" value="SM_Label"/>
+            <Property key="Colour" value="1 1 1"/>
+            <Property key="Depth" value="1"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.93429158110882959 0.88165680473372776 0.061601642710472276 0.023668639053254437">
+            <Property key="Caption" value="invisible"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.89322381930184802 0.62721893491124259 0.097535934291581111 0.076923076923076927" name="exmpload">
+            <Property key="Caption" value="load example"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontName" value="SM_Label"/>
+            <Property key="Colour" value="1 1 1"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.82135523613963035 -0.0011834319526627219 0.16940451745379878 0.0485207100591716">
+            <Property key="Caption" value="examples"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.82135523613963035 0.70414201183431957 0.082135523613963035 0.071005917159763315" name="notsaved">
+            <Property key="Colour" value="1 1 1"/>
+            <Property key="Alpha" value="1"/>
+            <Property key="Enabled" value="true"/>
+            <Property key="Depth" value="2"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.82135523613963035 0.92307692307692313 0.082135523613963035 0.059171597633136092" name="openStorage">
+            <Property key="FontName" value="SM_Label"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="storage"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.030800821355236138 0.97041420118343191 0.65708418891170428 0.028402366863905324" name="scrMode">
+            <Property key="Caption" value="Script Mode: luaInLua-safe-printOFF"/>
+            <Property key="TextAlign" value="Left VCenter"/>
+        </Widget>
+        <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.82135523613963035 0.11834319526627218 0.16837782340862423 0.50769230769230766" name="exmplist">
+            <Property key="ReadOnly" value="true"/>
+            <Property key="FontName" value="Default"/>
+            <Property key="MultiLine" value="true"/>
+			<Property key="MaxTextLength" value="100000"/>
+        </Widget>
+        <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.82135523613963035 0.63313609467455623 0.071868583162217656 0.065088757396449703" name="exmpnum">
+            <Property key="FontName" value="SM_Label"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.68788501026694049 0.97041420118343191 0.10266940451745379 0.063905325443786978" name="ai">
+            <Property key="Caption" value="ai code-gen"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.82135523613963035 0.86982248520710059 0.082135523613963035 0.059171597633136092" name="externEditor">
+            <Property key="FontName" value="SM_Label"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="vs code"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.90862422997946612 0.71597633136094674 0.020533880903490759 0.04142011834319527" name="alwaysOn"/>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.82135523613963035 0.81656804733727806 0.082135523613963035 0.059171597633136092" name="formatCode">
+            <Property key="FontName" value="SM_Label"/>
+            <Property key="Caption" value="format code"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.90862422997946612 0.76923076923076927 0.020533880903490759 0.04142011834319527" name="editLock"/>
+        <Widget type="Button" skin="Button" position_real="0.90862422997946612 0.87573964497041423 0.020533880903490759 0.04142011834319527" name="invisible"/>
+        <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.010266940451745379 0.047337278106508875 0.035934291581108828 0.74556213017751483" name="linesNumbers">
+            <Property key="FontName" value="DejaVuSansFont_15"/>
+            <Property key="TextAlign" value="Default"/>
+            <Property key="TabPrinting" value="true"/>
+            <Property key="MultiLine" value="true"/>
+            <Property key="MaxTextLength" value="100000"/>
+            <Property key="ReadOnly" value="true"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.90862422997946612 0.92899408284023666 0.020533880903490759 0.04142011834319527" name="dislogs"/>
+        <Widget type="TextBox" skin="TextBox" position_real="0.93429158110882959 0.9349112426035503 0.061601642710472276 0.023668639053254437">
+            <Property key="Caption" value="disable prints"/>
+        </Widget>
+        <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.82135523613963035 0.047337278106508875 0.16940451745379878 0.065088757396449703" name="search">
+            <Property key="FontName" value="SM_Label"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.90862422997946612 0.8224852071005917 0.020533880903490759 0.04142011834319527" name="encryptCode"/>
+        <Widget type="TextBox" skin="TextBox" position_real="0.93429158110882959 0.82840236686390534 0.061601642710472276 0.023668639053254437">
+            <Property key="Caption" value="encrypt code"/>
+        </Widget>
+    </Widget>
+    <CodeGeneratorSettings>
+        <Property key="IncludeDirectory" value=""/>
+        <Property key="PanelName" value=""/>
+        <Property key="PanelNamespace" value=""/>
+        <Property key="SourceDirectory" value=""/>
+    </CodeGeneratorSettings>
+</MyGUI>

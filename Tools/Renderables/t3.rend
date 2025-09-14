@@ -1,0 +1,38 @@
+/*
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Tools/Mesh/pocketRadio.fbx",
+         "subMeshList" : [
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_radio_dif.tga",
+					   "$GAME_DATA/Objects/Textures/interactive/obj_interactive_radio_asg.tga",
+					   "$GAME_DATA/Objects/Textures/interactive/obj_interactive_radio_nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}
+*/
+
+{
+	"lodList": [{
+		"mesh": "$GAME_DATA/Character/Char_Tools/Char_handbook/char_handbook.dae",
+		"includes" : ["POSITION", "UV0", "NORMAL", "TANGENTS", "BLEND_INDICES", "BLEND_WEIGHTS"],
+		"subMeshList" : [
+			{
+				"textureList": [
+					"$MOD_DATA/Tools/Textures/t3.tga",
+					"$MOD_DATA/Tools/Textures/asg.tga",
+					"$MOD_DATA/Tools/Textures/nor.tga"
+				],
+				"color": "472102",
+				"material": "DifAsgNor"
+			}
+		],
+		"maxViewDistance": 1000.0
+	}]
+}

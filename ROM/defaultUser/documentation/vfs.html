@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
+    </head>
+    <body>
+        <p class="text">
+            usage: require("vfs")<br/>
+            allows you to work with paths and create virtual filesystems with mount support<br/>
+            it can be used in conjunction with the <a class="hyper" href="./ramfs.html">ramfs</a> library to create a temporary directory<br/>
+            please note that this library always uses full paths when accessing file systems,<br/>
+            which means that the directory selected on the filesystem does not affect its operation through this library<br/>
+            however, this library itself implements a mechanism for changing directories, which replaces the one that is built into filesystems
+        </p>
+
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>vfs.createHost():vfshost - creates a new root filesystem</span></li>
+            <li><span>vfs.elements(path):table - divides the path into its component parts</span></li>
+            <li><span>vfs.resolve(...):string - accepts a table paths consisting of individual elements, processes elements such as "." and ".."</span></li>
+            <li><span>vfs.concat(...):string - combines many paths into one. supports returning to the previous directory using ".."</span></li>
+            <li><span>vfs.safeConcat(rootpath, ...):string - it works the same way as concat, but the resulting path cannot be a directory lower than the first one, otherwise it returns nil</span></li>
+            <li><span>vfs.isGlobalPath(path):boolean - returns true if the path is global</span></li>
+            <li><span>vfs.path(path):path - returns the path without the last element</span></li>
+            <li><span>vfs.name(path):name - returns the name of the last element of the path</span></li>
+            <li><span>vfs.hideExtension(name):string - accepts the name (not path), hides the extension</span></li>
+            <li><span>vfs.getExtension(name):string - accepts the name (not path), returns the extension</span></li>
+        </ul>
+
+        <p class="text">vfshost methods:</p>
+        <ul class="list">
+            <li><span>vfshost:mount(path, fs) - mounts the filesystem using the specified path</span></li>
+            <li><span>vfshost:get(path):fs|nil, path|nil - returns the filesystem mounted on this path and the global path to the target object inside the mounted file system</span></li>
+            <li><span>vfshost:unmount(path|fs):boolean - unmounts the filesystem using the specified path or filesystem object. returns true if at least one mount point has been deleted</span></li>
+            <li><span>vfshost:mounts():{{path, fs}, {path, fs}, ...} - return a list of all mount points</span></li>
+            <li><span>vfshost:absolute(path):path - returns an absolute path from a relative one</span></li>
+            <li><span>vfshost:equals(...):boolean - returns true if all paths refer to the same object</span></li>
+            <br/>
+            <li><span>vfshost:openFolder(path) - changes the currently selected folder. if the path starts with /, then the folder relative to the root is selected. if without / then relative to the current folder. ".." is also supported</span></li>
+            <li><span>vfshost:getCurrentPath():string - returns the path to the currently selected folder</span></li>
+            <br/>
+            <li><span>vfshost:createFile(path) - creates a file, if the file has already been created, it will throw an exception</span></li>
+            <li><span>vfshost:createFolder(path) - creates a directory with the specified name. if it already exists, it throws an exception</span></li>
+            <li><span>vfshost:deleteFile(path) - deletes the file if the file does not exist throws an exception</span></li>
+            <li><span>vfshost:deleteFolder(path) - deletes the directory if the file does not exist throws an exception</span></li>
+            <li><span>vfshost:writeFile(path, string) - writes a file, throws an exception if the file does not exist</span></li>
+            <li><span>vfshost:readFile(path):string - reads the file. if the file does not exist, it throws an exception</span></li>
+            <li><span>vfshost:hasFile(path):boolean - checks if a file with the specified name exists</span></li>
+            <li><span>vfshost:hasFolder(path):boolean - checks if a directory with the specified name exists</span></li>
+            <li><span>vfshost:getFileSize(path):number - reads the file size in bytes. takes into account the length of the file name</span></li>
+            <li><span>vfshost:getFolderSize(path):number - recursively reads how much space a folder takes up, taking into account all the names and contents of all files</span></li>
+            <li><span>vfshost:getFileList(path):table - returns a list of files in the current directory</span></li>
+            <li><span>vfshost:getFolderList(path):table - returns a list of directories in the current directory</span></li>
+            <br/>
+            <li><span>vfshost:hasMount(path):boolean - checks if a mount with the specified name exists</span></li>
+            <li><span>vfshost:getMountList(path):table - returns a list of mount points in the current directory. returns only the mount points inside this directory, not the mount point of this directory</span></li>
+            <br/>
+            <li><span>vfshost:pCreateFile(path) - this works the same way as createFile, but it does not give an error if the file already exists and automatically creates the necessary directories</span></li>
+            <li><span>vfshost:pCreateFolder(path) - it works the same way as createFolder, but it can create multiple directories at once and does not create exceptions if the directory already exists</span></li>
+            <li><span>vfshost:pDeleteFile(path):boolean - deletes the file, returns true if successful</span></li>
+            <li><span>vfshost:pDeleteFolder(path):boolean - deletes the directory, returns true if successful. cannot delete non-empty directories, use recursionDelete to do this</span></li>
+            <li><span>vfshost:pWriteFile(path, string) - it works the same way as writeFile, but it creates a file itself if there is none and paves the path of directories if one or more of them are missing</span></li>
+            <li><span>vfshost:pReadFile(path):string|nil - it works the same way as readFile, but it does not throw an exception if there is no file or directory, but returns nil</span></li>
+            <li><span>vfshost:pHasFile(path):boolean - it works the same way as hasFile but returns false instead of an exception when a directory is missing from the path</span></li>
+            <li><span>vfshost:pHasFolder(path):boolean - it works the same way as hasFolder but returns false instead of an exception when a directory is missing from the path</span></li>            
+            <li><span>vfshost:pGetFileSize(path):number|nil - it works the same way as getFileSize but returns nil instead of an exception</span></li>
+            <li><span>vfshost:pGetFolderSize(path):number|nil - it works the same way as getFolderSize but returns nil instead of an exception</span></li>
+            <li><span>vfshost:pGetFileList(path):table - it works the same way as getFileList, but if one of the path elements is missing, it simply returns an empty table instead of an exception</span></li>
+            <li><span>vfshost:pGetFolderList(path):table - it works the same way as getFolderList, but if one of the path elements is missing, it simply returns an empty table instead of an exception</span></li>
+            <br/>
+            <li><span>vfshost:recursionDelete(path, deleteContentsMountPoints:boolean) - recursively deletes directories and files. it does not delete mount points, but it can delete the contents in them if the appropriate flag is used</span></li>
+            <li><span>vfshost:recursionCopy(path, path2, copyContentsMountPoints:boolean) - recursively copy directories and files. you can pass the true value to also copy the contents of the mount points as directories</span></li>
+        </ul>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">local ramfs = require("ramfs")
+local vfs = require("vfs")
+local vfshost = vfs.createHost()
+
+vfshost:mount("/", getComponent("disk")) --you can mount something to the root, or you can choose not to. at your discretion
+for i = 1, 3 do
+    vfshost:mount("/tmp" .. i, ramfs.create(1024 * 64).fs)
+end
+
+function onTick()
+    print("file list: ")
+    for k, v in ipairs(vfshost:getFileList(".")) do
+        print(v)
+    end
+
+    print("folders list: ")
+    for k, v in ipairs(vfshost:getFolderList(".")) do
+        print(v)
+    end
+
+    print("mounts list: ")
+    for k, v in ipairs(vfshost:getMountsList(".")) do
+        print(v)
+    end
+end
+
+_enableCallbacks = true</code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

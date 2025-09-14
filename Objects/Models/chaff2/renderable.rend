@@ -1,0 +1,17 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Models/chaff2/mesh.fbx",
+         "subMeshList" : [
+            {
+               "material" : "Dif",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Models/chaff2/texture_dif.tga",
+                  "",
+                  ""
+               ]
+            }
+         ]
+      }
+   ]
+}

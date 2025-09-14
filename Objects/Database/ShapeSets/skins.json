@@ -1,0 +1,141 @@
+{
+   "partList" : [
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 2,
+            "z" : 1
+         },
+         "color" : "0E63B1",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 3,
+            "durability" : 1,
+            "friction" : 6
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Other/arduino/rend.rend",
+         "rotationSet" : "PropZ",
+         "scripted" : {
+            "classname" : "ScriptableComputer",
+            "data" : {
+               "arduino" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/ScriptableComputer.lua"
+         },
+         "showInInventory" : false,
+         "stackSize" : 10,
+         "sticky" : "-Z",
+         "uuid" : "b33253db-67e3-45f8-9a3f-4c16a3ea3fdd"
+      },
+      {
+         "box" : {
+            "x" : 5,
+            "y" : 2,
+            "z" : 2
+         },
+         "color" : "3c261e",
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 4,
+            "friction" : 7
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Other/chip/rend.rend",
+         "rotationSet" : "PropZ",
+         "scripted" : {
+            "classname" : "ScriptableComputer",
+            "data" : {
+               "chip" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/ScriptableComputer.lua"
+         },
+         "showInInventory" : false,
+         "stackSize" : 10,
+         "sticky" : "-Z",
+         "uuid" : "ef241100-53f7-440d-9576-d3c6ef25e7fb"
+      },
+      {
+         "box" : {
+            "x" : 2,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "3c261e",
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 2,
+            "durability" : 4,
+            "friction" : 7
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Other/chipSmall/rend.rend",
+         "rotationSet" : "PropZ",
+         "scripted" : {
+            "classname" : "ScriptableComputer",
+            "data" : {
+               "chip" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/ScriptableComputer.lua"
+         },
+         "showInInventory" : false,
+         "stackSize" : 10,
+         "sticky" : "-Z",
+         "uuid" : "86f2d10e-3250-4be4-8a6c-bbe828c31062"
+      },
+      {
+         "box" : {
+            "x" : 2,
+            "y" : 3,
+            "z" : 3
+         },
+         "color" : "00ff00",
+         "density" : 400,
+         "flammable" : true,
+         "physicsMaterial" : "Plastic",
+         "ratings" : {
+            "buoyancy" : 6,
+            "durability" : 6,
+            "friction" : 5
+         },
+         "renderable" : {
+            "lodList" : [
+               {
+                  "mesh" : "$CONTENT_DATA/Objects/Mesh/box.fbx",
+                  "subMeshList" : [
+                     {
+                        "material" : "DifAsg",
+                        "textureList" : [
+                           "$CONTENT_DATA/Objects/Textures/Legend/Fit_ZhuJi_dif.tif",
+                           "$CONTENT_DATA/Objects/Textures/Legend/Fit_ZhuJi_asg.tif",
+                           ""
+                        ]
+                     },
+                     {
+                        "material" : "Glass",
+                        "textureList" : [
+                           "$CONTENT_DATA/Objects/Textures/Legend/CS_SB_dif.png",
+                           "$CONTENT_DATA/Objects/Textures/Legend/CS_SB_asg.png",
+                           "$CONTENT_DATA/Objects/Textures/Legend/CS_nor.png"
+                        ]
+                     }
+                  ]
+               }
+            ]
+         },
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "ScriptableComputer",
+            "data" : {
+               "fsSize" : 131072
+            },
+            "filename" : "$CONTENT_DATA/Scripts/ScriptableComputer.lua"
+         },
+         "showInInventory" : false,
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "50569acb-7911-4fb5-b738-8e5296a6eadf"
+      }
+   ]
+}

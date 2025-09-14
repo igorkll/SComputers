@@ -1,0 +1,17 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$MOD_DATA/Objects/Mesh/small_hdd.obj",
+         "subMeshList" : [
+            {
+               "material" : "DifAsg",
+               "textureList" : [
+                  "$MOD_DATA/Objects/Textures/hdd_dif.png",
+                  "$MOD_DATA/Objects/Textures/hdd_asg.png",
+                  ""
+               ]
+            }
+         ]
+      }
+   ]
+}

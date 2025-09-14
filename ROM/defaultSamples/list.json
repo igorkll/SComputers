@@ -1,0 +1,22 @@
+{
+    "mc_noteblock_0"  : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/0.ogg",
+    "mc_noteblock_1"  : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/1.ogg",
+    "mc_noteblock_2"  : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/2.ogg",
+    "mc_noteblock_3"  : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/3.ogg",
+    "mc_noteblock_4"  : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/4.ogg",
+    "mc_noteblock_5"  : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/5.ogg",
+    "mc_noteblock_6"  : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/6.ogg",
+    "mc_noteblock_7"  : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/7.ogg",
+    "mc_noteblock_8"  : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/8.ogg",
+    "mc_noteblock_9"  : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/9.ogg",
+    "mc_noteblock_10" : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/10.ogg",
+    "mc_noteblock_11" : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/11.ogg",
+    "mc_noteblock_12" : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/12.ogg",
+    "mc_noteblock_13" : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/13.ogg",
+    "mc_noteblock_14" : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/14.ogg",
+    "mc_noteblock_15" : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/15.ogg",
+    "wave_sine"       : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/sine.mp3",
+    "wave_square"     : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/square.mp3",
+    "wave_sawtooth"   : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/sawtooth.mp3",
+    "wave_triangle"   : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/ROM/defaultSamples/triangle.mp3"
+}

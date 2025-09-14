@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Widget" skin="LogicGateBG" position_real="0.244140625 0.244140625 0.498046875 0.546875" align="Center">
+        <Property key="Alpha" value="1"/>
+        <Property key="Colour" value="1 1 1"/>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0098039215686274508 0.8839285714285714 0.26470588235294118 0.10714285714285714" name="esc">
+            <Property key="Caption" value="escape"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.70588235294117652 0.8839285714285714 0.28431372549019607 0.10714285714285714" name="enter">
+            <Property key="Caption" value="enter"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.0098039215686274508 0.0625 0.98039215686274506 0.8214285714285714" name="text">
+            <Property key="MultiLine" value="true"/>
+            <Property key="MaxTextLength" value="100000"/>
+            <Property key="TextAlign" value="Default"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="Enabled" value="true"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.20588235294117646 0.0089285714285714281 0.57843137254901966 0.044642857142857144">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="Caption" value="keyboard"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+    </Widget>
+    <CodeGeneratorSettings/>
+</MyGUI>

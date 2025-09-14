@@ -1,0 +1,137 @@
+// THIS FILE DOES NOT CONTAIN ANY SCI PARTICLES EXCEPT FOR THE UUIDS.
+// IT SERVES FOR INTER-MOD COMPATIBILITY.
+// ALSO, THE SCI ROM BLOCK IS NOT SUPPORTED BECAUSE IT IS A UNIQUE PART OF SCI AND NOT A MODIFICATION OF EXISTING ONES.
+
+{
+    "partList": [
+        {
+            "box": {
+                "x": 1,
+                "y": 4,
+                "z": 4
+            },
+            "color": "222222",
+            "physicsMaterial": "Plastic",
+            "renderable": "$CONTENT_DATA/Objects/Renderables/Display4.rend",
+            "rotationSet": "PropNegY",
+            "scripted": {
+                "classname": "AnyDisplay",
+                "data": {
+                    "v": 0.50,
+                    "x": 256,
+                    "y": 256
+                },
+                "filename": "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+            },
+            "showInInventory": false,
+            "sticky": "+X-Y+Y-Z+Z",
+            "uuid": "f9b5c7ac-5a29-4973-ba7f-7b2b5ff66a20"
+        },
+        {
+            "box": {
+                "x": 3,
+                "y": 1,
+                "z": 2
+            },
+            "ratings": {
+                "buoyancy": 3,
+                "density": 2,
+                "durability": 2,
+                "friction": 3
+            },
+            "color": "222222",
+            "physicsMaterial": "Mechanical",
+            "renderable": "$CONTENT_DATA/Objects/Renderables/hdd.rend",
+            "rotationSet": "PropFull",
+            "scripted": {
+                "classname": "hdd",
+                "data": {
+                    "size": 131072
+                },
+                "filename": "$CONTENT_DATA/Scripts/hdd.lua"
+            },
+            "showInInventory": false,
+            "stackSize": 10,
+            "uuid": "60966b58-94a2-4730-bddb-6652144a7ea8"
+        },
+        {
+            "box": {
+                "x": 3,
+                "y": 1,
+                "z": 2
+            },
+            "ratings": {
+                "buoyancy": 3,
+                "density": 2,
+                "durability": 2,
+                "friction": 3
+            },
+            "color": "222222",
+            "physicsMaterial": "Mechanical",
+            "renderable": "$CONTENT_DATA/Objects/Renderables/hdd.rend",
+            "rotationSet": "PropFull",
+            "scripted": {
+                "classname": "hdd",
+                "data": {
+                    "size": 131072
+                },
+                "filename": "$CONTENT_DATA/Scripts/hdd.lua"
+            },
+            "showInInventory": false,
+            "stackSize": 10,
+            "uuid": "78eb45cd-39e6-46a1-9fc2-9959d9dd1400"
+        },
+        {
+            "box": {
+                "x": 3,
+                "y": 1,
+                "z": 2
+            },
+            "ratings": {
+                "buoyancy": 3,
+                "density": 2,
+                "durability": 2,
+                "friction": 3
+            },
+            "color": "f002a8",
+            "physicsMaterial": "Mechanical",
+            "renderable": "$CONTENT_DATA/Objects/Renderables/hdd.rend",
+            "rotationSet": "PropFull",
+            "scripted": {
+                "classname": "hdd",
+                "filename": "$CONTENT_DATA/Scripts/hdd.lua"
+            },
+            "showInInventory": false,
+            "stackSize": 10,
+            "uuid": "b59e44cd-deda-4df4-87c0-e83a1fc80752"
+        },
+        {
+            "box": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+            },
+            "color": "555555",
+            "physicsMaterial": "Plastic",
+            "showInInventory": false,
+            "ratings": {
+                "buoyancy": 3,
+                "density": 2,
+                "durability": 2,
+                "friction": 3
+            },
+            "renderable": "$CONTENT_DATA/Objects/Renderables/SmallAntenna.rend",
+            "rotationSet": "PropY",
+            "scripted": {
+                "classname": "Antenna",
+                "data": {
+                    "radius": 32,
+                    "screen": true
+                },
+                "filename": "$CONTENT_DATA/Scripts/Networking/Antennas/Antenna.lua"
+            },
+            "stackSize": 10,
+            "uuid": "4022ae8e-4147-4948-b242-ae99020e761e"
+        }
+    ]
+}

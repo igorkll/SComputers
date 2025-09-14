@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Widget" skin="LogicGateBG" position_real="0 0 0.8935546875 0.810546875" name="BackPanel">
+        <Widget type="TextBox" skin="TextBox" position_real="0.0054644808743169399 0.012048192771084338 0.34972677595628415 0.054216867469879519" align="Default" name="Title">
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontName" value="SM_Text"/>
+            <Property key="TextShadow" value="true"/>
+            <Property key="FontHeight" value="25"/>
+            <Property key="Caption" value="Execution Config"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.67213114754098358 0.91566265060240959 0.3191256830601093 0.068674698795180719" align="Default" name="ApplyButton">
+            <Property key="Caption" value="APPLY"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Colour" value="0.859649 0.602124 0.0251359"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.34972677595628415 0.072289156626506021 0.3191256830601093 0.068674698795180719" name="ScriptModeButton">
+            <Property key="Caption" value="ScriptMode: Safe/Unsafe"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0054644808743169399 0.91566265060240959 0.3191256830601093 0.068674698795180719" name="AdminOnlyButton">
+            <Property key="Caption" value="AdminOnly: True/False"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontName" value="SM_Button"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0054644808743169399 0.072289156626506021 0.3191256830601093 0.068674698795180719" name="lua">
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="LuaVM: "/>
+            <Property key="FontName" value="SM_Button"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.34972677595628415 0.13253012048192772 0.3191256830601093 0.068674698795180719" name="messages">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="Allow Chat/Alert/Debug Messages: "/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.67213114754098358 0.072289156626506021 0.3191256830601093 0.068674698795180719" name="rend">
+            <Property key="Caption" value="display render distance"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.67213114754098358 0.31325301204819278 0.3191256830601093 0.068674698795180719" name="hostrender">
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="Caption" value="rendering displays on host"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.3551912568306011 0.43975903614457829 0.31693989071038253 0.072289156626506021" name="rst">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="Caption" value="default settings"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Colour" value="0.859649 0.602124 0.0251359"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0054644808743169399 0.85542168674698793 0.3191256830601093 0.068674698795180719" name="CE">
+            <Property key="Caption" value="Computers Enabled in This session"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0054644808743169399 0.13253012048192772 0.3191256830601093 0.068674698795180719" name="cpu">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="Caption" value="maximum CPU time"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.34972677595628415 0.012048192771084338 0.32786885245901637 0.054216867469879519">
+            <Property key="FontName" value="SM_Text"/>
+            <Property key="FontHeight" value="25"/>
+            <Property key="Caption" value="Cheat Functions"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="TextShadow" value="true"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.67213114754098358 0.012048192771084338 0.28415300546448086 0.054216867469879519">
+            <Property key="FontName" value="SM_Text"/>
+            <Property key="FontHeight" value="25"/>
+            <Property key="Caption" value="Displays"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.3551912568306011 0.5 0.31693989071038253 0.072289156626506021" name="srv">
+            <Property key="Caption" value="settings for server"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Colour" value="0.859649 0.602124 0.0251359"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.67213114754098358 0.13253012048192772 0.3191256830601093 0.068674698795180719" name="allowDist">
+            <Property key="Caption" value="allowDist"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0054644808743169399 0.79518072289156627 0.3191256830601093 0.068674698795180719" name="admin">
+            <Property key="Caption" value="Admin Panel"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0054644808743169399 0.43975903614457829 0.31693989071038253 0.072289156626506021" name="saving">
+            <Property key="Caption" value="saving content once per:"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.67213114754098358 0.19277108433734941 0.3191256830601093 0.068674698795180719" name="maxDisplays">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="Caption" value="max display resolution: "/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.0054644808743169399 0.38554216867469882 0.34972677595628415 0.053012048192771083">
+            <Property key="Caption" value="OTHER"/>
+            <Property key="FontHeight" value="25"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="TextShadow" value="true"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0054644808743169399 0.5 0.31693989071038253 0.072289156626506021" name="ibridge">
+            <Property key="Caption" value="Allow Internet-Bridge"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.34972677595628415 0.19277108433734941 0.3191256830601093 0.068674698795180719" name="disCompCheck">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="Caption" value="disable connect check"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0054644808743169399 0.19277108433734941 0.3191256830601093 0.068674698795180719" name="adrop">
+            <Property key="Caption" value="drop freq at lags"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0054644808743169399 0.56024096385542166 0.31693989071038253 0.072289156626506021" name="acreative">
+            <Property key="Caption" value="Allow Creative-Components: "/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.34972677595628415 0.25180722891566265 0.3191256830601093 0.068674698795180719" name="disableCallLimit">
+            <Property key="Caption" value="disable call limit"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0054644808743169399 0.25180722891566265 0.3191256830601093 0.068674698795180719" name="lagDetector">
+            <Property key="Caption" value="lag detector"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontName" value="SM_Button"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.67213114754098358 0.25180722891566265 0.3191256830601093 0.068674698795180719" name="screenRate">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="screen rate"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0054644808743169399 0.62048192771084343 0.31693989071038253 0.072289156626506021" name="resourceConsumption">
+            <Property key="Caption" value="resource consumption"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0054644808743169399 0.68072289156626509 0.31693989071038253 0.072289156626506021" name="disableSplash">
+            <Property key="Caption" value="disable splash"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.34972677595628415 0.38554216867469882 0.32786885245901637 0.053012048192771083">
+            <Property key="FontHeight" value="25"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="TextShadow" value="true"/>
+            <Property key="Caption" value="PRESETS OF SETTINGS"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.3551912568306011 0.56024096385542166 0.31693989071038253 0.072289156626506021" name="unrestrictedSettings">
+            <Property key="Colour" value="0.859649 0.602124 0.0251359"/>
+            <Property key="Caption" value="unrestricted settings"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontName" value="SM_Button"/>
+        </Widget>
+    </Widget>
+    <CodeGeneratorSettings/>
+</MyGUI>

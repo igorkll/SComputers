@@ -1,0 +1,824 @@
+{
+   "partList" : [
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 2.0,
+               "x" : 16,
+               "y" : 16
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "663bab7b-8e5b-4e1d-9843-3679e4961526"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 1.0,
+               "x" : 32,
+               "y" : 32
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "861f514f-5913-4538-852c-fa05aa5e265f"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 0.50,
+               "x" : 64,
+               "y" : 64
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "c977cf5d-9ce9-4382-8edf-ea97d22c70d0"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 0.25,
+               "x" : 128,
+               "y" : 128
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "19644a5c-f299-4594-b682-abc180932227"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 2,
+            "z" : 2
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display2.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 4,
+               "x" : 16,
+               "y" : 16
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "84d67c26-5923-49f0-a564-df24eae2f7d5"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 2,
+            "z" : 2
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display2.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 2.0,
+               "x" : 32,
+               "y" : 32
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "cb0fa796-b709-439f-8c0d-9045e7107dfd"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 2,
+            "z" : 2
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display2.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 1.0,
+               "x" : 64,
+               "y" : 64
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "e0e439e8-5103-4aa7-b74c-858ce6e1e1d4"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 2,
+            "z" : 2
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display2.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 0.50,
+               "x" : 128,
+               "y" : 128
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "1b4281c6-4393-4ca7-94b8-8f199eba4668"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 2,
+            "z" : 2
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display2.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 0.25,
+               "x" : 256,
+               "y" : 256
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "52bc1fcf-dc17-40fd-aea4-ab7cdc25fb67"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 3,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display3x3.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 6.0,
+               "x" : 16,
+               "y" : 16
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "4b7651fe-c958-4836-bcfd-11bddabbda73"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 3,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display3x3.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 3.0,
+               "x" : 32,
+               "y" : 32
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "f54eb0b7-9041-47e4-ba34-3abdad87112e"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 3,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display3x3.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 1.50,
+               "x" : 64,
+               "y" : 64
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "12e55219-7478-4e7d-a6e6-b39e5daa160a"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 3,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display3x3.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 0.750,
+               "x" : 128,
+               "y" : 128
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "5c6f9472-d88d-47ad-9cf8-faac8b008480"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 3,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display3x3.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 0.3750,
+               "x" : 256,
+               "y" : 256
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "0e026670-4897-47c2-a129-7061ab8adf84"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 4,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display4.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 8,
+               "x" : 16,
+               "y" : 16
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "0cafe1bc-fd95-4b89-97fb-af1da059a4ab"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 4,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display4.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 4.0,
+               "x" : 32,
+               "y" : 32
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "2b6b6b6f-7c7d-4f6a-9c8d-774a084b1cfb"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 4,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display4.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 2.0,
+               "x" : 64,
+               "y" : 64
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "46271f6f-e61a-4173-b121-e37a1f56a904"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 4,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display4.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 1.0,
+               "x" : 128,
+               "y" : 128
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "7abd8ee7-f1ac-4b32-924c-f8322f58a8e7"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 4,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display4.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 0.50,
+               "x" : 256,
+               "y" : 256
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "92361ece-e595-4f82-b89d-a427d3070374"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 4,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display4.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 0.250,
+               "x" : 512,
+               "y" : 512
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "showInInventory" : true,
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "b5dcd494-3e09-4d4d-ad4a-82fa09afbede"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 4,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display4.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 0.1250,
+               "x" : 1024,
+               "y" : 1024
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "showInInventory" : true,
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "c400e00a-c636-4aa3-8669-23405c527eb6"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 16,
+            "z" : 16
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display16.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 32,
+               "x" : 16,
+               "y" : 16
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "5052380b-83b0-404f-936b-3f40c8c261b3"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 16,
+            "z" : 16
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display16.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 16,
+               "x" : 32,
+               "y" : 32
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "c76d8f28-0d16-45e0-988c-5ab88506108a"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 16,
+            "z" : 16
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display16.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 8,
+               "x" : 64,
+               "y" : 64
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "57f5bbeb-3dd1-4c63-bc17-a172b4f1baf6"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 16,
+            "z" : 16
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display16.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 4,
+               "x" : 128,
+               "y" : 128
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "ae6c7083-445b-4458-af07-006b3d4856fb"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 16,
+            "z" : 16
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display16.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 2,
+               "x" : 256,
+               "y" : 256
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "a37ec8a8-1251-40d1-b79a-b7dc166fec52"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 16,
+            "z" : 16
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display16.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 1,
+               "x" : 512,
+               "y" : 512
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "showInInventory" : true,
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "dcf0971b-58c5-49fd-abae-3f1d173c5a6c"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 16,
+            "z" : 16
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display16.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 0.50,
+               "x" : 1024,
+               "y" : 1024
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "showInInventory" : true,
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "98093804-6af8-4862-91fc-b0fdbb72f3dc"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display4x1.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 2.0,
+               "x" : 64,
+               "y" : 16
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "596660f2-1d92-468a-97c6-e7cdb9087095"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display4x1.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 1.0,
+               "x" : 128,
+               "y" : 32
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "18a8e622-2c01-41c0-9b60-c0d8d88c09d8"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 12,
+            "z" : 16
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display16x12.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 8,
+               "x" : 64,
+               "y" : 48
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "f5a29be5-c614-4a2b-8b0a-958248b00a8d"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 12,
+            "z" : 16
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display16x12.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 4,
+               "x" : 128,
+               "y" : 96
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "d62b97d9-6387-4ec5-8b52-e23b04bade07"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 16
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display16x1.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 4,
+               "x" : 128,
+               "y" : 8
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "b9a1f72d-4099-4c3a-a97a-7d273fa0780f"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 3,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display4x3.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 2,
+               "x" : 64,
+               "y" : 48
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "17e9e663-501a-46e4-bdfc-40a365910cf4"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 3,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display4x3.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 1,
+               "x" : 128,
+               "y" : 96
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "623318f9-dbef-4fa4-80c6-f279d0780af1"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 2,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display3x2.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 1.350,
+               "x" : 72,
+               "y" : 48
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "showInInventory" : true,
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "884284ba-ef36-487d-9e8a-553794c032da"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 2,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Display3x2.rend",
+         "rotationSet" : "PropNegY",
+         "scripted" : {
+            "classname" : "AnyDisplay",
+            "data" : {
+               "v" : 0.6750,
+               "x" : 144,
+               "y" : 96
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua"
+         },
+         "showInInventory" : true,
+         "sticky" : "+X-Y+Y-Z+Z",
+         "uuid" : "7a8ce597-9f4b-4386-a50d-fe26edafe4a3"
+      }
+   ]
+}

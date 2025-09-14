@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            the fonts library contains many pre-prepared NON-monospaced fonts<br/>
+            activate them on the displays using setFont<br/>
+            when activating non-monospaced fonts, getFontWidth and getFontHeight return the maximum height/width of a character in the font<br/>
+            all fonts are available in variants 16, 32, 72 pixels. Please note that the actual character sizes may vary depending on the font and symbol. they may be a little bigger or a little smaller, but they will never increase the dimensions provided by getFontWidth and getFontHeight<br/>
+            to get other font sizes, use display.setFontScale or display.setFontSize<br/>
+            these are standard fonts from windows. and I can't guarantee that all of them have been rasterized with high quality<br/>
+            to calculate exactly what space the text will occupy on the screen, use display.calcTextBox
+        </p>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">--example for display 256x256
+--full fonts list: https://igorkll.github.io/fonts.html
+
+local fonts = require("fonts")
+local display = getComponent("display")
+
+display.reset()
+display.setTextSpacing(6) --in such large fonts, it would be more logical to spread the characters a little more than 1 pixel apart
+display.setFontScale(1.8, 1.8) --is 32x32 small? you can make any font bigger!
+display.clear()
+local posY = 1
+local text = "TEST"
+
+display.setFont(fonts.impact_32)
+local boxX, boxY = display.calcTextBox(text)
+display.fillRect(1, posY, boxX, boxY, 0x00ff00)
+display.drawText(1, posY, text, 0xff0000)
+posY = posY + display.getFontHeight() + 3
+
+display.setFont(fonts.verdana_32)
+local boxX, boxY = display.calcTextBox(text)
+display.fillRect(1, posY, boxX, boxY, 0x00ff00)
+display.drawText(1, posY, text, 0xff0000)
+posY = posY + display.getFontHeight() + 3
+
+display.setFont(fonts.seguibl_32)
+local boxX, boxY = display.calcTextBox(text)
+display.fillRect(1, posY, boxX, boxY, 0x00ff00)
+display.drawText(1, posY, text, 0xff0000)
+posY = posY + display.getFontHeight() + 3
+
+display.setFont(fonts.arial_32)
+local boxX, boxY = display.calcTextBox(text)
+display.fillRect(1, posY, boxX, boxY, 0x00ff00)
+display.drawText(1, posY, text, 0xff0000)
+posY = posY + display.getFontHeight() + 3
+
+display.flush()
+
+function callback_loop()
+    if _endtick then
+        display.clear()
+        display.flush()
+        return
+    end
+end</code>
+        </pre>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">--example for display 256x256
+--full fonts list: https://igorkll.github.io/fonts.html
+
+local fonts = require("fonts")
+local display = getComponent("display")
+
+display.reset()
+display.setFont(fonts.lgc_5x5)
+display.setUtf8Support(true)
+display.clear()
+
+local posY = 1
+local function drawText(text)
+    local boxX, boxY = display.calcTextBox(text)
+    display.fillRect(1, posY, boxX, boxY, 0x005500)
+    display.drawText(1, posY, text)
+    posY = posY + display.getFontHeight() + 3
+end
+
+drawText("font - 5x5")
+drawText("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
+drawText("abcdefghijklmnopqrstuvwxyz")
+drawText("АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ")
+drawText("абвгдеёжзийклмнопрстуфхцчшщъыьэюя")
+drawText("01234567890")
+drawText("+-*/\\\"'@#!<>?{}[]()&^%$#")
+display.flush()
+
+function callback_loop()
+    if _endtick then
+        display.clear()
+        display.flush()
+        return
+    end
+end</code>
+        </pre>     
+
+        <a class="text">fonts made especially for SComputers:</a>
+        <p class="text">
+            lgc_5x4 - the standard font for monitors. it will be setted if you pass nil to display.setFont (monospaced)<br/>
+            lgc_5x5 - just a 5x5 (square) font (monospaced)<br/>
+            lgc_3x3 - just a 3x3 (square) font (monospaced)<br/>
+			oc_16x8 - font from the opencomputers mod for minecraft. almost monospaced, but has double-width characters<br/>
+        </p>
+        <br/>
+
+        <a class="text">bitmap fonts from microsoft windows:</a>
+        <p class="text">
+            arial_16<br/>
+            arial_32<br/>
+            arial_72<br/>
+            arialbd_16<br/>
+            arialbd_32<br/>
+            arialbd_72<br/>
+            arialbi_16<br/>
+            arialbi_32<br/>
+            arialbi_72<br/>
+            ariali_16<br/>
+            ariali_32<br/>
+            ariali_72<br/>
+            ariblk_16<br/>
+            ariblk_32<br/>
+            ariblk_72<br/>
+            bahnschrift_16<br/>
+            bahnschrift_32<br/>
+            bahnschrift_72<br/>
+            calibri_16<br/>
+            calibri_32<br/>
+            calibri_72<br/>
+            calibrib_16<br/>
+            calibrib_32<br/>
+            calibrib_72<br/>
+            calibrii_16<br/>
+            calibrii_32<br/>
+            calibrii_72<br/>
+            calibril_16<br/>
+            calibril_32<br/>
+            calibril_72<br/>
+            calibrili_16<br/>
+            calibrili_32<br/>
+            calibrili_72<br/>
+            calibriz_16<br/>
+            calibriz_32<br/>
+            calibriz_72<br/>
+            cambriab_16<br/>
+            cambriab_32<br/>
+            cambriab_72<br/>
+            cambriai_16<br/>
+            cambriai_32<br/>
+            cambriai_72<br/>
+            cambriaz_16<br/>
+            cambriaz_32<br/>
+            cambriaz_72<br/>
+            Candara_16<br/>
+            Candara_32<br/>
+            Candara_72<br/>
+            Candarab_16<br/>
+            Candarab_32<br/>
+            Candarab_72<br/>
+            Candarai_16<br/>
+            Candarai_32<br/>
+            Candarai_72<br/>
+            Candaral_16<br/>
+            Candaral_32<br/>
+            Candaral_72<br/>
+            Candarali_16<br/>
+            Candarali_32<br/>
+            Candarali_72<br/>
+            Candaraz_16<br/>
+            Candaraz_32<br/>
+            Candaraz_72<br/>
+            CascadiaCode_16<br/>
+            CascadiaCode_32<br/>
+            CascadiaCode_72<br/>
+            CascadiaMono_16<br/>
+            CascadiaMono_32<br/>
+            CascadiaMono_72<br/>
+            comic_16<br/>
+            comic_32<br/>
+            comic_72<br/>
+            comicbd_16<br/>
+            comicbd_32<br/>
+            comicbd_72<br/>
+            comici_16<br/>
+            comici_32<br/>
+            comici_72<br/>
+            comicz_16<br/>
+            comicz_32<br/>
+            comicz_72<br/>
+            consola_16<br/>
+            consola_32<br/>
+            consola_72<br/>
+            consolab_16<br/>
+            consolab_32<br/>
+            consolab_72<br/>
+            consolai_16<br/>
+            consolai_32<br/>
+            consolai_72<br/>
+            consolaz_16<br/>
+            consolaz_32<br/>
+            consolaz_72<br/>
+            constan_16<br/>
+            constan_32<br/>
+            constan_72<br/>
+            constanb_16<br/>
+            constanb_32<br/>
+            constanb_72<br/>
+            constani_16<br/>
+            constani_32<br/>
+            constani_72<br/>
+            constanz_16<br/>
+            constanz_32<br/>
+            constanz_72<br/>
+            corbel_16<br/>
+            corbel_32<br/>
+            corbel_72<br/>
+            corbelb_16<br/>
+            corbelb_32<br/>
+            corbelb_72<br/>
+            corbeli_16<br/>
+            corbeli_32<br/>
+            corbeli_72<br/>
+            corbell_16<br/>
+            corbell_32<br/>
+            corbell_72<br/>
+            corbelli_16<br/>
+            corbelli_32<br/>
+            corbelli_72<br/>
+            corbelz_16<br/>
+            corbelz_32<br/>
+            corbelz_72<br/>
+            cour_16<br/>
+            cour_32<br/>
+            cour_72<br/>
+            courbd_16<br/>
+            courbd_32<br/>
+            courbd_72<br/>
+            courbi_16<br/>
+            courbi_32<br/>
+            courbi_72<br/>
+            couri_16<br/>
+            couri_32<br/>
+            couri_72<br/>
+            ebrima_16<br/>
+            ebrima_32<br/>
+            ebrima_72<br/>
+            ebrimabd_16<br/>
+            ebrimabd_32<br/>
+            ebrimabd_72<br/>
+            framd_16<br/>
+            framd_32<br/>
+            framd_72<br/>
+            framdit_16<br/>
+            framdit_32<br/>
+            framdit_72<br/>
+            Gabriola_16<br/>
+            Gabriola_32<br/>
+            Gabriola_72<br/>
+            gadugi_16<br/>
+            gadugi_32<br/>
+            gadugi_72<br/>
+            gadugib_16<br/>
+            gadugib_32<br/>
+            gadugib_72<br/>
+            georgia_16<br/>
+            georgia_32<br/>
+            georgia_72<br/>
+            georgiab_16<br/>
+            georgiab_32<br/>
+            georgiab_72<br/>
+            georgiai_16<br/>
+            georgiai_32<br/>
+            georgiai_72<br/>
+            georgiaz_16<br/>
+            georgiaz_32<br/>
+            georgiaz_72<br/>
+            GOST_A_16<br/>
+            GOST_A_32<br/>
+            GOST_A_72<br/>
+            GOST_AU_16<br/>
+            GOST_AU_32<br/>
+            GOST_AU_72<br/>
+            GOST_B_16<br/>
+            GOST_B_32<br/>
+            GOST_B_72<br/>
+            GOST_BU_16<br/>
+            GOST_BU_32<br/>
+            GOST_BU_72<br/>
+            himalaya_16<br/>
+            himalaya_32<br/>
+            himalaya_72<br/>
+            holomdl2_16<br/>
+            holomdl2_32<br/>
+            holomdl2_72<br/>
+            HPSimplified_Bd_16<br/>
+            HPSimplified_Bd_32<br/>
+            HPSimplified_Bd_72<br/>
+            HPSimplified_BdIt_16<br/>
+            HPSimplified_BdIt_32<br/>
+            HPSimplified_BdIt_72<br/>
+            HPSimplified_It_16<br/>
+            HPSimplified_It_32<br/>
+            HPSimplified_It_72<br/>
+            HPSimplified_Lt_16<br/>
+            HPSimplified_Lt_32<br/>
+            HPSimplified_Lt_72<br/>
+            HPSimplified_LtIt_16<br/>
+            HPSimplified_LtIt_32<br/>
+            HPSimplified_LtIt_72<br/>
+            HPSimplified_Rg_16<br/>
+            HPSimplified_Rg_32<br/>
+            HPSimplified_Rg_72<br/>
+            impact_16<br/>
+            impact_32<br/>
+            impact_72<br/>
+            Inkfree_16<br/>
+            Inkfree_32<br/>
+            Inkfree_72<br/>
+            javatext_16<br/>
+            javatext_32<br/>
+            javatext_72<br/>
+            l_10646_16<br/>
+            l_10646_32<br/>
+            l_10646_72<br/>
+            LeelaUIb_16<br/>
+            LeelaUIb_32<br/>
+            LeelaUIb_72<br/>
+            LeelawUI_16<br/>
+            LeelawUI_32<br/>
+            LeelawUI_72<br/>
+            LeelUIsl_16<br/>
+            LeelUIsl_32<br/>
+            LeelUIsl_72<br/>
+            lucon_16<br/>
+            lucon_32<br/>
+            lucon_72<br/>
+            malgun_16<br/>
+            malgun_32<br/>
+            malgun_72<br/>
+            malgunbd_16<br/>
+            malgunbd_32<br/>
+            malgunbd_72<br/>
+            malgunsl_16<br/>
+            malgunsl_32<br/>
+            malgunsl_72<br/>
+            micross_16<br/>
+            micross_32<br/>
+            micross_72<br/>
+            mmrtext_16<br/>
+            mmrtext_32<br/>
+            mmrtext_72<br/>
+            mmrtextb_16<br/>
+            mmrtextb_32<br/>
+            mmrtextb_72<br/>
+            monbaiti_16<br/>
+            monbaiti_32<br/>
+            monbaiti_72<br/>
+            msyi_16<br/>
+            msyi_32<br/>
+            msyi_72<br/>
+            mvboli_16<br/>
+            mvboli_32<br/>
+            mvboli_72<br/>
+            Nirmala_16<br/>
+            Nirmala_32<br/>
+            Nirmala_72<br/>
+            NirmalaB_16<br/>
+            NirmalaB_32<br/>
+            NirmalaB_72<br/>
+            NirmalaS_16<br/>
+            NirmalaS_32<br/>
+            NirmalaS_72<br/>
+            ntailu_16<br/>
+            ntailu_32<br/>
+            ntailu_72<br/>
+            ntailub_16<br/>
+            ntailub_32<br/>
+            ntailub_72<br/>
+            pala_16<br/>
+            pala_32<br/>
+            pala_72<br/>
+            palab_16<br/>
+            palab_32<br/>
+            palab_72<br/>
+            palabi_16<br/>
+            palabi_32<br/>
+            palabi_72<br/>
+            palai_16<br/>
+            palai_32<br/>
+            palai_72<br/>
+            phagspa_16<br/>
+            phagspa_32<br/>
+            phagspa_72<br/>
+            phagspab_16<br/>
+            phagspab_32<br/>
+            phagspab_72<br/>
+            segmdl2_16<br/>
+            segmdl2_32<br/>
+            segmdl2_72<br/>
+            segoepr_16<br/>
+            segoepr_32<br/>
+            segoepr_72<br/>
+            segoeprb_16<br/>
+            segoeprb_32<br/>
+            segoeprb_72<br/>
+            segoesc_16<br/>
+            segoesc_32<br/>
+            segoesc_72<br/>
+            segoescb_16<br/>
+            segoescb_32<br/>
+            segoescb_72<br/>
+            segoeui_16<br/>
+            segoeui_32<br/>
+            segoeui_72<br/>
+            segoeuib_16<br/>
+            segoeuib_32<br/>
+            segoeuib_72<br/>
+            segoeuii_16<br/>
+            segoeuii_32<br/>
+            segoeuii_72<br/>
+            segoeuil_16<br/>
+            segoeuil_32<br/>
+            segoeuil_72<br/>
+            segoeuisl_16<br/>
+            segoeuisl_32<br/>
+            segoeuisl_72<br/>
+            segoeuiz_16<br/>
+            segoeuiz_32<br/>
+            segoeuiz_72<br/>
+            seguibl_16<br/>
+            seguibl_32<br/>
+            seguibl_72<br/>
+            seguibli_16<br/>
+            seguibli_32<br/>
+            seguibli_72<br/>
+            seguiemj_16<br/>
+            seguiemj_32<br/>
+            seguiemj_72<br/>
+            seguihis_16<br/>
+            seguihis_32<br/>
+            seguihis_72<br/>
+            seguili_16<br/>
+            seguili_32<br/>
+            seguili_72<br/>
+            seguisb_16<br/>
+            seguisb_32<br/>
+            seguisb_72<br/>
+            seguisbi_16<br/>
+            seguisbi_32<br/>
+            seguisbi_72<br/>
+            seguisli_16<br/>
+            seguisli_32<br/>
+            seguisli_72<br/>
+            seguisym_16<br/>
+            seguisym_32<br/>
+            seguisym_72<br/>
+            simsunb_16<br/>
+            simsunb_32<br/>
+            simsunb_72<br/>
+            sylfaen_16<br/>
+            sylfaen_32<br/>
+            sylfaen_72<br/>
+            symbol_16<br/>
+            symbol_32<br/>
+            symbol_72<br/>
+            SYMBOL_A_16<br/>
+            SYMBOL_A_32<br/>
+            SYMBOL_A_72<br/>
+            SYMBOL_B_16<br/>
+            SYMBOL_B_32<br/>
+            SYMBOL_B_72<br/>
+            tahoma_16<br/>
+            tahoma_32<br/>
+            tahoma_72<br/>
+            tahomabd_16<br/>
+            tahomabd_32<br/>
+            tahomabd_72<br/>
+            taile_16<br/>
+            taile_32<br/>
+            taile_72<br/>
+            taileb_16<br/>
+            taileb_32<br/>
+            taileb_72<br/>
+            times_16<br/>
+            times_32<br/>
+            times_72<br/>
+            timesbd_16<br/>
+            timesbd_32<br/>
+            timesbd_72<br/>
+            timesbi_16<br/>
+            timesbi_32<br/>
+            timesbi_72<br/>
+            timesi_16<br/>
+            timesi_32<br/>
+            timesi_72<br/>
+            trebuc_16<br/>
+            trebuc_32<br/>
+            trebuc_72<br/>
+            trebucbd_16<br/>
+            trebucbd_32<br/>
+            trebucbd_72<br/>
+            trebucbi_16<br/>
+            trebucbi_32<br/>
+            trebucbi_72<br/>
+            trebucit_16<br/>
+            trebucit_32<br/>
+            trebucit_72<br/>
+            verdana_16<br/>
+            verdana_32<br/>
+            verdana_72<br/>
+            verdanab_16<br/>
+            verdanab_32<br/>
+            verdanab_72<br/>
+            verdanai_16<br/>
+            verdanai_32<br/>
+            verdanai_72<br/>
+            verdanaz_16<br/>
+            verdanaz_32<br/>
+            verdanaz_72<br/>
+            webdings_16<br/>
+            webdings_32<br/>
+            webdings_72<br/>
+            wingding_16<br/>
+            wingding_32<br/>
+            wingding_72
+        </p>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

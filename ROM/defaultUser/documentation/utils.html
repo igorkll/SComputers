@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            usage: require("utils")<br/>
+            this library contains several methods that serve to simplify programming
+        </p>
+
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>utils.clamp(value, min, max):number - range limitation</span></li>
+            <li><span>utils.map(value, min, max, min2, max2):number - overlapping ranges</span></li>
+            <li><span>utils.roundTo(number, after_the_dot:number):number - rounds up to a certain number of characters after the dot</span></li>
+            <li><span>utils.split(tool:stringlib/utf8, str:string, seps:table/string):table - splits the string using the library you passed. supports multiple separators. saves empty strings</span></li>
+            <li><span>utils.splitByMaxSize(string, maximum_lenght:number):table - splits a string into substrings with the maximum lenght</span></li>
+            <li><span>utils.splitByMaxSizeWithTool(tool:stringlib/utf8, string, maximum_lenght:number):table - splits a string into substrings with the maximum lenght(uses the library you provided)</span></li>
+            <li><span>utils.deepcopy(table):table - clones the table along with the subtables. supports recursive tables. it also clones game userdata objects such as Vec3, Color, Quat</span></li>
+            <li><span>utils.copy(table):table - just clones the table. does not support nested tables (they just won't be cloned). it also does not support userdata objects</span></li>
+            <li><span>utils.md5(string):string - calculates the md5 checksum from the string you passed</span></li>
+            <li><span>utils.md5bin(string):string - calculates the md5(binary format) checksum from the string you passed</span></li>
+            <li><span>utils.sha256(string):string - calculates the sha256 checksum from the string you passed</span></li>
+            <li><span>utils.sha256bin(string):string - calculates the sha256(binary format) checksum from the string you passed</span></li>
+            <li><span>utils.dist(vec3, vec3):number - calculates the distance between two points</span></li>
+            <li><span>utils.fromEuler(vec3):quat - custom fromEuler implementation</span></li>
+            <li><span>utils.toEuler(quat):vec3 - converts a quaternion to an Euler angle</span></li>
+            <li><span>utils.radarTriangulation(radarTarget:table, radarPosition:vec3, radarDirectionYPrad:number):vec3 - accepts the target that the radar returned to you, the radar position that you received from somewhere (for example, set as a constant or received from GPS), and the radar direction (you can extract this from the "-gps.getSelfGpsData().rotationEuler.z" if you set the GPS on the same plane as the radar with the screen facing up and point the tail of the GPS logo towards the radar arrow) returns the target's coordinate in the world</span></li>
+            <li><span>utils.createPID(kp:1, ki:0, kd:0, dt:40):function(target, input):output - creates a new PID controller</span></li>
+        </ul>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">--Please note that this code does not implement radar rotation, so the angle is limited to 180 degrees.
+--also, the utils.radarTriangulation function currently provides triangulation functionality only for radars standing on a horizontal plane
+                
+local utils = require("utils")
+
+local radar = getComponent("radar")
+local gps = getComponent("gps")
+
+radar.setAngle(math.rad(0))
+radar.setVFov(math.rad(180))
+radar.setHFov(math.rad(180))
+
+function callback_loop()
+    local gpsdata = gps.getSelfGpsData()
+    local pos = gpsdata.position
+    local angle = -gpsdata.rotationEuler.z
+
+    print("----------")
+    for i, target in ipairs(radar.getTargets()) do
+        local pos = utils.radarTriangulation(target, pos, angle)
+        print(i .. ". " .. utils.roundTo(pos.x, 1) .. " : " .. utils.roundTo(pos.y, 1) .. " : " .. utils.roundTo(pos.z, 1))
+    end
+end</code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

@@ -1,0 +1,70 @@
+{
+   "partList" : [
+      	{
+         	"previewRotation": [ 1, 0, 0, 0, 1, 0, 0, 0, 1 ],
+			"renderable": "$CONTENT_DATA/Objects/Renderables/smart_piston.rend",
+			"color": "000000",
+			"box": { "x": 1, "y": 1, "z": 1 },
+			"piston": {
+				"length": 256,
+				"defaultRange": 1,
+				"speedLevels": [
+					{ "speed": 1.0 },
+					{ "speed": 2.0 },
+					{ "speed": 3.0 },
+					{ "speed": 4.0 },
+					{ "speed": 6.0 },
+					{ "speed": 8.0 },
+					{ "speed": 10.0 },
+					{ "speed": 12.0 },
+					{ "speed": 14.0 },
+					{ "speed": 16.0 },
+					{ "speed": 18.0 },
+					{ "speed": 20.0 },
+					{ "speed": 22.0 },
+					{ "speed": 24.0 },
+					{ "speed": 26.0 },
+					{ "speed": 28.0 },
+					{ "speed": 30.0 },
+					{ "speed": 32.0 },
+					{ "speed": 34.0 },
+					{ "speed": 36.0 },
+					{ "speed": 38.0 },
+					{ "speed": 40.0 },
+					{ "speed": 42.0 },
+					{ "speed": 44.0 },
+					{ "speed": 46.0 },
+					{ "speed": 48.0 },
+					{ "speed": 50.0 }
+				],
+				"defaultSpeedLevel": 2,
+				"force": 10000000.0,
+				"effect": "Piston - Default"
+			},
+         	"uuid": "6b919779-1aa4-4d1a-9186-513d0965dc98",
+         	"rotationSet": "PropZ",
+			"sticky": "-Z",
+			"physicsMaterial": "Mechanical",
+			"qualityLevel": 2,
+			"stackSize": 10
+		},
+		{
+			"box" : {
+			   "x" : 1,
+			   "y" : 1,
+			   "z" : 1
+			},
+			"color" : "DF7F00",
+			"physicsMaterial" : "Mechanical",
+			"renderable" : "$CONTENT_DATA/Objects/Renderables/pistonController.rend",
+			"rotationSet" : "PropYZ",
+			"scripted" : {
+			   "classname" : "pistonController",
+			   "filename" : "$CONTENT_DATA/Scripts/pistonController.lua"
+			},
+			"stackSize" : 10,
+			"sticky" : "-X+X-Y+Y-Z+Z",
+			"uuid" : "d3f8edb0-beab-426e-983b-4f189c776854"
+		}
+   	]
+}

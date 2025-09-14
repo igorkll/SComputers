@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Button" skin="PrimaryButton" position_real="0.400390625 0.8935546875 0.208984375 0.09765625" name="exit">
+        <Property key="Caption" value="EXIT"/>
+        <Property key="FontName" value="SM_Button"/>
+        <Property key="TextAlign" value="Center"/>
+    </Widget>
+    <Widget type="EditBox" skin="EditBox" position_real="0 0 1 0.8984375" name="text">
+        <Property key="TabPrinting" value="true"/>
+        <Property key="MultiLine" value="true"/>
+        <Property key="MaxTextLength" value="100000"/>
+        <Property key="Visible" value="false"/>
+    </Widget>
+    <CodeGeneratorSettings/>
+</MyGUI>

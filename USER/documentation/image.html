@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            usage: require("image")<br/>
+            this library allows you to load images in bmp, scimg, scimg8 format and save images in scimg, scimg8 format<br/>
+            you can get images from the camera and process it<br/>
+            the image can be changed in real time and rendered on the display<br/>
+            bmp - currently, the library supports only 32 and 24 bit bmp<br/>
+            scimg - a 24-bit image format created specifically for SComputers. does not support transparency<br/>
+            scimg8 - a 8-bit image format created specifically for SComputers. does not support transparency<br/>
+        </p>
+
+        <br/>
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>image.new(resX, resY, color):scimg - creates a new image with a background of the specified color</span></li>
+            <li><span>image.load(disk, path):scimg - loads the image from the disk, the function itself determines the format by the file extension, if the extension is other than bmp or scimg8, then the function loads the image as scimg</span></li>
+            <li><span>image.decode(string):scimg - decodes the string as a scimg and converts it to an image</span></li>
+            <li><span>image.decode8(string):scimg - decodes the string as a scimg8 and converts it to an image</span></li>
+            <li><span>image.decodeBmp(string):scimg - decodes the string as a bmp and converts it to an image</span></li>
+        </ul>
+
+        <br/>
+        <p class="text">scimg methods:</p>
+        <ul class="list">
+            <li><span>scimg:getSize():sizeX, sizeY - returns the size of the image</span></li>
+            <li><span>scimg:draw(display, posX, posY) - draws the image on the display at the specified point starting from the upper left corner</span></li>
+            <li><span>scimg:drawForTicks(display, ticks, posX, posY):function - draws the image on the display at the specified point starting from the upper left corner. stretches the rendering process by the specified number of ticks. returns a callback function that you should call until it returns true</span></li>
+            <li><span>scimg:set(x, y, color) - sets the pixel to the specified image position</span></li>
+            <li><span>scimg:get(x, y):color - returns the color from the specified location of the image</span></li>
+            <li><span>scimg:rawGet(x, y):color - returns the color as it is stored in the image buffer. it can be a number, a string, smcolor, or even nil</span></li>
+            <li><span>scimg:encode():string - converts an image as scimg format</span></li>
+            <li><span>scimg:encode8():string - converts an image as scimg8 format</span></li>
+            <li><span>scimg:save(disk, path) - saves the image as a scimg</span></li>
+            <li><span>scimg:save8(disk, path) - saves the image as a scimg8 (be sure to save with the scimg8 extension, otherwise you will not be able to load the image using the image.load function)</span></li>
+            <li><span>scimg:fromCamera(camera, methodName, ...) - makes one request to get an image to the camera with the specified rendering function and the specified arguments and writes the result to the image</span></li>
+            <li><span>scimg:fromCameraAll(camera, methodName, ...) - it works almost the same as scimg:fromCamera, but it makes as many requests as it takes to get the entire image</span></li>
+        </ul>
+
+        <br/>
+        <h2 class="text">slow image draw example:</h2>
+        <pre>
+            <code class="language-lua" style="width: fit-content;">--this code does not render the image from the disk immediately so that the computer does not crash
+local disk = getComponent("disk")
+local display = getComponent("display")
+display.reset()
+
+local image = require("image")
+
+--local img = assert(image.load(disk, "/colorbox64.bmp"))
+local img = assert(image.load(disk, "/colorbox128.bmp"))
+--local img = assert(image.load(disk, "/colorbox256.bmp"))
+--local img = assert(image.load(disk, "/lighthouse64.bmp"))
+--local img = assert(image.load(disk, "/lighthouse128.bmp"))
+--local img = assert(image.load(disk, "/lighthouse256.bmp"))
+--local img = assert(image.load(disk, "/mandelbulb64.bmp"))
+--local img = assert(image.load(disk, "/mandelbulb128.bmp"))
+--local img = assert(image.load(disk, "/mandelbulb256.bmp"))
+
+display.clear()
+display.flush()
+
+local drw = img:drawForTicks(display, 40 * 5)
+function callback_loop()
+    if _endtick then
+        display.clear()
+        display.flush()
+        return
+    end
+
+    if drw then
+        if drw() then
+            drw = nil
+        end
+        display.flush()
+    end
+end</code>
+        </pre>
+
+        <br/>
+        <h2 class="text">image draw example:</h2>
+        <pre>
+            <code class="language-lua" style="width: fit-content;">local disk = getComponent("disk")
+local display = getComponent("display")
+display.reset()
+
+local image = require("image")
+
+--local img = assert(image.load(disk, "/colorbox64.bmp"))
+local img = assert(image.load(disk, "/colorbox128.bmp"))
+--local img = assert(image.load(disk, "/colorbox256.bmp"))
+--local img = assert(image.load(disk, "/lighthouse64.bmp"))
+--local img = assert(image.load(disk, "/lighthouse128.bmp"))
+--local img = assert(image.load(disk, "/lighthouse256.bmp"))
+--local img = assert(image.load(disk, "/mandelbulb64.bmp"))
+--local img = assert(image.load(disk, "/mandelbulb128.bmp"))
+--local img = assert(image.load(disk, "/mandelbulb256.bmp"))
+
+display.clear()
+display.flush()
+
+img:draw(display)
+function callback_loop()
+    if _endtick then
+        display.clear()
+        display.flush()
+        return
+    end
+end</code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+	<Widget type="Widget" skin="BackgroundInteractableWide" position_real="0 0 0.2 0.2" name="BackPanel">
+		<Widget type="TextBox" skin="TextBox" position_real="0.1 0.06 0.8 0.11267605633802817" align="Center Top" name="Title">
+			<Property key="Caption" value="Reader"/>
+			<Property key="TextAlign" value="Center"/>
+			<Property key="FontName" value="HandbookFAQAnswer"/>
+			<Property key="TextShadow" value="true"/>
+		</Widget>
+		<Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.02 0.3 0.96 0.26" align="Right Top" name="RegisterName">
+			<Property key="Caption" value="Enter register to read from"/>
+			<Property key="TextAlign" value="Center"/>
+		</Widget>
+		<Widget type="Button" skin="PrimaryButton" position_real="0.02 0.65 0.96 0.3" align="HStretch Top" name="Save">
+			<Property key="Caption" value="DONE"/>
+			<Property key="FontName" value="SM_Button"/>
+			<Property key="TextAlign" value="Center"/>
+		</Widget>
+	</Widget>
+	<CodeGeneratorSettings/>
+</MyGUI>

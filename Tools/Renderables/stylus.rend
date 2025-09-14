@@ -1,0 +1,18 @@
+{
+    "lodList": [
+		{
+			"mesh": 		"$GAME_DATA/Character/Char_Tools/Char_connecttool/char_connecttool.dae",
+		    "subMeshList": [
+				{
+				    "textureList": [
+						"$CONTENT_DATA/Tools/Textures/stylus_dif.tga",
+						"$GAME_DATA/Character/Char_Tools/Char_connecttool/char_connecttool_asg.tga",
+						"$GAME_DATA/Character/Char_Tools/Char_connecttool/char_connecttool_nor.tga"
+				    ],
+						"material": "DifAsgNor"
+				}
+		    ],
+		    "maxViewDistance": 1000.0
+		}
+    ]
+}

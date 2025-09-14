@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            this library contains functions for working with lua syntax. such as code formatting and syntax highlighting
+        </p>
+
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>syntax.format(string):string - formats the code</span></li>
+            <li><span>syntax.highlight(code, errorLine:number|nil, palette:number|nil):string - makes syntax highlighting with colors through the '#' symbol for subsequent output to mygui. pass the palette number from 1 to 5. you can also pass the number of the line where the error occurred to highlight it in red</span></li>
+        </ul>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

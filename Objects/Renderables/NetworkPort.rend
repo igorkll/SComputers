@@ -1,0 +1,17 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$MOD_DATA/Objects/Mesh/network_port.obj",
+         "subMeshList" : [
+            {
+               "material" : "DifAsg",
+               "textureList" : [
+                  "$MOD_DATA/Objects/Textures/network_port_dif.png",
+                  "$MOD_DATA/Objects/Textures/network_port_asg.png",
+                  ""
+               ]
+            }
+         ]
+      }
+   ]
+}

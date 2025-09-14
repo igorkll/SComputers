@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            usage: require("timer")<br/>
+            the library of asynchronous timers allows you to create timers with callbacks that automatically adjust their time in case the computer starts skipping ticks from lags<br/>
+        </p>
+
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>timer.createHost():timerhost - creates a timer host</span></li>
+        </ul>
+
+        <p class="text">timerhost methods:</p>
+        <ul class="list">
+            <li><span>timerhost:createTimer(period:number, autoReset:boolean, callback:function(self)[optional]):timer - creates a new timer</span></li>
+			<li><span>timerhost:callLater(time:number, callback:function(self)):timer - creates an default enabled and resetted timer without autoReset</span></li>
+			<li><span>timerhost:task(period:number, callback:function(self)):timer - creates an default enabled timer with autoReset</span></li>
+            <li><span>timerhost:tick() - call this every tick(in callback_loop) for the timers to work</span></li>
+            <li><span>timerhost:setEnabledAll(enable:boolean) - turns off/on all timers created at the moment</span></li>
+        </ul>
+
+        <p class="text">timer methods:</p>
+        <ul class="list">
+            <li><span>timer:setPeriod(value:number) - sets the timer period from 1 to as many as you like in ticks. a value of 1 will trigger the timer every tick and a value of 2 will trigger every two ticks, 40 will trigger every second</span></li>
+            <li><span>timer:setAutoReset(autoreset:boolean) - sets whether the timer will reset itself</span></li>
+            <li><span>timer:setValue(value:number) - sets the current timer value</span></li>
+            <li><span>timer:reset() - resets the timer, sets the value to 0. for oneshot timers, by default, the value is equal to the period so that it does not start working without resetting</span></li>
+            <li><span>timer:setEnabled(enable:boolean) - turns on/off the timer</span></li>
+            <li><span>timer:isTriggered():boolean - returns true if the timer has been triggered since the last isTriggered call</span></li>
+            <li><span>timer:force() - initiates timer callback operation at the next timer system update</span></li>
+            <li><span>timer:delete() - deletes the timer. after calling this method, do not access the timer object</span></li>
+        </ul>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">-- methods for the timer
+-- timer:delete() - deletes the timer
+-- timer:isTriggered() - returns the value true when the timer is triggered and resets the trigger flag
+-- timer:setEnabled(enable:boolean) - activates or deactivates the timer but does not reset it
+-- timer:reset() - resets the timer, sets the value to 0. for oneshot timers, by default, the value is equal to the period so that it does not start working without resetting
+-- timer:setValue(value:number) - sets the current timer value
+-- timer:setPeriod(value:number) - sets the timer period from 1 to as many as you like in ticks. a value of 1 will trigger the timer every tick and a value of 2 will trigger every two ticks, 40 will trigger every second
+-- timer:setAutoReset(autoreset:boolean) - sets whether the timer will reset itself
+
+local timerhost = require("timer").createHost()
+
+local oneshotTimer = timerhost:createTimer(40, false) --you can add a callback to the oneshot timer in the same way as on a regular one
+
+local autoTimer1 = timerhost:createTimer(40 * 5, true, function (timer)
+    print("timer 1. period: " .. timer.period .. " ticks")
+    oneshotTimer:reset()
+end)
+
+local autoTimer2 = timerhost:createTimer(40 * 3, true, function (timer)
+    print("timer 2. period: " .. timer.period .. " ticks")
+end)
+
+timerhost:setEnabledAll(true)
+
+function callback_loop()
+    timerhost:tick()
+
+    if oneshotTimer:isTriggered() then --allows you to find out from the code that the timer has been triggered
+        print("the oneshot timer has triggered!")
+    end
+end</code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

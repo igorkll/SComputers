@@ -1,0 +1,79 @@
+{
+   "partList" : [
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "65ff1d",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Scriptable.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "ScriptableComputer",
+            "filename" : "$CONTENT_DATA/Scripts/ScriptableComputer.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "356ecbf5-d4fa-480f-8409-15d9d8add6a5"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "327a10",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Scriptable.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "ScriptableComputer",
+            "data" : {
+               "fsSize" : 65536
+            },
+            "filename" : "$CONTENT_DATA/Scripts/ScriptableComputer.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "1a09438d-c8b4-49c5-9d2d-aa12935b2c49"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "17d471",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/ScriptableR.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "CompositeReader",
+            "filename" : "$CONTENT_DATA/Scripts/CompositeReader.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "ad8d37df-4d4d-4548-af40-daaca65a301f"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "d41736",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/ScriptableW.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "CompositeWriter",
+            "filename" : "$CONTENT_DATA/Scripts/CompositeWriter.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "b58ed71c-5758-4e6e-9856-aae43da6baea"
+      }
+   ]
+}

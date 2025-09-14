@@ -1,0 +1,1 @@
+there are standard disk images here, they can serve for testing and as an example

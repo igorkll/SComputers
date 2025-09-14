@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        
+        <br/>
+        <a class="text" href="addons.html#online_boombox">main page - addon list</a>
+
+        <br/>
+        <br/>
+        <a target="_blank" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3185287679">
+            <img src="addons/online_boombox.jpg" class="image" />
+        </a>
+
+        <br/>
+        <p class="text">
+            this radio runs on betterAPI and can play music via a direct link.<br/>
+            unfortunately, you cannot insert a link from youtube or something like that here,<br/>
+            but you can place your .mp3/.wav file on any hosting (for example, github) and insert a direct (raw) link to the file.<br/>
+            direct links to streaming Internet radio stations will also work (however, connecting to a streaming radio station can take a long time and not the first time).<br/>
+        </p>
+
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>onlineBoombox.play()</span></li>
+            <li><span>onlineBoombox.stop()</span></li>
+            <li><span>onlineBoombox.setVolume(value:number(0-1))</span></li>
+            <li><span>onlineBoombox.setMute(state:boolean)</span></li>
+            <li><span>onlineBoombox.setUrl(url:string)</span></li>
+        </ul>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

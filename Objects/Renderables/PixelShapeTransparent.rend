@@ -1,0 +1,21 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$MOD_DATA/Objects/Mesh/displaypixel.obj",
+         "minViewSize" : 15,
+         "subMeshList" : [
+            {
+               "custom" : {
+                  "shadow" : false
+               },
+               "material" : "Glass",
+               "textureList" : [
+                  "$GAME_DATA/Textures/transparent.tga",
+                  "$MOD_DATA/Objects/Textures/transparent_pixel_asg.png",
+                  "$GAME_DATA/Textures/nonor_nor.png"
+               ]
+            }
+         ]
+      }
+   ]
+}

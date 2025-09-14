@@ -1,0 +1,14 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$MOD_DATA/Objects/Mesh/display4x1.obj",
+         "minViewSize" : 20,
+         "subMeshList" : [
+            {
+               "material" : "Dif",
+               "textureList" : [ "$GAME_DATA/Textures/transparent.tga", "", "" ]
+            }
+         ]
+      }
+   ]
+}

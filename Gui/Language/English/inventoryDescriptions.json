@@ -1,0 +1,688 @@
+{
+   "10e2710c-eff7-4b03-a5a1-dd849283b997" : {
+      "description" : "Allows you to change the SComputers settings, be careful!",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Permission Tool"
+   },
+   "abb7eb4d-67d1-400d-a1e6-48e3ae50b0e7" : {
+      "description" : "Allows you to change the SComputers settings, be careful!",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Creative Permission Tool#eeeeee"
+   },
+   "db358391-f914-4e08-af92-5de0c7e32976" : {
+      "description" : "Allows you to change the SComputers settings, be careful!",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Pocket Permission Tool"
+   },
+   "3d37b254-dbaa-4be2-9a0d-ce1e24315c08" : {
+      "description" : "Allows you to change the SComputers settings, be careful!",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Creative Pocket Permission Tool#eeeeee"
+   },
+
+   "356ecbf5-d4fa-480f-8409-15d9d8add6a5" : {
+      "description" : "This part can execute lua code!\n\nJust connect all the necessary components and upload the code to it.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Lua Computer"
+   },
+   "1a09438d-c8b4-49c5-9d2d-aa12935b2c49" : {
+      "description" : "#ffd54cBuilt-in disk: #ffeaa564KB\n\n#939393This computer contains disk.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Lua Computer with disk"
+   },
+   "50569acb-7911-4fb5-b738-8e5296a6eadf" : {
+      "description" : "#ffd54cBuilt-in disk: #ffeaa5128KB\n\n#939393This computer contains disk.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Realistic Lua Computer with disk"
+   },
+
+   "ad8d37df-4d4d-4548-af40-daaca65a301f" : {
+      "description" : "Reads data from the computer register, outputs a logical or numeric signal.\n\nUse \"setreg(name, value)\" to output a value to it",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Composite Reader (output)"
+   },
+   "b58ed71c-5758-4e6e-9856-aae43da6baea" : {
+      "description" : "Writes a number to the computer register.\n\nUse a \"getreg(name)\" to read a value. even when using a logical signal, a number will be written to the register.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Composite Writer (input)"
+   },
+
+
+
+   "6b919779-1aa4-4d1a-9186-513d0965dc98" : {
+      "description" : "This piston can have a length of 256 blocks!\nCan be used with piston controller.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Extended length piston"
+   },
+   "d3f8edb0-beab-426e-983b-4f189c776854" : {
+      "description" : "Allows you to control one or more pistons from a computer.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Piston controller"
+   },
+
+
+
+   "663bab7b-8e5b-4e1d-9843-3679e4961526" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa51x1\n#ffd54cResolution: #ffeaa516x16\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Display 1x1 (16x16)"
+   },
+   "861f514f-5913-4538-852c-fa05aa5e265f" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa51x1\n#ffd54cResolution: #ffeaa532x32\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Display 1x1 (32x32)"
+   },
+   "c977cf5d-9ce9-4382-8edf-ea97d22c70d0" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa51x1\n#ffd54cResolution: #ffeaa564x64\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Display 1x1 (64x64)"
+   },
+
+   "596660f2-1d92-468a-97c6-e7cdb9087095" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa54x1\n#ffd54cResolution: #ffeaa564x16\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Wide Display 4x1 (64x16)"
+   },
+   "18a8e622-2c01-41c0-9b60-c0d8d88c09d8" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa54x1\n#ffd54cResolution: #ffeaa5128x32\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Wide Display 4x1 (128x32)"
+   },
+   "b9a1f72d-4099-4c3a-a97a-7d273fa0780f" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa516x1\n#ffd54cResolution: #ffeaa5128x8\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Wide Display 16x1 (128x8)"
+   },
+
+   "84d67c26-5923-49f0-a564-df24eae2f7d5" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa52x2\n#ffd54cResolution: #ffeaa516x16\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 2x2 (16x16)"
+   },
+   "cb0fa796-b709-439f-8c0d-9045e7107dfd" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa52x2\n#ffd54cResolution: #ffeaa532x32\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 2x2 (32x32)"
+   },
+   "e0e439e8-5103-4aa7-b74c-858ce6e1e1d4" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa52x2\n#ffd54cResolution: #ffeaa564x64\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 2x2 (64x64)"
+   },
+   "1b4281c6-4393-4ca7-94b8-8f199eba4668" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa52x2\n#ffd54cResolution: #ffeaa5128x128\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 2x2 (128x128)"
+   },
+
+   "884284ba-ef36-487d-9e8a-553794c032da" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa53x2\n#ffd54cResolution: #ffeaa572x48\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 3x2 (72x48)"
+   },
+   "7a8ce597-9f4b-4386-a50d-fe26edafe4a3" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa53x2\n#ffd54cResolution: #ffeaa5144x96\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 3x2 (144x96)"
+   },
+
+   "4b7651fe-c958-4836-bcfd-11bddabbda73" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa53x3\n#ffd54cResolution: #ffeaa516x16\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 3x3 (16x16)"
+   },
+   "f54eb0b7-9041-47e4-ba34-3abdad87112e" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa53x3\n#ffd54cResolution: #ffeaa532x32\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 3x3 (32x32)"
+   },
+   "12e55219-7478-4e7d-a6e6-b39e5daa160a" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa53x3\n#ffd54cResolution: #ffeaa564x64\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 3x3 (64x64)"
+   },
+   "5c6f9472-d88d-47ad-9cf8-faac8b008480" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa53x3\n#ffd54cResolution: #ffeaa5128x128\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 3x3 (128x128)"
+   },
+   "0e026670-4897-47c2-a129-7061ab8adf84" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa53x3\n#ffd54cResolution: #ffeaa5256x256\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 3x3 (256x256)"
+   },
+
+   "fb43bd75-7e24-4054-bb65-ce247fb3400b" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa53x4\n#ffd54cResolution: #ffeaa5128x96\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Realistic Display 4x3 (128x96)"
+   },
+
+   "17e9e663-501a-46e4-bdfc-40a365910cf4" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa54x3\n#ffd54cResolution: #ffeaa564x48\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 4x3 (64x48)"
+   },
+   "623318f9-dbef-4fa4-80c6-f279d0780af1" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa54x3\n#ffd54cResolution: #ffeaa5128x96\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Display 4x3 (128x96)"
+   },
+
+   "0cafe1bc-fd95-4b89-97fb-af1da059a4ab" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa54x4\n#ffd54cResolution: #ffeaa516x16\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Big Display 4x4 (16x16)"
+   },
+   "2b6b6b6f-7c7d-4f6a-9c8d-774a084b1cfb" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa54x4\n#ffd54cResolution: #ffeaa532x32\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Big Display 4x4 (32x32)"
+   },
+   "46271f6f-e61a-4173-b121-e37a1f56a904" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa54x4\n#ffd54cResolution: #ffeaa564x64\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Big Display 4x4 (64x64)"
+   },
+   "7abd8ee7-f1ac-4b32-924c-f8322f58a8e7" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa54x4\n#ffd54cResolution: #ffeaa5128x128\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Big Display 4x4 (128x128)"
+   },
+   "92361ece-e595-4f82-b89d-a427d3070374" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa54x4\n#ffd54cResolution: #ffeaa5256x256\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Big Display 4x4 (256x256)"
+   },
+   "b5dcd494-3e09-4d4d-ad4a-82fa09afbede" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa54x4\n#ffd54cResolution: #ffeaa5512x512\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Big Display 4x4 (512x512)"
+   },
+   "c400e00a-c636-4aa3-8669-23405c527eb6" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa54x4\n#ffd54cResolution: #ffeaa51024x1024\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Big Display 4x4 (1024x1024)"
+   },
+
+   "f5a29be5-c614-4a2b-8b0a-958248b00a8d" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa516x12\n#ffd54cResolution: #ffeaa564x48\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Huge Display 16x12 (64x48)"
+   },
+   "d62b97d9-6387-4ec5-8b52-e23b04bade07" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa516x12\n#ffd54cResolution: #ffeaa5128x96\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Huge Display 16x12 (128x96)"
+   },
+
+   "5052380b-83b0-404f-936b-3f40c8c261b3" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa516x16\n#ffd54cResolution: #ffeaa516x16\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Huge Display 16x16 (16x16)"
+   },
+   "c76d8f28-0d16-45e0-988c-5ab88506108a" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa516x16\n#ffd54cResolution: #ffeaa532x32\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Huge Display 16x16 (32x32)"
+   },
+   "57f5bbeb-3dd1-4c63-bc17-a172b4f1baf6" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa516x16\n#ffd54cResolution: #ffeaa564x64\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Huge Display 16x16 (64x64)"
+   },
+   "ae6c7083-445b-4458-af07-006b3d4856fb" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa516x16\n#ffd54cResolution: #ffeaa5128x128\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Huge Display 16x16 (128x128)"
+   },
+   "a37ec8a8-1251-40d1-b79a-b7dc166fec52" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa516x16\n#ffd54cResolution: #ffeaa5256x256\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Huge Display 16x16 (256x256)"
+   },
+   "dcf0971b-58c5-49fd-abae-3f1d173c5a6c" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa516x16\n#ffd54cResolution: #ffeaa5512x512\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Huge Display 16x16 (512x512)"
+   },
+   "98093804-6af8-4862-91fc-b0fdbb72f3dc" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa516x16\n#ffd54cResolution: #ffeaa51024x1024\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Huge Display 16x16 (1024x1024)"
+   },
+
+   "2e8390f8-746b-4d17-a2ef-19ff1faa51d3" : {
+      "description" : "#ffd54cResolution: #ffeaa516x16\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Holographic Display (16x16)"
+   },
+   "4c6fe32b-3555-4dba-88c7-614b3601605e" : {
+      "description" : "#ffd54cResolution: #ffeaa532x32\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Holographic Display (32x32)"
+   },
+   "af787ebd-1557-493b-8d89-09fcb7c9edac" : {
+      "description" : "#ffd54cResolution: #ffeaa564x64\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Holographic Display (64x64)"
+   },
+   "ec26d383-28c3-49d3-a100-e41c02331cbf" : {
+      "description" : "#ffd54cResolution: #ffeaa5128x128\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Holographic Display (128x128)"
+   },
+   "171803b0-14b5-4fc7-81ff-57ec8d2abfd0" : {
+      "description" : "#ffd54cResolution: #ffeaa5256x256\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Holographic Display (256x256)"
+   },
+
+   "98221d58-7aad-450f-abc3-f325da34514d" : {
+      "description" : "#ffd54cResolution: #ffeaa516x16\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Holographic Display (16x16)"
+   },
+   "69d5f621-4afe-461b-b6e0-378ef677b725" : {
+      "description" : "#ffd54cResolution: #ffeaa532x32\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Holographic Display (32x32)"
+   },
+   "c53c677c-fbba-490b-a64d-d5ce0edc3e22" : {
+      "description" : "#ffd54cResolution: #ffeaa564x64\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Holographic Display (64x64)"
+   },
+   "09458a14-6fcd-45cb-aa5c-3890aaf6ddad" : {
+      "description" : "#ffd54cResolution: #ffeaa5128x128\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Holographic Display (128x128)"
+   },
+   "7e9cb8c1-1353-4b45-a67f-7a771f365703" : {
+      "description" : "#ffd54cResolution: #ffeaa5256x256\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Holographic Display (256x256)"
+   },
+
+   "3aa0151f-a3d6-48b1-9a7e-2328aa1bfe36" : {
+      "description" : "#ffd54cResolution: #ffeaa532x32\n#ffd54cdisk: #ffeaa5None\n\n#939393You can carry it in your hand and use it when you need it. Executes code like a computer.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Tablet (32x32)"
+   },
+   "178a9ec6-f5d9-4842-aa5b-5307f6822f46" : {
+      "description" : "#ffd54cResolution: #ffeaa564x64\n#ffd54cdisk: #ffeaa564KB\n\n#939393You can carry it in your hand and use it when you need it. Executes code like a computer.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Tablet (64x64)"
+   },
+   "9f4d34ef-61c8-4cc6-96bc-74aa1ce002ed" : {
+      "description" : "#ffd54cResolution: #ffeaa5128x128\n#ffd54cdisk: #ffeaa564KB\n\n#939393You can carry it in your hand and use it when you need it. Executes code like a computer.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Tablet (128x128)"
+   },
+
+   "06da2ef1-d444-4e87-aed2-4021b1bfc20f" : {
+      "description" : "#ffd54cMax voxels count: #ffeaa51024\n#ffd54cMax scale: #ffeaa50.5\n#ffd54cMax local scale: #ffeaa54\n#ffd54cMax offset: #ffeaa516\n#ffd54cMax voxels offset: #ffeaa516\n\n#939393Allows you to draw holograms.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Holoprojector"
+   },
+   "3c46e9e5-2875-47b4-8668-005a0768c992" : {
+      "description" : "#ffd54cMax voxels count: #ffeaa516384\n#ffd54cMax scale: #ffeaa5inf\n#ffd54cMax local scale: #ffeaa5inf\n#ffd54cMax offset: #ffeaa5inf\n#ffd54cMax voxels offset: #ffeaa5inf\n\n#939393Allows you to draw holograms.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Creative Holoprojector#eeeeee"
+   },
+   "82bddce1-94ae-4559-ab7a-05d8f2b90fec" : {
+      "description" : "#ffd54cMax voxels count: #ffeaa5256\n#ffd54cMax scale: #ffeaa50.25\n#ffd54cMax local scale: #ffeaa54\n#ffd54cMax offset: #ffeaa58\n#ffd54cMax voxels offset: #ffeaa58\n\n#939393Allows you to draw holograms.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Mini Holoprojector"
+   },
+   "68749ef7-4c99-4e11-8c33-46652bc7ec9d" : {
+      "description" : "#ffd54cMax voxels count: #ffeaa516384\n#ffd54cMax scale: #ffeaa5inf\n#ffd54cMax local scale: #ffeaa5inf\n#ffd54cMax offset: #ffeaa5inf\n#ffd54cMax voxels offset: #ffeaa5inf\n\n#939393Allows you to draw holograms.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Creative Mini Holoprojector#eeeeee"
+   },
+
+
+
+
+
+
+
+
+
+
+   "6f7bd3f2-1be2-47ad-a778-5be60778cfb2" : {
+      "description" : "Use it for importing and exporting text.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Keyboard"
+   },
+   "81f9080a-12b1-4fd7-9710-91d9434ef156" : {
+      "description" : "Use it for importing and exporting text.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Sci-Fi Keyboard"
+   },
+
+   "7936702f-092a-4b02-9794-f51abbb42a9f" : {
+      "description" : "Allows you to interact with the computer using the console.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Terminal"
+   },
+   "e9e72dbe-8962-4710-aa3e-73313b1aef22" : {
+      "description" : "Allows you to interact with the computer using the console.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Vertical Terminal"
+   },
+   "2ee8588d-b29c-47f6-9693-fc2607cf3720" : {
+      "description" : "Allows you to interact with the computer using the console.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Terminal"
+   },
+
+   "7f3e227c-345a-4c28-8775-f6c011b80127" : {
+      "description" : "Allows you to click on the screen with the mouse buttons. It also allows you to interact with screens at a large distance.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Stylus"
+   },
+
+
+   "6bf0ba41-8e3d-4abb-9d88-a044ab584f6d" : {
+      "description" : "#ffd54cMax data volume: #ffeaa564KB\n\n#939393Solid-State Drive. Allows you to store files.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Disk (64KB)"
+   },
+   "abcd9bdb-c3b7-4818-b5b5-09e08ae059a0" : {
+      "description" : "#ffd54cMax data volume: #ffeaa564KB\n\n#939393Solid-State Drive. Allows you to store files.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Disk (64KB)"
+   },
+   "ec9c9673-177a-47ee-9611-be9ec97427bc" : {
+      "description" : "#ffd54cMax data volume: #ffeaa564KB\n\n#939393Solid-State Drive. Allows you to store files.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Disk (64KB)"
+   },
+   "45151dd5-109a-4f0c-83fb-0fd35afd9020" : {
+      "description" : "#ffd54cMax data volume: #ffeaa5128KB\n\n#939393Hard Disk Drive. Allows you to store files.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Disk (128KB)"
+   },
+   "6ed15b2a-6407-4330-9b54-acdd855e33da" : {
+      "description" : "#ffd54cMax data volume: #ffeaa51024 MB\n\n#939393Hard Disk Drive. Allows you to temporary store files.\n\n#ff0000ATTENTION: THIS DISK DOES NOT SAVE DATA AFTER RE-ENTRY AND ON THE BLUEPRINT!!!",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Creative Operational Disk (1024 MB)#eeeeee"
+   },
+
+   "02cd2199-788c-4d9c-a362-5b2655657768" : {
+      "description" : "#ffd54cMax data volume: #ffeaa51024 MB\n\n#939393Hard Disk Drive. Allows you to temporary store files.\n\n#ff0000ATTENTION: THIS DISK DOES NOT SAVE DATA AFTER RE-ENTRY AND ON THE BLUEPRINT!!!",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Small Creative Operational Disk (1024 MB)#eeeeee"
+   },
+
+   
+
+
+   "6b08c951-f207-4280-9470-b7fce56a480a" : {
+      "description" : "Allows you to send GET/POST requests to the real internet!\nBut... It weighs a lot and is very expensive to craft. \n\n#ff0000BetterAPI#eeeeee is required to work.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Internet Bridge"
+   },
+   "cdf96cb3-3582-43e0-9452-86e774e3c75c" : {
+      "description" : "Allows you to transfer data to another network port. It can also be used together with the antenna.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Network Port"
+   },
+
+   "d933ab9f-0007-4398-ad30-9aab6bac8b0a" : {
+      "description" : "#ffd54cRadius: #ffeaa5128 blocks\n\n#939393The antenna is able to transmit data through network ports at a distance.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Antenna"
+   },
+   "65f5fc73-32f7-428f-b0a8-4a99243f4d0d" : {
+      "description" : "#ffd54cRadius: #ffeaa516 blocks\n\n#939393The antenna is able to transmit data through network ports at a distance.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "NFC Antenna"
+   },
+   "43f8c2f7-cd4f-47c5-ab3a-cbef548e340b" : {
+      "description" : "#ffd54cRadius: #ffeaa51000 blocks\n\n#939393The antenna is able to transmit data through network ports at a distance.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Antenna"
+   },
+   "0b3292c1-9f5a-4453-9612-c9446c7aa555" : {
+      "description" : "#ffd54cRadius: #ffeaa5inf\n\n#939393It is capable of transmitting a signal at an unlimited distance (and even between worlds), but it weighs quite a lot and is expensive to craft.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "World Antenna"
+   },
+
+
+   "5123feac-7a92-45bd-8935-d1342d27cb04" : {
+      "description" : "Radar, used to detect objects. It does not see through walls, the measurement accuracy and the minimum mass that the radar sees depend on the size of the radar.\nSo far, the radar does not see static objects.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Big Radar"
+   },
+   "92877a40-097d-45be-be06-faa30d7846df" : {
+      "description" : "Radar, used to detect objects. It does not see through walls, the measurement accuracy and the minimum mass that the radar sees depend on the size of the radar.\nSo far, the radar does not see static objects.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Radar"
+   },
+   "a33417df-19f3-4fef-8595-0efc6ae15e5b" : {
+      "description" : "Radar, used to detect objects. It does not see through walls, the measurement accuracy and the minimum mass that the radar sees depend on the size of the radar.\nSo far, the radar does not see static objects.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Extra Big Radar"
+   },
+   "ab2672e2-4f2f-4e7b-8be1-4dcfc4ccb151" : {
+      "description" : "Radar, used to detect objects. It does not see through walls, the measurement accuracy and the minimum mass that the radar sees depend on the size of the radar.\nSo far, the radar does not see static objects.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Radar"
+   },
+
+   "d4bf6cb5-17af-491b-abbc-f6492ae5e03c" : {
+      "description" : "Allows you to find out if the radars see you, and also allows you to find out the directions for the radars that have detected you.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Radar Detector"
+   },
+   "73df7328-ab7b-4654-9248-d0ea5e105927" : {
+      "description" : "Allows you to find out if the radars see you, and also allows you to find out the directions for the radars that have detected you.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Radar Detector"
+   },
+
+
+   "331fe852-9e4a-48ba-8235-dde17b5de3a4" : {
+      "description" : "Allows you to make robot head sounds and horn sounds.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Sound Synthesizer"
+   },
+   "179d660d-4792-48c6-86d6-3a19cf354823" : {
+      "description" : "Allows you to make robot head sounds and horn sounds.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Sound Synthesizer"
+   },
+   "f3a2d5e3-70c9-4d76-bdb5-f5ccd2403a25" : {
+      "description" : "Allows you to make robot head sounds and horn sounds.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Speaker (Synthesizer)"
+   },
+   "c83e0e11-6ac1-48fb-a2c6-256f8128b4a6" : {
+      "description" : "Allows you to make robot head sounds and horn sounds.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Big Speaker (Synthesizer)"
+   },
+
+   "9604ecbd-abff-4bcd-b77e-ce3421379a4f" : {
+      "description" : "#ffd54cMax Velocity: #ffeaa5100\n#ffd54cMax Strength: #ffeaa51000\n\n#939393It can be used to create automatic synchronized machinerys!\n\n*Requires the connection of a container with batteries.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Stepper Motor"
+   },
+   "66355447-8900-412c-b03c-12c85e0587ef" : {
+      "description" : "#ffd54cMax Velocity: #ffeaa510000\n#ffd54cMax Strength: #ffeaa510000000\n\n#939393It can be used to create automatic synchronized machinerys!",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Creative Stepper Motor#eeeeee"
+   },
+   "b5efb918-088d-4a75-a3a1-a652e49d7511" : {
+      "description" : "#ffd54cMax Velocity: #ffeaa525\n#ffd54cMax Strength: #ffeaa5300\n\n#939393It can be used to create automatic synchronized machinerys!\n\n*Requires the connection of a container with batteries.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Mini Stepper Motor"
+   },
+   "99195c6c-951a-4f2e-87d4-39708a7334b1" : {
+      "description" : "#ffd54cMax Velocity: #ffeaa510000\n#ffd54cMax Strength: #ffeaa510000000\n\n#939393It can be used to create automatic synchronized machinerys!",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Creative Mini Stepper Motor#eeeeee"
+   },
+
+   "1ba4ace4-fc21-4481-bdca-4bd93c295b14" : {
+      "description" : "#ffd54cFuel consumption: #ffeaa51 batteries and 1 gas per second\n\n#939393Allows you to move creation in any direction.\n\n*Requires connection of a container with batteries and fuel, it has the same consumption when switched on, regardless of the load.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Inertial Engine"
+   },
+   "eb60707f-f3b2-4381-bc75-a794a9dc70b8" : {
+      "description" : "#ffd54cFuel consumption: #ffeaa5No\n\n#939393Allows you to move creation in any direction.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Creative Inertial Engine#eeeeee"
+   },
+   "f9c63827-0e63-4ed0-b377-5c2d18d8e3e4" : {
+      "description" : "#ffd54cFuel consumption: #ffeaa51 batteries and 1 gas per second\n\n#939393Allows you to move creation in any direction.\n\n*Requires connection of a container with batteries and fuel, it has the same consumption when switched on, regardless of the load.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Mini Inertial Engine"
+   },
+   "13d52b7b-6159-4925-a9f1-7e88c9a4ceb0" : {
+      "description" : "#ffd54cFuel consumption: #ffeaa5No\n\n#939393Allows you to move creation in any direction.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Creative Mini Inertial Engine#eeeeee"
+   },
+   "db579eed-1eb9-4cba-a2d0-b46b46c84dcc" : {
+    "description" : "#ffd54cFuel consumption: #ffeaa5No\n\n#939393Allows you to move creation in any direction.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Creative Micro Inertial Engine#eeeeee"
+   },
+
+
+   "c2f7fa83-264f-4f00-8b12-829279ad609d" : {
+      "description" : "Allows you to get your position / rotation, and also get the location / rotation of GPS tags at an unlimited distance.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "GPS"
+   },
+   "cadc5226-3e96-43e7-9630-3507f9652350" : {
+      "description" : "Unlike conventional GPS, this does not contain noise in measurements.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Creative GPS"
+   },
+   "fd678469-4f6a-4c40-96ff-15d156c8a58a" : {
+      "description" : "It's location can be determined using GPS, for this you need to know the frequency of the label, which is random by default.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "GPS-TAG"
+   },
+
+
+   "94c8b309-b6fb-40f8-90bb-b5c3ac28bacd" : {
+      "description" : "They can display any color, they are controlled sequentially by the address of the led.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Address Led"
+   },
+   "e99397c7-f055-45a7-92f2-b6850dc6d073" : {
+      "description" : "The camera allows you to capture a picture and display it on a monitor or save it to disk\nbut only in SComputers, the camera can detect the type of object and UUID (for the balance, of determining the UUID, it works at a distance of up to 16 blocks)",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Camera (Raycasted)"
+   },
+   "9d071ead-c24e-42e5-b4ad-67d709e9a4ab" : {
+      "description" : "Allows you to get information about the presence of the player in the seat and pressing the WASD buttons.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "WASD Converter"
+   },
+   "bf1212b3-3aeb-45f6-b08b-80cfc7cc0e42" : {
+        "description" : "Allows you to get the direction of the player's gaze in the seat and at the nearest player at a distance of 16 meters (64 blocks) from this block.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Camera Control"
+   },
+   "773d90ee-2f5e-4415-998c-90f4cfe12a77" : {
+      "description" : "Press \"E\" on this unit or give a logical signal and it will restart all connected computers. It also gives a logical signal if the computer crashed.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Reboot Gate"
+   },
+   "126a5046-f203-438d-abd5-a9b2acfd1044" : {
+      "description" : "The camera tunnel allows you to connect the camera via an antenna without using complex and slow image serialization algorithms. Select the tunneling channel by pressing the E button, connect the camera to it, and connect it to the antenna. On the other side, connect the antenna to the same unit and connect it to the computer. The computer will get access to the camera component!",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Camera Tunnel"
+   },
+
+
+
+
+   "b33253db-67e3-45f8-9a3f-4c16a3ea3fdd" : {
+      "description" : "Arduino from AliExpress.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Arduino Uno"
+   },
+   "ef241100-53f7-440d-9576-d3c6ef25e7fb" : {
+      "description" : "Soviet microcontroller. An ancient thing, surprisingly still works.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Soviet Microcontroller"
+   },
+   "86f2d10e-3250-4be4-8a6c-bbe828c31062" : {
+      "description" : "Soviet microcontroller. An ancient thing, surprisingly still works.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Soviet Microcontroller"
+   },
+   "f33d5c9a-61f2-418c-9e78-9230794001b0" : {
+      "description" : "#ffd54cMax range: #ffeaa516 blocks (4 meters)\n\n#939393It allows you to shoot paintballs, which for some unknown reason appear in the cannon themselves. Allows you to paint: shapes / robots / trees.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Paint Gun"
+   },
+   "5dfeacad-524f-4913-9490-5cae6265dedc" : {
+      "description" : "#ffd54cMax range: #ffeaa516 blocks (4 meters)\n\n#939393It allows you to shoot paintballs, which for some unknown reason appear in the cannon themselves. Allows you to paint: shapes / robots / trees.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Paint Gun"
+   },
+
+
+
+
+
+
+
+
+   "19644a5c-f299-4594-b682-abc180932227" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa51x1\n#ffd54cResolution: #ffeaa5128x128\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Display 1x1 (128x128)"
+   },
+   "52bc1fcf-dc17-40fd-aea4-ab7cdc25fb67" : {
+      "description" : "#ffd54cPhysical Size: #ffeaa52x2\n#ffd54cResolution: #ffeaa5256x256\n\n#939393Displays allow you to display various information. Whether it's a picture from the camera or the temperature of the reactor. The displays in SComputers are much more optimized than in the original mod.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small Display 2x2 (256x256)"
+   },
+   "cf242987-3572-47df-9c58-3ef645141385" : {
+      "description" : "#ffd54cResolution: #ffeaa516x16\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Very Small Holographic Display (16x16)"
+   },
+   "59aef7e7-baad-4cb9-adbc-ce80030ca632" : {
+      "description" : "#ffd54cResolution: #ffeaa532x32\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Very Small Holographic Display (32x32)"
+   },
+   "68fee925-4057-4e95-a411-d4725245c2ed" : {
+      "description" : "#ffd54cResolution: #ffeaa564x64\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Very Small Holographic Display (64x64)"
+   },
+   "1d70e85b-45f1-4882-b359-09fbbfba305e" : {
+      "description" : "#ffd54cResolution: #ffeaa5128x1128\n\n#939393This is a holographic screen, which can be used, for example, to display information in a fighter.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Very Small Holographic Display (128x128)"
+   },
+
+   "b7900915-62ca-4fbe-94cd-83cbebe2497d" : {
+      "description" : "allows you to read the json file in safe mode. It is an alias to sm.json.open(), but the path is not transmitted from the computer, but is indicated by a constant in the ROM disk menu. you can put your json file in the blueprint folder and the path to it in the ROM so that you can distribute your creation in the workshop along with your data.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Small ROM Disk"
+   },
+   "178040d2-c977-4cdd-96e2-89c541eab7f1" : {
+      "description" : "allows you to read the json file in safe mode. It is an alias to sm.json.open(), but the path is not transmitted from the computer, but is indicated by a constant in the ROM disk menu. you can put your json file in the blueprint folder and the path to it in the ROM so that you can distribute your creation in the workshop along with your data.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "ROM Disk"
+   },
+
+   "2ce74e6b-188d-40c0-ad8a-0afc6925dc9f" : {
+      "description" : "place it on the plane and activate it with a logical signal or via API! It leaves behind a cloud of foil that smoothly descends to the ground, the radar beam does not pass through it. these pieces of foil are displayed on radar as separate parts of the aircraft, which confuses missiles with homing. It can only work once, it is recharged when installed on the lift",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Chaff"
+   }
+}

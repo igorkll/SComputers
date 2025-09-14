@@ -1,0 +1,687 @@
+{
+   "10e2710c-eff7-4b03-a5a1-dd849283b997" : {
+      "description" : "Позволяет вам изменять настройки SComputers, будьте осторожны при использовании!",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Инструмент конфигурации"
+   },
+   "abb7eb4d-67d1-400d-a1e6-48e3ae50b0e7" : {
+      "description" : "Позволяет вам изменять настройки SComputers, будьте осторожны при использовании!",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Творческий инструмент конфигурации#eeeeee"
+   },
+   "db358391-f914-4e08-af92-5de0c7e32976" : {
+      "description" : "Позволяет вам изменять настройки SComputers, будьте осторожны при использовании!",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Переносной инструмент конфигурации"
+   },
+   "3d37b254-dbaa-4be2-9a0d-ce1e24315c08" : {
+      "description" : "Позволяет вам изменять настройки SComputers, будьте осторожны при использовании!",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Творческий переносной инструмент конфигурации#eeeeee"
+   },
+
+   "356ecbf5-d4fa-480f-8409-15d9d8add6a5" : {
+      "description" : "Эта штука может исполнять Lua код!\n\nПросто подключите к нему все необходимые компоненты и загрузите код.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Lua компьютер"
+   },
+   "1a09438d-c8b4-49c5-9d2d-aa12935b2c49" : {
+      "description" : "#ffd54cВстроенный диск: #ffeaa564КБ\n\n#939393Этот компьютер содержит накопитель.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Lua компьютер с диском"
+   },
+   "50569acb-7911-4fb5-b738-8e5296a6eadf" : {
+      "description" : "#ffd54cВстроенный диск: #ffeaa5128КБ\n\n#939393Этот компьютер содержит накопитель.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f4c6ff[ТОЛЬКО ФОРК]#eeeeeeРеалистичный Lua компьютер с диском"
+   },
+
+   "ad8d37df-4d4d-4548-af40-daaca65a301f" : {
+      "description" : "Читает данные из регистра компьютера, выдает логический или числовой сигнал.\n\nИспользуйте \"setreg(имя, значение)\", чтобы вывести на него значение",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Композиционный считыватель (выход)"
+   },
+   "b58ed71c-5758-4e6e-9856-aae43da6baea" : {
+      "description" : "Записывает число в регистр компьютера.\n\nИспользуйте \"getreg(string)\" для чтения значения, даже при использовании логического сигнала в регистр будет записано число.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Композиционный записыватель (вход)"
+   },
+
+
+
+   "6b919779-1aa4-4d1a-9186-513d0965dc98" : {
+      "description" : "Длина этого поршня может составлять до 256-ти блоков!\nТакже, может использоваться с контроллером поршня.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Поршень увеличенной длины"
+   },
+   "d3f8edb0-beab-426e-983b-4f189c776854" : {
+      "description" : "Позволяет управлять одним или несколькими поршнями с помощью компьютера.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Контроллер поршня"
+   },
+
+
+
+   "663bab7b-8e5b-4e1d-9843-3679e4961526" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa51x1\n#ffd54cРазрешение: #ffeaa516x16\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшой дисплей 1x1 (16x16)"
+   },
+   "861f514f-5913-4538-852c-fa05aa5e265f" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa51x1\n#ffd54cРазрешение: #ffeaa532x32\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшой дисплей 1x1 (32x32)"
+   },
+   "c977cf5d-9ce9-4382-8edf-ea97d22c70d0" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa51x1\n#ffd54cРазрешение: #ffeaa564x64\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшой дисплей 1x1 (64x64)"
+   },
+
+   "596660f2-1d92-468a-97c6-e7cdb9087095" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa54x1\n#ffd54cРазрешение: #ffeaa564x16\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Широкий дисплей 4x1 (64x16)"
+   },
+   "18a8e622-2c01-41c0-9b60-c0d8d88c09d8" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa54x1\n#ffd54cРазрешение: #ffeaa5128x32\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Широкий дисплей 4x1 (128x32)"
+   },
+   "b9a1f72d-4099-4c3a-a97a-7d273fa0780f" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa516x1\n#ffd54cРазрешение: #ffeaa5128x8\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Широкий дисплей 16x1 (128x8)"
+   },
+
+   "84d67c26-5923-49f0-a564-df24eae2f7d5" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa52x2\n#ffd54cРазрешение: #ffeaa516x16\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 2x2 (16x16)"
+   },
+   "cb0fa796-b709-439f-8c0d-9045e7107dfd" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa52x2\n#ffd54cРазрешение: #ffeaa532x32\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 2x2 (32x32)"
+   },
+   "e0e439e8-5103-4aa7-b74c-858ce6e1e1d4" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa52x2\n#ffd54cРазрешение: #ffeaa564x64\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 2x2 (64x64)"
+   },
+   "1b4281c6-4393-4ca7-94b8-8f199eba4668" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa52x2\n#ffd54cРазрешение: #ffeaa5128x128\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 2x2 (128x128)"
+   },
+
+   "884284ba-ef36-487d-9e8a-553794c032da" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa53x2\n#ffd54cРазрешение: #ffeaa572x48\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 3x2 (72x48)"
+   },
+   "7a8ce597-9f4b-4386-a50d-fe26edafe4a3" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa53x2\n#ffd54cРазрешение: #ffeaa5144x96\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 3x2 (144x96)"
+   },
+
+   "4b7651fe-c958-4836-bcfd-11bddabbda73" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa53x3\n#ffd54cРазрешение: #ffeaa516x16\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 3x3 (16x16)"
+   },
+   "f54eb0b7-9041-47e4-ba34-3abdad87112e" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa53x3\n#ffd54cРазрешение: #ffeaa532x32\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 3x3 (32x32)"
+   },
+   "12e55219-7478-4e7d-a6e6-b39e5daa160a" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa53x3\n#ffd54cРазрешение: #ffeaa564x64\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 3x3 (64x64)"
+   },
+   "5c6f9472-d88d-47ad-9cf8-faac8b008480" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa53x3\n#ffd54cРазрешение: #ffeaa5128x128\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 3x3 (128x128)"
+   },
+   "0e026670-4897-47c2-a129-7061ab8adf84" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa53x3\n#ffd54cРазрешение: #ffeaa5256x256\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 3x3 (256x256)"
+   },
+
+   "fb43bd75-7e24-4054-bb65-ce247fb3400b" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa53x4\n#ffd54cРазрешение: #ffeaa5128x96\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Реалистичный дисплей 4x3 (128x96)"
+   },
+
+   "17e9e663-501a-46e4-bdfc-40a365910cf4" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa54x3\n#ffd54cРазрешение: #ffeaa564x48\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 4x3 (64x48)"
+   },
+   "623318f9-dbef-4fa4-80c6-f279d0780af1" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa54x3\n#ffd54cРазрешение: #ffeaa5128x96\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 4x3 (128x96)"
+   },
+
+   "0cafe1bc-fd95-4b89-97fb-af1da059a4ab" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa54x4\n#ffd54cРазрешение: #ffeaa516x16\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Большой дисплей 4x4 (16x16)"
+   },
+   "2b6b6b6f-7c7d-4f6a-9c8d-774a084b1cfb" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa54x4\n#ffd54cРазрешение: #ffeaa532x32\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Большой дисплей 4x4 (32x32)"
+   },
+   "46271f6f-e61a-4173-b121-e37a1f56a904" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa54x4\n#ffd54cРазрешение: #ffeaa564x64\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Большой дисплей 4x4 (64x64)"
+   },
+   "7abd8ee7-f1ac-4b32-924c-f8322f58a8e7" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa54x4\n#ffd54cРазрешение: #ffeaa5128x128\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Большой дисплей 4x4 (128x128)"
+   },
+   "92361ece-e595-4f82-b89d-a427d3070374" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa54x4\n#ffd54cРазрешение: #ffeaa5256x256\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Большой дисплей 4x4 (256x256)"
+   },
+   "b5dcd494-3e09-4d4d-ad4a-82fa09afbede" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa54x4\n#ffd54cРазрешение: #ffeaa5512x512\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Большой дисплей 4x4 (512x512)"
+   },
+   "c400e00a-c636-4aa3-8669-23405c527eb6" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa54x4\n#ffd54cРазрешение: #ffeaa51024x1024\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Большой дисплей 4x4 (1024x1024)"
+   },
+
+   "f5a29be5-c614-4a2b-8b0a-958248b00a8d" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa516x12\n#ffd54cРазрешение: #ffeaa564x48\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Огромный дисплей 16x12 (64x48)"
+   },
+   "d62b97d9-6387-4ec5-8b52-e23b04bade07" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa516x12\n#ffd54cРазрешение: #ffeaa5128x96\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Огромный дисплей 16x12 (128x96)"
+   },
+
+   "5052380b-83b0-404f-936b-3f40c8c261b3" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa516x16\n#ffd54cРазрешение: #ffeaa516x16\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Огромный дисплей 16x16 (16x16)"
+   },
+   "c76d8f28-0d16-45e0-988c-5ab88506108a" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa516x16\n#ffd54cРазрешение: #ffeaa532x32\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Огромный дисплей 16x16 (32x32)"
+   },
+   "57f5bbeb-3dd1-4c63-bc17-a172b4f1baf6" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa516x16\n#ffd54cРазрешение: #ffeaa564x64\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Огромный дисплей 16x16 (64x64)"
+   },
+   "ae6c7083-445b-4458-af07-006b3d4856fb" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa516x16\n#ffd54cРазрешение: #ffeaa5128x128\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Огромный дисплей 16x16 (128x128)"
+   },
+   "a37ec8a8-1251-40d1-b79a-b7dc166fec52" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa516x16\n#ffd54cРазрешение: #ffeaa5256x256\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Огромный дисплей 16x16 (256x256)"
+   },
+   "dcf0971b-58c5-49fd-abae-3f1d173c5a6c" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa516x16\n#ffd54cРазрешение: #ffeaa5512x512\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Огромный дисплей 16x16 (512x512)"
+   },
+   "98093804-6af8-4862-91fc-b0fdbb72f3dc" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa516x16\n#ffd54cРазрешение: #ffeaa51024x1024\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Огромный дисплей 16x16 (1024x1024)"
+   },
+
+   "2e8390f8-746b-4d17-a2ef-19ff1faa51d3" : {
+      "description" : "#ffd54cРазрешение: #ffeaa516x16\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Голографический дисплей (16x16)"
+   },
+   "4c6fe32b-3555-4dba-88c7-614b3601605e" : {
+      "description" : "#ffd54cРазрешение: #ffeaa532x32\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Голографический дисплей (32x32)"
+   },
+   "af787ebd-1557-493b-8d89-09fcb7c9edac" : {
+      "description" : "#ffd54cРазрешение: #ffeaa564x64\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Голографический дисплей (64x64)"
+   },
+   "ec26d383-28c3-49d3-a100-e41c02331cbf" : {
+      "description" : "#ffd54cРазрешение: #ffeaa5128x128\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Голографический дисплей (128x128)"
+   },
+   "171803b0-14b5-4fc7-81ff-57ec8d2abfd0" : {
+      "description" : "#ffd54cРазрешение: #ffeaa5256x256\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Голографический дисплей (256x256)"
+   },
+
+   "98221d58-7aad-450f-abc3-f325da34514d" : {
+      "description" : "#ffd54cРазрешение: #ffeaa516x16\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшой Голографический дисплей (16x16)"
+   },
+   "69d5f621-4afe-461b-b6e0-378ef677b725" : {
+      "description" : "#ffd54cРазрешение: #ffeaa532x32\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшой Голографический дисплей (32x32)"
+   },
+   "c53c677c-fbba-490b-a64d-d5ce0edc3e22" : {
+      "description" : "#ffd54cРазрешение: #ffeaa564x64\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшой Голографический дисплей (64x64)"
+   },
+   "09458a14-6fcd-45cb-aa5c-3890aaf6ddad" : {
+      "description" : "#ffd54cРазрешение: #ffeaa5128x128\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшой Голографический дисплей (128x128)"
+   },
+   "7e9cb8c1-1353-4b45-a67f-7a771f365703" : {
+      "description" : "#ffd54cРазрешение: #ffeaa5256x256\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшой Голографический дисплей (256x256)"
+   },
+
+   "3aa0151f-a3d6-48b1-9a7e-2328aa1bfe36" : {
+      "description" : "#ffd54cРазрешение: #ffeaa532x32\n#ffd54cдиск: #ffeaa5Нету\n\n#939393Вы можете держать его в руке и использовать, когда вам это нужно. Выполняет код, подобно компьютеру.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Планшет (32x32)"
+   },
+   "178a9ec6-f5d9-4842-aa5b-5307f6822f46" : {
+      "description" : "#ffd54cРазрешение: #ffeaa564x64\n#ffd54cдиск: #ffeaa564КБ\n\n#939393Вы можете держать его в руке и использовать, когда вам это нужно. Выполняет код, подобно компьютеру.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Планшет (64x64)"
+   },
+   "9f4d34ef-61c8-4cc6-96bc-74aa1ce002ed" : {
+      "description" : "#ffd54cРазрешение: #ffeaa5128x128\n#ffd54cдиск: #ffeaa564КБ\n\n#939393Вы можете держать его в руке и использовать, когда вам это нужно. Выполняет код, подобно компьютеру.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Планшет (128x128)"
+   },
+
+   "06da2ef1-d444-4e87-aed2-4021b1bfc20f" : {
+      "description" : "#ffd54cМакс. кол-во вокселей: #ffeaa51024\n#ffd54cМакс. масштаб: #ffeaa50.5\n#ffd54cМакс. локальный масштаб: #ffeaa54\n#ffd54cМакс. смещение: #ffeaa516\n#ffd54cМакс. смещение вокселей: #ffeaa516\n\n#939393Позволяет вам создавать голограммы.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Голопроектор"
+   },
+   "3c46e9e5-2875-47b4-8668-005a0768c992" : {
+      "description" : "#ffd54cМакс. кол-во вокселей: #ffeaa516384\n#ffd54cМакс. масштаб: #ffeaa5бесконечно\n#ffd54cМакс. локальный масштаб: #ffeaa5бесконечно\n#ffd54cМакс. смещение: #ffeaa5бесконечно\n#ffd54cМакс. смещение вокселей: #ffeaa5бесконечно\n\n#939393Позволяет вам создавать голограммы.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Творческий голопроектор#eeeeee"
+   },
+   "82bddce1-94ae-4559-ab7a-05d8f2b90fec" : {
+      "description" : "#ffd54cМакс. кол-во вокселей: #ffeaa5256\n#ffd54cМакс. масштаб: #ffeaa50.25\n#ffd54cМакс. локальный масштаб: #ffeaa54\n#ffd54cМакс. смещение: #ffeaa58\n#ffd54cМакс. смещение вокселей: #ffeaa58\n\n#939393Позволяет вам создавать голограммы.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Мини-голопроектор"
+   },
+   "68749ef7-4c99-4e11-8c33-46652bc7ec9d" : {
+      "description" : "#ffd54cМакс. кол-во вокселей: #ffeaa516384\n#ffd54cМакс. масштаб: #ffeaa5бесконечно\n#ffd54cМакс. локальный масштаб: #ffeaa5бесконечно\n#ffd54cМакс. смещение: #ffeaa5бесконечно\n#ffd54cМакс. смещение вокселей: #ffeaa5бесконечно\n\n#939393Позволяет вам создавать голограммы.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Творческий мини-голопроектор#eeeeee"
+   },
+
+
+
+
+
+
+
+
+
+
+   "6f7bd3f2-1be2-47ad-a778-5be60778cfb2" : {
+      "description" : "Используйте её для ввода и вывода текста.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Клавиатура"
+   },
+   "81f9080a-12b1-4fd7-9710-91d9434ef156" : {
+      "description" : "Используйте её для ввода и вывода текста.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Футуристичная клавиатура"
+   },
+
+   "7936702f-092a-4b02-9794-f51abbb42a9f" : {
+      "description" : "Позволяет вам взаимодействовать с компьютером с помощью консоли.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Терминал"
+   },
+   "e9e72dbe-8962-4710-aa3e-73313b1aef22" : {
+      "description" : "Позволяет вам взаимодействовать с компьютером с помощью консоли.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Вертикальный терминал"
+   },
+   "2ee8588d-b29c-47f6-9693-fc2607cf3720" : {
+      "description" : "Позволяет вам взаимодействовать с компьютером с помощью консоли.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Маленький терминал"
+   },
+
+   "7f3e227c-345a-4c28-8775-f6c011b80127" : {
+      "description" : "Позволяет щелкать по экрану кнопками мыши. Это также позволяет взаимодействовать с экранами на большом расстоянии.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Стилус"
+   },
+
+
+   "6bf0ba41-8e3d-4abb-9d88-a044ab584f6d" : {
+      "description" : "#ffd54cМакс. объём: #ffeaa564КБ\n\n#939393Жесткий диск. Позволяет хранить файлы.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "[DEV] Жесткий диск (64КБ)"
+   },
+   "abcd9bdb-c3b7-4818-b5b5-09e08ae059a0" : {
+      "description" : "#ffd54cМакс. объём: #ffeaa564КБ\n\n#939393Жесткий диск. Позволяет хранить файлы.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "[DEV] Жесткий диск (64КБ)"
+   },
+   "ec9c9673-177a-47ee-9611-be9ec97427bc" : {
+      "description" : "#ffd54cМакс. объём: #ffeaa564КБ\n\n#939393Жесткий диск. Позволяет хранить файлы.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшой жесткий диск (64КБ)"
+   },
+   "45151dd5-109a-4f0c-83fb-0fd35afd9020" : {
+      "description" : "#ffd54cМакс. объём: #ffeaa5128КБ\n\n#939393Жесткий диск. Позволяет хранить файлы.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Жесткий диск (128КБ)"
+   },
+   "6ed15b2a-6407-4330-9b54-acdd855e33da" : {
+      "description" : "#ffd54cМакс. объём: #ffeaa51024 МБ\n\n#939393Жесткий диск. Позволяет временно хранить файлы.\n\n#ff0000ВНИМАНИЕ: ПО ТЕХНИЧЕСКИМ ПРИЧИНАМ ДАННЫЕ НА ЭТОМ ДИСКЕ СТИРАЮТСЯ ПОСЛЕ ПЕРЕЗАХОДА НА КАРТУ!!!",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Креативный жесткий диск (1024 МБ)#eeeeee"
+   },
+
+   "02cd2199-788c-4d9c-a362-5b2655657768"  : {
+      "description" : "#ffd54cМакс. объём: #ffeaa51024 МБ\n\n#939393Жесткий диск. Позволяет временно хранить файлы.\n\n#ff0000ВНИМАНИЕ: ПО ТЕХНИЧЕСКИМ ПРИЧИНАМ ДАННЫЕ НА ЭТОМ ДИСКЕ СТИРАЮТСЯ ПОСЛЕ ПЕРЕЗАХОДА НА КАРТУ!!!",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Небольшой креативный жесткий диск (1024 МБ)#eeeeee"
+   },
+
+
+   "6b08c951-f207-4280-9470-b7fce56a480a" : {
+      "description" : "Позволяет вам отправлять GET/POST запросы в реальный Интернет!\nНо... Он весит много и очень дорогой в крафте. \n\n#eeeeeeДля его работы требуется #ff0000BetterAPI#eeeeee.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Интернет-мост"
+   },
+   "cdf96cb3-3582-43e0-9452-86e774e3c75c" : {
+      "description" : "Позволяет вам передавать данные на другой сетевой порт. Его также можно использовать вместе с антенной.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Сетевой порт"
+   },
+
+   "d933ab9f-0007-4398-ad30-9aab6bac8b0a" : {
+      "description" : "#ffd54cРадиус: #ffeaa5128 блоков\n\n#939393Антенна способна передавать данные через сетевые порты на далёкое расстояние.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшая антенна"
+   },
+   "65f5fc73-32f7-428f-b0a8-4a99243f4d0d" : {
+      "description" : "#ffd54cРадиус: #ffeaa516 блоков\n\n#939393Антенна способна передавать данные через сетевые порты на далёкое расстояние.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "NFC-антенна"
+   },
+   "43f8c2f7-cd4f-47c5-ab3a-cbef548e340b" : {
+      "description" : "#ffd54cРадиус: #ffeaa51000 блоков\n\n#939393Антенна способна передавать данные через сетевые порты на далёкое расстояние.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Антенна"
+   },
+   "0b3292c1-9f5a-4453-9612-c9446c7aa555" : {
+      "description" : "#ffd54cРадиус: #ffeaa5бесконечно\n\n#939393Он способен передавать сигнал на неограниченное расстояние (и даже между мирами), но весит довольно много и дорог в изготовлении.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Мировая антенна"
+   },
+
+
+   "5123feac-7a92-45bd-8935-d1342d27cb04" : {
+      "description" : "Радар, используемый для обнаружения объектов. Он не видит сквозь стены, точность измерения и минимальная масса, которую видит радар, зависят от размера радара.\nПока что, радар не видит статичных объектов.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Большой радар"
+   },
+   "92877a40-097d-45be-be06-faa30d7846df" : {
+      "description" : "Радар, используемый для обнаружения объектов. Он не видит сквозь стены, точность измерения и минимальная масса, которую видит радар, зависят от размера радара.\nПока что, радар не видит статичных объектов.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Радар"
+   },
+   "a33417df-19f3-4fef-8595-0efc6ae15e5b" : {
+      "description" : "Радар, используемый для обнаружения объектов. Он не видит сквозь стены, точность измерения и минимальная масса, которую видит радар, зависят от размера радара.\nПока что, радар не видит статичных объектов.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Очень большой радар"
+   },
+   "ab2672e2-4f2f-4e7b-8be1-4dcfc4ccb151" : {
+      "description" : "Радар, используемый для обнаружения объектов. Он не видит сквозь стены, точность измерения и минимальная масса, которую видит радар, зависят от размера радара.\nПока что, радар не видит статичных объектов.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшой радар"
+   },
+
+   "d4bf6cb5-17af-491b-abbc-f6492ae5e03c" : {
+      "description" : "Позволяет вам узнать, заметили ли вас радары, а также позволяет вам узнать направление до радаров, с которых вас обнаружили.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Детектор радаров"
+   },
+   "73df7328-ab7b-4654-9248-d0ea5e105927" : {
+      "description" : "Позволяет вам узнать, заметили ли вас радары, а также позволяет вам узнать направление до радаров, с которых вас обнаружили.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Маленький детектор радаров"
+   },
+
+
+   "331fe852-9e4a-48ba-8235-dde17b5de3a4" : {
+      "description" : "Позволяет проигрывать звуки голов роботов и звуковые сигналы клаксона.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Синтезатор звука"
+   },
+   "179d660d-4792-48c6-86d6-3a19cf354823" : {
+      "description" : "Позволяет проигрывать звуки голов роботов и звуковые сигналы клаксона.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Маленький Синтезатор звука"
+   },
+   "f3a2d5e3-70c9-4d76-bdb5-f5ccd2403a25" : {
+      "description" : "Позволяет проигрывать звуки голов роботов и звуковые сигналы клаксона.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Динамик (синтезатор)"
+   },
+   "c83e0e11-6ac1-48fb-a2c6-256f8128b4a6" : {
+      "description" : "Позволяет проигрывать звуки голов роботов и звуковые сигналы клаксона.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Большой динамик (синтезатор)"
+   },
+
+   "9604ecbd-abff-4bcd-b77e-ce3421379a4f" : {
+      "description" : "#ffd54cМакс. скорость: #ffeaa5100\n#ffd54cМакс. сила: #ffeaa51000\n\n#939393Он может быть использован для создания автоматизированных синхронных механизмов!\n\n*Требует подключенных контейнеров с батарейками.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Шаговый мотор"
+   },
+   "66355447-8900-412c-b03c-12c85e0587ef" : {
+      "description" : "#ffd54cМакс. скорость: #ffeaa510000\n#ffd54cМакс. сила: #ffeaa510000000\n\n#939393Он может быть использован для создания автоматизированных синхронных механизмов!",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Творческий шаговый мотор#eeeeee"
+   },
+   "b5efb918-088d-4a75-a3a1-a652e49d7511" : {
+      "description" : "#ffd54cМакс. скорость: #ffeaa525\n#ffd54cМакс. сила: #ffeaa5300\n\n#939393Он может быть использован для создания автоматизированных синхронных механизмов!\n\n*Требует подключенных контейнеров с батарейками.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Мини-шаговый мотор"
+   },
+   "99195c6c-951a-4f2e-87d4-39708a7334b1" : {
+      "description" : "#ffd54cМакс. скорость: #ffeaa510000\n#ffd54cМакс. сила: #ffeaa510000000\n\n#939393Он может быть использован для создания автоматизированных синхронных механизмов!",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Творческий мини-шаговый мотор#eeeeee"
+   },
+
+   "1ba4ace4-fc21-4481-bdca-4bd93c295b14" : {
+      "description" : "#ffd54cЗатраты топлива: #ffeaa51 батарейка и 1 бензин в секунду\n\n#939393Позволяет перемещать творение в любом направлении.\n\n*Требуются подключеные контейнеры с батарейками и топливом, расход при включении одинаковый, независимо от нагрузки.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Инерциальный двигатель"
+   },
+   "eb60707f-f3b2-4381-bc75-a794a9dc70b8" : {
+      "description" : "#ffd54cЗатраты топлива: #ffeaa5Нет\n\n#939393Позволяет перемещать творение в любом направлении.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Творческий инерциальный двигатель#eeeeee"
+   },
+   "f9c63827-0e63-4ed0-b377-5c2d18d8e3e4" : {
+      "description" : "#ffd54cЗатраты топлива: #ffeaa51 батарейка и 1 бензин в секунду\n\n#939393Позволяет перемещать творение в любом направлении.\n\n*Требуются подключеные контейнеры с батарейками и топливом, расход при включении одинаковый, независимо от нагрузки.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Мини-инерциальный двигатель"
+   },
+   "13d52b7b-6159-4925-a9f1-7e88c9a4ceb0" : {
+      "description" : "#ffd54cЗатраты топлива: #ffeaa5Нет\n\n#939393Позволяет перемещать творение в любом направлении.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Творческий мини-инерциальный двигатель#eeeeee"
+   },
+    "db579eed-1eb9-4cba-a2d0-b46b46c84dcc" : {
+      "description" : "#ffd54cЗатраты топлива: #ffeaa5Нет\n\n#939393Позволяет перемещать творение в любом направлении.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "#f002a8Творческий микро-инерциальный двигатель#eeeeee"
+   },
+   
+
+
+   "c2f7fa83-264f-4f00-8b12-829279ad609d" : {
+      "description" : "Позволяет получить ваше местоположение / поворот, а также получить местоположение / поворот GPS-меток на неограниченном расстоянии.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "GPS"
+   },
+   "cadc5226-3e96-43e7-9630-3507f9652350" : {
+      "description" : "В отличие от обычного GPS, этот прибор не содержит погрешности при измерениях.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Creative GPS"
+   },
+   "fd678469-4f6a-4c40-96ff-15d156c8a58a" : {
+      "description" : "Его местоположение можно определить с помощью GPS, для этого вам нужно знать частоту сигнала метки, которая по умолчанию является случайной.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "GPS-МЕТКА"
+   },
+
+
+   "94c8b309-b6fb-40f8-90bb-b5c3ac28bacd" : {
+      "description" : "Они могут отображать любой цвет, управляются последовательно по адресу светодиодов.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Адресный светодиод"
+   },
+   "e99397c7-f055-45a7-92f2-b6850dc6d073" : {
+      "description" : "Камера позволяет вам сделать снимок и отобразить его на мониторе или сохранить на диске, но только в SComputers камера может определять тип объекта и UUID (для баланса определения UUID она работает на расстоянии до 16 блоков).",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Камера (рейкаст)"
+   },
+   "9d071ead-c24e-42e5-b4ad-67d709e9a4ab" : {
+      "description" : "Позволяет вам получить информацию о присутствии игрока на сиденье, и нажатии кнопок WASD, сидя на нём.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "WASD-конвертер"
+   },
+   "bf1212b3-3aeb-45f6-b08b-80cfc7cc0e42" : {
+        "description" : "Позволяет получить направление взгляда игрока в сиденье и у ближайшего игрока на расстоянии 16 метров (64 блоков) от этого блока",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Camera Control"
+   },
+   "773d90ee-2f5e-4415-998c-90f4cfe12a77" : {
+      "description" : "Нажмите \"E\" на этом устройстве или подайте логический сигнал, и оно перезагрузит все подключенные компьютеры. Оно также подает логический сигнал, если компьютер вышел из строя.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Рестартовый шлюз"
+   },
+   "126a5046-f203-438d-abd5-a9b2acfd1044" : {
+      "description" : "Туннель камеры позволяет подключать камеру через антенну, без использования сложных и медленных алгоритмов сериализации изображений. Выберите канал туннелирования, нажав кнопку E, подключите к нему камеру и подключите ее к антенне. С другой стороны, подключите антенну к тому же устройству и подключите его к компьютеру. В результате, компьютер получит доступ к компоненту камеры!",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Туннель камеры"
+   },
+
+
+
+
+   "b33253db-67e3-45f8-9a3f-4c16a3ea3fdd" : {
+      "description" : "Ардуинка с алишки.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Arduino Uno"
+   },
+   "ef241100-53f7-440d-9576-d3c6ef25e7fb" : {
+      "description" : "советский микроконтроллер. Древняя тема, но прекрасно работает и по сей день.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Советский микроконтроллер"
+   },
+   "86f2d10e-3250-4be4-8a6c-bbe828c31062" : {
+      "description" : "советский микроконтроллер. Древняя тема, но прекрасно работает и по сей день.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Маленький Советский микроконтроллер"
+   },
+   "f33d5c9a-61f2-418c-9e78-9230794001b0" : {
+      "description" : "#ffd54cМакс. расстояние: #ffeaa516 блоков (4 метра)\n\n#939393Она позволяет вам стрелять пейнтбольными шариками, которые по какой-то неизвестной причине сами появляются в пушке. Позволяет вам раскрашивать: фигуры / роботов / деревья.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Красящая пушка"
+   },
+   "5dfeacad-524f-4913-9490-5cae6265dedc" : {
+      "description" : "#ffd54cМакс. расстояние: #ffeaa516 блоков (4 метра)\n\n#939393Она позволяет вам стрелять пейнтбольными шариками, которые по какой-то неизвестной причине сами появляются в пушке. Позволяет вам раскрашивать: фигуры / роботов / деревья.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшая красящая пушка"
+   },
+
+
+
+
+
+
+
+
+   "19644a5c-f299-4594-b682-abc180932227" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa51x1\n#ffd54cРазрешение: #ffeaa5128x128\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшой дисплей 1x1 (128x128)"
+   },
+   "52bc1fcf-dc17-40fd-aea4-ab7cdc25fb67" : {
+      "description" : "#ffd54cФиз. размеры: #ffeaa52x2\n#ffd54cРазрешение: #ffeaa5256x256\n\n#939393Дисплеи позволяют отображать различную информацию. Будь то изображение с камеры или температура реактора. Дисплеи в SComputers гораздо более оптимизированы, чем в оригинальном моде.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дисплей 2x2 (256x256)"
+   },
+   "cf242987-3572-47df-9c58-3ef645141385" : {
+      "description" : "#ffd54cРазрешение: #ffeaa516x16\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Очень Маленький Голографический дисплей (16x16)"
+   },
+   "59aef7e7-baad-4cb9-adbc-ce80030ca632" : {
+      "description" : "#ffd54cРазрешение: #ffeaa532x32\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Очень Маленький Голографический дисплей (32x32)"
+   },
+   "68fee925-4057-4e95-a411-d4725245c2ed" : {
+      "description" : "#ffd54cРазрешение: #ffeaa564x64\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Очень Маленький Голографический дисплей (64x64)"
+   },
+   "1d70e85b-45f1-4882-b359-09fbbfba305e" : {
+      "description" : "#ffd54cРазрешение: #ffeaa5128x128\n\n#939393Это голографический дисплей, который можно использовать, например, для отображения информации в истребителе.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Очень Маленький Голографический дисплей (128x128)"
+   },
+
+   "b7900915-62ca-4fbe-94cd-83cbebe2497d" : {
+      "description" : "позволяет прочитать файл json в safe mode. являеться алиасом на sm.json.open() но путь передаеться не из компьютера а указываеться константой в меню ROM диска. вы можете поместить свой файл json в папку с blueprint а путь к нему в ПЗУ чтобы вы могли распространять свою постройку в workshop вместе с вашими данными",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Небольшой Диск ПЗУ"
+   },
+   "178040d2-c977-4cdd-96e2-89c541eab7f1" : {
+      "description" : "позволяет прочитать файл json в safe mode. являеться алиасом на sm.json.open() но путь передаеться не из компьютера а указываеться константой в меню ROM диска. вы можете поместить свой файл json в папку с blueprint а путь к нему в ПЗУ чтобы вы могли распространять свою постройку в workshop вместе с вашими данными",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Диск ПЗУ"
+   },
+
+   "2ce74e6b-188d-40c0-ad8a-0afc6925dc9f" : {
+      "description" : "установите его на самолет и активируйте логическим сигналом или через API! Он оставляет после себя облако фольги, которое плавно опускается на землю, луч радара не проходит сквозь него. эти куски фольги отображаться на радаре как отдельные части самолета что путает ракеты с самонаведением. Он может сработать только один раз, он перезаряжается при установке на подъемник",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Дипольный отражатель (chaff)"
+   }
+}

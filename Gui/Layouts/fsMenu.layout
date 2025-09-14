@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Widget" skin="LogicGateBG" position_real="0.216796875 0.43359375 0.56640625 0.2939453125" align="Center">
+        <Property key="Alpha" value="1"/>
+        <Property key="Colour" value="1 1 1"/>
+        <Widget type="Button" skin="PrimaryButton" position_real="0 0.11627906976744186 0.15517241379310345 0.1461794019933555" name="clear">
+            <Property key="Caption" value="clear"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0 0 1 0.11627906976744186">
+            <Property key="Caption" value="filesystem"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontHeight" value="25"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.45689655172413796 0.28239202657807311 0.26724137931034481 0.11627906976744186" name="userImage">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="import from importer"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0 0.41528239202657807 0.31034482758620691 0.1461794019933555" name="osImage">
+            <Property key="Caption" value="import scriptableOS"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0 0.54817275747508309 0.31034482758620691 0.14950166112956811" name="pictures">
+            <Property key="Caption" value="import pictures"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0 0.68106312292358806 0.31034482758620691 0.14950166112956811" name="midis">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="import midi soundpack"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.72413793103448276 0.28239202657807311 0.26724137931034481 0.11627906976744186" name="export">
+            <Property key="Caption" value="export to importer"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="EditBox" skin="TextBox" position_real="0.45689655172413796 0.13289036544850499 0.52586206896551724 0.14950166112956811">
+            <Property key="MultiLine" value="true"/>
+            <Property key="Caption" value="importer disk image located in\n&quot;$CONTENT_DATA/USER/importer/disk.json&quot;"/>
+            <Property key="WordWrap" value="true"/>
+            <Property key="ReadOnly" value="true"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.017241379310344827 0.34883720930232559 0.26724137931034481 0.066445182724252497">
+            <Property key="Caption" value="examples / default"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.45689655172413796 0.38205980066445183 0.26724137931034481 0.11627906976744186" name="i1">
+            <Property key="Caption" value="import 1"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontName" value="SM_Button"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.72413793103448276 0.38205980066445183 0.26724137931034481 0.11627906976744186" name="e1">
+            <Property key="Caption" value="export 1"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.45689655172413796 0.48172757475083056 0.26724137931034481 0.11627906976744186" name="i2">
+            <Property key="Caption" value="import 2"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.72413793103448276 0.48172757475083056 0.26724137931034481 0.11627906976744186" name="e2">
+            <Property key="Caption" value="export 2"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.45689655172413796 0.58139534883720934 0.26724137931034481 0.11627906976744186" name="i3">
+            <Property key="Caption" value="import 3"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.72413793103448276 0.58139534883720934 0.26724137931034481 0.11627906976744186" name="e3">
+            <Property key="Caption" value="export 3"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.72413793103448276 0.68106312292358806 0.26724137931034481 0.11627906976744186" name="e4">
+            <Property key="Caption" value="export 4"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.45689655172413796 0.68106312292358806 0.26724137931034481 0.11627906976744186" name="i4">
+            <Property key="Caption" value="import 4"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.45689655172413796 0.79734219269102991 0.53448275862068961 0.18272425249169436" name="openImporter">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="open importer folder"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0 0.81395348837209303 0.31034482758620691 0.14950166112956811" name="nbs">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="import nbs soundpack"/>
+        </Widget>
+    </Widget>
+    <CodeGeneratorSettings/>
+</MyGUI>

@@ -1,0 +1,1 @@
+more information about the library: https://igorkll.github.io/SComputers/canvasAPI.html

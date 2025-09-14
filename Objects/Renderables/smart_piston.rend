@@ -1,0 +1,18 @@
+{
+	"lodList": [
+		{
+			"mesh": "$SURVIVAL_DATA/Objects/Mesh/interactive/obj_interactive_piston_03_off.fbx",
+			"pose0": "$CONTENT_DATA/Objects/Mesh/smart_piston.fbx",
+			"subMeshMap": {
+				"submesh2": {
+					"material": "PoseAnimDifAsgNor",
+					"textureList": [
+						"$SURVIVAL_DATA/Objects/Textures/interactive/obj_interactive_piston_03_dif.tga",
+						"$SURVIVAL_DATA/Objects/Textures/interactive/obj_interactive_piston_03_asg.tga",
+						"$SURVIVAL_DATA/Objects/Textures/interactive/obj_interactive_piston_03_nor.tga"
+					]
+				}
+			}
+		}
+	]
+}

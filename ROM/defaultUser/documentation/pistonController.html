@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            allows you to control one or more pistons<br/>
+            indexing of pistons goes from 0 to (getPistonsCount() - 1)<br/>
+            component name - pistonController
+        </p>
+
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>pistonController.setLength(index:number, length:number) - sets the length for a this piston</span></li>
+            <li><span>pistonController.getLength(index:number):number - returns the length set for this piston</span></li>
+            <li><span>pistonController.setVelocity(index:number, velocity:number) - sets the velocity for a this piston</span></li>
+            <li><span>pistonController.getVelocity(index:number):number - returns the velocity set for this piston</span></li>
+            <li><span>pistonController.setForce(index:number, force:number) - sets the force for a this piston (default: 100000)</span></li>
+            <li><span>pistonController.getForce(index:number):number - returns the force set for this piston (default: 100000)</span></li>
+            <br/>
+            <li><span>pistonController.getPistonsCount():number - returns the number of pistons connected to the controller</span></li>
+            <li><span>pistonController.isPistonAvailable(index:number):boolean - returns true if there is a piston with this index</span></li>
+            <li><span>pistonController.getMaxVelocity(index:number):number - returns the maximum speed available for the given piston</span></li>
+            <li><span>pistonController.getMaxLength(index:number):number - returns the maximum length available for the given piston</span></li>
+            <li><span>pistonController.getMaxForce(index:number):number - returns the maximum force available for the given piston (256 piston: 10000000, other pistons: 100000)</span></li>
+        </ul>
+        </pre>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">local pistonController = getComponent("pistonController")
+local speed = 3
+local height = 4
+
+function onTick(dt)
+    local tick = getUptime() * speed
+    for i = 0, pistonController.getPistonsCount() - 1 do
+        pistonController.setLength(i, ((math.sin(math.rad(tick - (i * 16))) + 1) / 2) * height)
+        pistonController.setVelocity(i, pistonController.getMaxVelocity(i))
+    end
+end
+
+_enableCallbacks = true
+            </code>
+        </pre>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">local p1 = getComponentByLabel("pistonController", "1")
+local p2 = getComponentByLabel("pistonController", "2")
+
+function onTick(dt)
+    local state = getTick() % 40 >= 20
+    p1.setVelocity(0, p1.getMaxVelocity(0))
+    p2.setVelocity(0, p2.getMaxVelocity(0))
+    p1.setLength(0, state and 4 or 0)
+    p2.setLength(0, state and 0 or 4)
+end
+
+_enableCallbacks = true
+            </code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

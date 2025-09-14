@@ -1,0 +1,96 @@
+{
+   "blockList" : [
+      {
+         "asg" : "$GAME_DATA/Objects/Textures/Blocks/blk_glass_asg.tga",
+         "dif" : "$GAME_DATA/Objects/Textures/Blocks/blk_glass_dif.tga",
+         "glass" : true,
+         "nor" : "",
+         "physicsMaterial" : "Water",
+         "showInInventory" : false,
+         "tiling" : 4,
+         "uuid" : "2f4c970d-c249-4f8d-ac2e-0a89abd2013f"
+      },
+      {
+         "asg" : "$CONTENT_DATA/Textures/holopixel_asg.tga",
+         "dif" : "$CONTENT_DATA/Textures/holopixel_dif.tga",
+         "glass" : true,
+         "nor" : "",
+         "physicsMaterial" : "Water",
+         "showInInventory" : false,
+         "tiling" : 4,
+         "uuid" : "75708339-6420-41e4-88a0-fbc210826c14"
+      },
+      {
+         "asg" : "$CONTENT_DATA/Textures/glow_asg.tga",
+         "dif" : "$GAME_DATA/Objects/Textures/Blocks/blk_glass_dif.tga",
+         "nor" : "",
+         "physicsMaterial" : "Water",
+         "showInInventory" : false,
+         "tiling" : 4,
+         "uuid" : "d3db3f52-0a8d-4884-afd6-b4f2ac4365c2"
+      },
+      {
+         "asg" : "$GAME_DATA/Textures/Default/default_asg.tga",
+         "dif" : "$GAME_DATA/Textures/Default/default_dif.tga",
+         "nor" : "$GAME_DATA/Textures/Default/default_nor.tga",
+         "physicsMaterial" : "Water",
+         "showInInventory" : false,
+         "tiling" : 4,
+         "uuid" : "765c61be-7d34-4b11-bb2f-e58cfc1708e6"
+      }
+   ],
+   "partList" : [
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "FFFFFF",
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/PixelShape.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "708d4a47-7de7-49df-8ba3-e58083c2610e"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "FFFFFF",
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/PixelShape.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "3d11dd1d-1296-414b-a2d9-101e876c022f"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "FFFFFF",
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/oops.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "c3931873-eadc-4e46-a575-0a369ae01202"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "FFFFFF",
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/cursor.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "77e46b76-0b2e-4a00-86e4-d030b8d9b59d"
+      }
+   ]
+}

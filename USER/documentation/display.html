@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            displays allow you to display information<br/>
+            in SComputers, displays have the best optimization of all mods in the workshop<br/>
+            the colors for the display can be specified in the following formats: 0xRRGGBB, "rrggbb", "#rrggbb", sm.color.new(r, g, b)<br/>
+            indexing of the display starts from 0 and up to width/height - 1. however, if you "go beyond the margins" nothing happens, all content that goes beyond the boundaries of the display simply will not be rendered<br/>
+            if you do not have enough variety of sizes and resolutions of displays presented in the basic mod, you can use the <a href="addons.html#stretchable_display" class="hyper">"stretchable display"</a> addon<br/>
+            note that if the color is not specified (nil), then all rendering methods will perceive it as white, except clear, which perceives nil as black<br/>
+            please note that the display renders the image using effects. and a large number of effects cause LAGS. despite the best optimization of displays in the workshop at the moment, displays still cause lags due to effects. you can use display.setOptimizationLevel(0-255) to set how similar colors the display can combine. The default value is 16. 0 is a perfect picture and 256 is a very bad picture. For the most part, this optimization only makes sense when using cameras<br/>
+            attention. if your display usage scenario does not involve rendering a full-color image, then it is better to disable optimization using: display.setOptimizationLevel(0) (this way the display will work faster)<br/>
+            component name - display
+        </p>
+
+        <br/>
+        <p class="text">list of materials for the display (can be setted using display.setMaterial):</p>
+        <ul class="list">
+            <li><span>material 0 - transparent (default for holographic displays, not supported on a regular display)</span></li>
+            <li><span>material 1 - glowing (default for displays)</span></li>
+            <li><span>material 2 - general block</span></li>
+            <li><span>material 3 - smoothed (to work, you will need to enable the blur effect in the game graphics settings)</span></li>
+            <li><span>material 4 - glowing (alternative)</span></li>
+            <li><span>material 5 - transparent (alternative)</span></li>
+        </ul>
+
+        <br/>
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>display.get(x:number, y:number):number - returns the current color in the display buffer at the specified position as a number. the color is taken from the host display. color format: 0xRRGGBB</span></li>
+            <br/>
+            <li><span>display.setOptimizationLevel(0-255) - sets the value of how similar the adjacent pixels must be in order to be combined into 1 effect. 0 is a perfect picture, 255 is a very poor picture quality. the higher the value, the fewer effects the display will use with a large number of colors on the screen (default: 16)</span></li>
+            <li><span>display.getOptimizationLevel(0-255) - returns the value set using display.setOptimizationLevel (default: 16)</span></li>
+            <br/>
+            <li><span>display.isAllow():boolean - returns true if this display can be used. returns false if it was disabled by the administrator</span></li>
+            <li><span>display.getAudience():number - returns the number of players who are currently looking at the display</span></li>
+            <li><span>display.setFontScale(scaleX:float, scaleY:float) - allows you to stretch and compress the font. fractional values are allowed (by default 1, 1)</span></li>
+            <li><span>display.setFontSize(charX:number, charY:number) - calculates font scaling based on the required size. please note that the calculation may not always be accurate with non-monospaced fonts</span></li>
+            <li><span>display.getFontScale():float, float - returns the value set using display.setFontScale (by default 1, 1)</span></li>
+            <li><span>display.setTextSpacing(number) - sets the distances between characters in pixels (by default 1)</span></li>
+            <li><span>display.getTextSpacing():number - returns the value set using display.setTextSpacing (by default 1)</span></li>
+            <li><span>display.calcTextBox(text:string):number, number - it will return two numbers, this will be the size of the box that your text will occupy with this font and this scale</span></li>
+            <li><span>display.calcCharsSize(text:string):lens - calculates the length of each character in a string, taking into account its spacing from the next character, and returns a table with these values</span></li>
+            <li><span>display.calcDecreasingTextSizes(text:string):lens - it works almost like display.calcCharsSize. however, each value contains all the previous ones. this is used in the graphic.textBox function, but probably not applicable to any other</span></li>
+            <li><span>display.getWidth():number - returns the width of the display in pixels</span></li>
+            <li><span>display.getHeight():number - returns the height of the display in pixels</span></li>
+            <li><span>display.getSize():number, number - returns the width and height of the display</span></li>
+            <li><span>display.getResolution():number, number - alias to display.getSize</span></li>
+            <li><span>display.setUtf8Support(state:boolean) - set to true if you want to use Russian or other special characters which take up more than one byte (default: false)</span></li>
+            <li><span>display.getUtf8Support():boolean - returns the value set using display.setUtf8Support (default: false)</span></li>
+            <li><span>display.setRenderAtDistance(state:boolean) - allows you to see the contents of the display much further than it is usually visible (requires enable in the mod config) (default: false)</span></li>
+            <li><span>display.getRenderAtDistance():boolean - returns the value set using display.setRenderAtDistance (default: false)</span></li>
+            <li><span>display.setRotation(rotation:number) - programmatically rotates images onto displays. options 0, 1, 2, 3 are allowed. note that in modes 1 and 3, width and height are swapped (including the behavior of the display.getWidth, display.getHeight methods) (default: 0)</span></li>
+            <li><span>display.getRotation():number - returns the value set using display.setRotation (default: 0)</span></li>
+            <li><span>display.setFont(font) - sets a custom font. if the font is from the <a href="fonts.html" class="hyper">"fonts library"</a>, it will not be transmitted over the network. however, if it is a custom font, it will be transmitted over the network (more than one custom font cannot be transmitted per 1 tick)</span></li>
+            <li><span>display.getFont():font - returns the value set using setFont (default by nil)</span></li>
+            <li><span>display.getFontWidth():number - returns the width of a character using scaleX</span></li>
+            <li><span>display.getFontHeight():number - returns the height of a character using scaleY</span></li>
+            <li><span>display.getFontSize():number, number - returns the width and height of a character using scaleX and scaleY</span></li>
+            <li><span>display.getRealFontWidth():number - returns the width of a character without considering scaleX</span></li>
+            <li><span>display.getRealFontHeight():number - returns the height of a character without considering scaleY</span></li>
+            <li><span>display.getRealFontSize():number, number - returns the width and height of a character without considering scale</span></li>
+            <li><span>display.setSkipAtNotSight(state:boolean) - if set to true, the display will not be updated for those players who are not looking at it (which in some cases increases FPS and reduces network load) (default: false)</span></li>
+            <li><span>display.getSkipAtNotSight():boolean - returns the value set using display.setSkipAtNotSight (default: false)</span></li>
+            <li><span>display.isMonospacedFont():boolean - returns true if a monospaced font is set</span></li>
+            <li><span>display.setLight(number) - sets the glow level of the display (min:0, max:255) (default: 255)</span></li>
+            <li><span>display.getLight():number - returns the value set using display.setLight (default: 255)</span></li>
+            <li><span>display.reset() - resets all display settings but does not clear it</span></li>
+
+            <br/>
+            <li><span>display.setClicksAllowed(state:boolean) - turns the touchscreen on/off (default: false)</span></li>
+            <li><span>display.getClicksAllowed():boolean -  returns the value set using display.setClicksAllowed (default: false)</span></li>
+            <li><span>display.clearClicks() - clears the click buffer</span></li>
+            <li><span>display.setMaxClicks(number) - sets the maximum number of clicks that fit into the buffer from 1 to 16 (default: 16)</span></li>
+            <li><span>display.getMaxClicks():number - returns the value set using display.setMaxClicks (default: 16)</span></li>
+            <li><span>display.getClick():table - reads a table with information about the click. if there was no click, it will return nil</span></li>
+            <li><span>display.getTouchs():{click, click, ...} - returns all currently active clicks in the "pressed" and "drag" states</span></li>
+            <li><span>display.getTouch():click - returns the first active click</span></li>
+
+            <pre>
+                <code class="language-lua" style="width: fit-content;">--the structure of the click table
+{
+    --string values
+    x = number, --the position of the click on X. from 0 to width
+    y = number, --the position of the click on Y. from 0 to height
+    state = string, --"pressed" / "released" / "drag"
+    button = number, --1 - left mouse button, 2 - right mouse button
+    nickname = string --player nickname
+
+    --number values
+    1 = number, --the position of the click on X. from 0 to width
+    2 = number, --the position of the click on Y. from 0 to height
+    3 = string, --"pressed" / "released" / "drag"
+    4 = number, --1 - left mouse button, 2 - right mouse button
+    5 = string --player nickname
+}</code>
+            </pre>
+            
+            <br/>
+            <li><span>display.clear(color) - fills the display with the specified color. resets the viewport even before clearing</span></li>
+            <li><span>display.setViewport(x:number, y:number, width:number, height:number) - sets the zone in which the rendering will take place, call without arguments to reset. note that flush resets the viewport</span></li>
+            <li><span>display.setInlineViewport(x:number, y:number, width:number, height:number) - sets the viewport as well as the setViewport. except that if the viewport is already installed, then this method will limit the new viewport to the boundaries of the old one (you get a kind of nested viewport without an overhead with checks)</span></li>
+            <li><span>display.getViewport():number, number, number, number - returns the currently installed viewport. or nothing if it is not installed</span></li>
+            <li><span>display.drawPixel(x, y, color) - sets 1 pixel on display</span></li>
+            <li><span>display.fillRect(x, y, sizeX, sizeY, color) - fills the rectangle</span></li>
+            <li><span>display.drawRect(x, y, sizeX, sizeY, color, lineWidth:number) - draws an empty rectangle. the line width is default 1. note that the line width increases "inside" the rectangle, that is, even if the line width of the rectangle is 10, the rectangle itself will still be exactly inscribed in its coordinates</span></li>
+            <li><span>display.drawText(x, y, text, color) - draws text of a given color at a given position</span></li>
+            <li><span>display.drawCenteredText(x, y, text, color, centerX:boolean (default: true), centerY:boolean (default: true)) - centers the text when rendering</span></li>
+            <li><span>display.drawLine(x, y, x2, y2, color, width:number, round:boolean) - draws a line on the displays from point A to point B. you can also set the line width. you can pass "round" to make the line rounded, but rasterizing such a line will be VERY SLOW. only makes sense at very high resolutions</span></li>
+            <li><span>display.drawCircle(x, y, radius, color) - draws an empty circle, please note that this circle cannot be exactly inscribed in a square and does not exactly fit on the display.fillCircle</span></li>
+            <li><span>display.drawCircleEvenly(x, y, radius, color) - a more accurate version of display.drawCircle. it can already be inscribed in a square (for example, drawn over the entire surface of the display) and lie more evenly on the display.fillCircle (however, it is not ideal)</span></li>
+            <li><span>display.drawCircleVeryEvenly(x, y, radius, color, stroke=1) - fits perfectly on display.fillCircle. can change the stroke size</span></li>
+            <li><span>display.fillCircle(x, y, radius, color) - fills a circle of a given radius at a given position</span></li>
+            <li><span>display.drawPoly(color, x, y, x, y, ...) - draws polygon without filling. pass the color and polygon points. then, in turn, x, y for each point</span></li>
+            <li><span>display.drawWidePoly(color, width:number, round:boolean, x, y, x, y, ...) - allows you to set the width of the line to be used and enable line rounding</span></li>
+            <li><span>display.fillPoly(color, x, y, x, y, ...) - fill polygon</span></li>
+            <li><span>display.fillWidePoly(color, width:number, round:boolean, x, y, x, y, ...) - fills the polygon, but allows you to adjust the width of the line and round it. in fact, it only makes sense if you want to round the polygon using a rounded line</span></li>
+            <li><span>display.drawTriangle(x1, y1, x2, y2, x3, y3, color) - draws a triangle</span></li>
+            <li><span>display.fillTriangle(x1, y1, x2, y2, x3, y3, color) - fills a triangle</span></li>
+            <li><span>display.drawEllipse(x, y, sizeX, sizeY, cornerRadius, color) - draws an ellipse within the specified square frame</span></li>
+            <li><span>display.fillEllipse(x, y, sizeX, sizeY, cornerRadius, color) - fills an ellipse within the specified square frame</span></li>
+            <li><span>display.flush() - sends the changes to the display. however, please note that your changes may be "lost" if the skipAtNotSight(this is disabled by default) flag is set and the player is not looking at the display. resets the viewport after sending</span></li>
+            <li><span>display.forceFlush() - sends the changes to the display. ensures that the image reaches the recipient. it ONLY makes sense if setSkipAtNotSight mode is enabled, but you still want to update the image for all users. doesn't make sense in others</span></li>
+            <br/>
+            <li><span>display.setMaterial(material:number) - sets the display material</span></li>
+            <li><span>display.getMaterial():number - returns the current display material</span></li>
+            <li><span>display.getDefaultMaterial():number - returns the default material for this display</span></li>
+			<br/>
+			<li><span>display.getDefaultResolution():x, y - gets the resolution of the display that is on it by default</span></li>
+			<li><span>display.setResolution(x:number, y:number) - changes the display resolution. on the world display or unrestricted display, you can set the resolution up to 4096x4096. On conventional displays, you can only set the resolution that meets two conditions: do not exceed the maximum number of pixels of the standard resolution, none of the resolution sides should exceed the maximum side of the standard resolution</span></li>
+        </ul>
+
+        <br/>
+        <p class="text">only for holographic/world/unrestricted displays:</p>
+        <ul class="list">
+            <li><span>display.setHoloOffset(x, y, z) - changes the displacement of the hologram relative to the display. the maximum offset is 5</span></li>
+            <li><span>display.getHoloOffset():x, y, z - returns the value set using display.setOffset</span></li>
+            <li><span>display.setHoloRotation(x, y, z, altRotation) - changes the rotation of the hologram relative to the display. when the alternative rotation mode is enabled, the rotation operation is performed first and only then the mixing operation is performed. Please note that the offset work slightly differently in this mode</span></li>
+            <li><span>display.getHoloRotation():x, y, z, altRotation - returns the value set using display.setRotation</span></li>
+            <li><span>display.setHoloScale(x, y) - sets the scale of the hologram. the maximum scale is 5</span></li>
+            <li><span>display.getHoloScale():x, y - returns the value set using display.setScale</span></li>
+        </ul>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">--ellipse example
+local display = getComponent("display")
+display.reset()
+local rx, ry = display.getSize()
+
+display.clear()
+display.fillEllipse(16, 16, rx - 32, ry - 32, 15, 0xff0000)
+display.drawEllipse(16, 16, rx - 32, ry - 32, 15, 0xff00ff)
+display.flush()
+
+function callback_loop()
+    if _endtick then
+        display.clear()
+        display.flush()
+    end
+end</code>
+        </pre>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">--example for display 256x256
+--full fonts list: https://igorkll.github.io/fonts.html
+
+local fonts = require("fonts")
+local display = getComponent("display")
+
+display.reset()
+display.setTextSpacing(6) --in such large fonts, it would be more logical to spread the characters a little more than 1 pixel apart
+display.setFontScale(1.8, 1.8) --is 32x32 small? you can make any font bigger!
+display.clear()
+local posY = 1
+local text = "TEST"
+
+display.setFont(fonts.impact_32)
+local boxX, boxY = display.calcTextBox(text)
+display.fillRect(1, posY, boxX, boxY, 0x00ff00)
+display.drawText(1, posY, text, 0xff0000)
+posY = posY + display.getFontHeight() + 3
+
+display.setFont(fonts.verdana_32)
+local boxX, boxY = display.calcTextBox(text)
+display.fillRect(1, posY, boxX, boxY, 0x00ff00)
+display.drawText(1, posY, text, 0xff0000)
+posY = posY + display.getFontHeight() + 3
+
+display.setFont(fonts.seguibl_32)
+local boxX, boxY = display.calcTextBox(text)
+display.fillRect(1, posY, boxX, boxY, 0x00ff00)
+display.drawText(1, posY, text, 0xff0000)
+posY = posY + display.getFontHeight() + 3
+
+display.setFont(fonts.arial_32)
+local boxX, boxY = display.calcTextBox(text)
+display.fillRect(1, posY, boxX, boxY, 0x00ff00)
+display.drawText(1, posY, text, 0xff0000)
+posY = posY + display.getFontHeight() + 3
+
+display.flush()
+
+function callback_loop()
+    if _endtick then
+        display.clear()
+        display.flush()
+        return
+    end
+end</code>
+        </pre>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">local display = getComponents("display")[1]
+
+display.reset()
+display.clear()
+display.setFont(
+    {
+        width = 3,
+        height = 3,
+        chars = {
+            error = {
+                "111",
+                "1.1",
+                "111"
+            },
+            a = {
+                ".1.",
+                "111",
+                "1.1"
+            },
+            b = {
+                "1..",
+                "111",
+                "111"
+            },
+            c = {
+                "111",
+                "1..",
+                "111"
+            }
+        }
+    }
+)
+display.setFontSize(6, 12)
+local boxX, boxY = display.calcTextBox("abcdef")
+display.fillRect(1, 1, boxX, boxY, 0x00ff00)
+display.drawText(1, 1, "abcdef", "ff0000")
+display.flush()
+
+function callback_loop()
+    if _endtick then
+        display.clear()
+        display.forceFlush()
+    end
+end</code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

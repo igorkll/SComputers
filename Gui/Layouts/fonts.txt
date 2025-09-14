@@ -1,0 +1,4 @@
+ScriptData, linesNumbers
+verySmallFont - <Property key="FontName" value="SM_Button"/> <Property key="FontHeight" value="30"/>
+smallFont - <Property key="FontName" value="DejaVuSansFont_15"/>
+bigFont - <Property key="FontName" value="SM_Button"/>

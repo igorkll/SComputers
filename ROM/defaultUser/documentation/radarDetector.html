@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            the radar detector lets you know if your creation has been detected by radar! it gives you directions to the radar (but not the distance) so that you can direct a ballistic missile there!!!<br/>
+            component name - radarDetector
+        </p>
+
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>radarDetector.getRadars():{vec3, ...} - this function can only be used 1 time per tick if the call limit is not disabled. returns a table of normalized vectors to the radars that detected you on this tick</span></li>
+        </ul>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">local display = getComponents("display")[1]
+local radarDetector = getComponents("radarDetector")[1]
+
+local rx, ry = display.getWidth(), display.getHeight()
+
+function callback_loop()
+    if _endtick then
+        display.clear()
+        display.forceFlush()
+        return
+    end
+
+    display.clear()
+    display.fillCircle(rx / 2, ry / 2, rx / 2,       "22ee22")
+    display.fillCircle(rx / 2, ry / 2, (rx / 2) - 1, "002200")
+
+    for _, vec in ipairs(radarDetector.getRadars()) do
+        display.drawLine(rx / 2, ry / 2, (rx / 2) - (vec.y * (rx / 3)), (ry / 2) + (vec.x * (ry / 3)), "ff0000")
+    end
+
+    display.flush()
+end</code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

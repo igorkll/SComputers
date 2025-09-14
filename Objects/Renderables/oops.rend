@@ -1,0 +1,21 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$MOD_DATA/Objects/Mesh/displaypixel.obj",
+         "minViewSize" : 15,
+         "subMeshList" : [
+            {
+               "custom" : {
+                  "shadow" : false
+               },
+               "material" : "DifAsg",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/oops.tga",
+                  "$CONTENT_DATA/Objects/Textures/pixel_asg.png",
+                  ""
+               ]
+            }
+         ]
+      }
+   ]
+}

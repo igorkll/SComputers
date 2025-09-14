@@ -1,0 +1,17 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Models/chaff_object/new_chaff.stl",
+         "subMeshList" : [
+            {
+               "material" : "DifAsg",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Models/chaff_object/texture_dif.tga",
+                  "$CONTENT_DATA/Objects/Models/chaff_object/texture_asg.tga",
+                  ""
+               ]
+            }
+         ]
+      }
+   ]
+}

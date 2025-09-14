@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        
+                
+
+        <p>
+            SComputers supports the creation of addons<br/>
+            to create add-ons, you don't need to have special permissions or anything like that, you just need to modify your shape script a little by providing an API<br/>
+            please note that SComputers clones the API table and adds its hook to each method, each computer creates its own clone of your API table when you first receive the component table, this can cause confusion. just remember that it is better to re-spawn your test blueprint after you have changed your shape script for debugging<br/>
+            you can also use the addon API (sm.scomputers) to add additional functionality to your addon
+        </p>
+
+        <p class="text">actions for creating addons:</p>
+        <ul class="list">
+            <li><span>if this mod is purely an addon for SComputers and does not involve use without SComputers. then add [SComputers addon] at the end of the mod name</span></li>
+            <li><span>add the "componentType" field with the component name to your shape class</span></li>
+            <li><span>make the input or output of your component with the sm.interactable.connectionType.composite type (you can combine types using the + operator)</span></li>
+            <li><span>add the sc_component table to the publicData of your interactable, add the type field to it that corresponds to the componentType field of your class and the api field that contains the callback functions of your component</span></li>
+            <li><span>test your add-on</span></li>
+            <li><span>create and publish documentation</span></li>
+            <li><span>create a preview</span></li>
+            <li><span>create a description</span></li>
+            <li><span>upload an addon on steam</span></li>
+            <li><span>add SComputers to the required for your addon</span></li>
+            <li><span>make the addon public</span></li>
+            <li><span><a class="hyper" href="./contact_me.html">contact me</a>, i will double-check your addon and if it works as needed, then I will add your addon to the <a class="hyper" href="https://steamcommunity.com/workshop/filedetails/?id=3154813944">"steam collection"</a> and to the <a class="hyper" href="./addons.html">"addon list"</a></span></li>
+        </ul>
+
+        <br/>
+        <p class="text">additional API for creating addons (sm.scomputers):</p>
+        <ul class="list">
+            <li><span>sm.scomputers.addExample(name:string, code:string, architecture:string(default: lua)) - adds an example to SComputers. you will call 1 time. it is advisable to do this from autotool so that the example is available immediately. call this method 1 time for each client</span></li>
+            <li><span>sm.scomputers.addLibrary(name:string, function:constructor(self, env):table) - adds the library to SComputers so that it can be accessed using require on all computers. The library is a function that creates the library instance two arguments come to the function. self, env. one computer can create only 1 instance of the library at a time. return the table with the library methods from this library. please do not make a library cheat, the library should not have access to data that the computer itself cannot access, and should not be able to perform actions that the computer itself cannot perform (although this is just an extra recommendation). the library needs to be registered 1 time on the server side from autotool</span></li>
+			<li><span>sm.scomputers.addEnvHook(function:envhook(self, env)) - it will be called every time the computer sandbox is created. you get access to the computer's self and its sandbox if you want to add something there</span></li>
+			<li><span>sm.scomputers.addClEnvHook(function:envhook(self, env)) - adds an envhook for clientInvoke. call once from the client's side</span></li>
+			<li><span>sm.scomputers.require(self:table, name:string) - require the library from the mod. it requires self because it needs to create a library cache and transfer library access to env. if the library you want to connect does not need the env of the computer and you do not have a self computer, then simply pass an empty table instead of self or your self</span></li>
+            <li><span>sm.scomputers.realIsComputerConnected(interactable):boolean - returns true if at least 1 computer is connected to this interactable</span></li>
+            <li><span>sm.scomputers.isComputerConnected(interactable):boolean - it works the same way as sm.scomputers.realIsComputerConnected, but it returns true, not only if the computer is connected, but also if the component connection check is turned off</span></li>
+            <li><span>sm.scomputers.isUnsafeFeatures(interactable):boolean - returns true if an unsafe mode is set in the mod, or if a unsafe computer from SComputers integrable is connected to your component</span></li>
+            <li><span>sm.scomputers.base64_encode(string):string</span></li>
+            <li><span>sm.scomputers.base64_decode(string):string</span></li>
+            <li><span>sm.scomputers.sha256_bin(string):string</span></li>
+            <li><span>sm.scomputers.sha256_hex(string):string</span></li>
+            <li><span>sm.scomputers.md5_bin(string):string</span></li>
+            <li><span>sm.scomputers.md5_hex(string):string</span></li>
+        </ul>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">--this code is the basis for creating addons
+exampleComponent = class()
+exampleComponent.maxParentCount = 1
+exampleComponent.maxChildCount = 0
+exampleComponent.connectionInput = sm.interactable.connectionType.composite
+exampleComponent.connectionOutput = sm.interactable.connectionType.none
+exampleComponent.colorNormal = sm.color.new(0x7F7F7Fff)
+exampleComponent.colorHighlight = sm.color.new(0xFFFFFFff)
+exampleComponent.componentType = "example" --absences can cause problems
+
+function exampleComponent:server_onCreate()
+    self.interactable.publicData = {
+        sc_component = {
+            type = exampleComponent.componentType,
+            api = {
+                test = function()
+                    return "ok"
+                end,
+                directTest = function()
+                    --let's assume that this method needs to be called 1000 times per second
+                end
+            },
+            directList = {
+                directTest = true --disables checking for connectivity and component availability for this method. increases the call speed by about 10 times
+            },
+            label = function() --optional. this function should return the current label of the component so that it can be accessed using getComponentByLabel.
+                return "label"
+            end
+        }
+    }
+end</code>
+        </pre>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">--we check the operation of our component
+print(getComponent("example").test())
+            </code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

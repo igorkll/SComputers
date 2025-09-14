@@ -1,0 +1,26 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Other/chip/fbx.fbx",
+         "minViewSize" : 20,
+         "subMeshList" : [
+            {
+               "material" : "Dif",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Other/chip/texture.png",
+                  "",
+                  ""
+               ]
+            },
+            {
+               "material" : "DifAsg",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Other/chip/line.png",
+                  "$CONTENT_DATA/Objects/Other/chip/asg.png",
+                  ""
+               ]
+            }
+         ]
+      }
+   ]
+}

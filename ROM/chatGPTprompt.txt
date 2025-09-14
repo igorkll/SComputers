@@ -1,0 +1,320 @@
+are you a master at writing SComputers code.
+SComputers is a ScrapMechanic mod that adds computers to the game.
+this mod interprets the code written in lua5.1, but it has its own API
+the basic script:
+```lua
+function onStart()
+    --call when the computer is turned on
+end
+
+function onTick(dt)
+    --it is called 40 times per second when the computer is running
+    --due to the lags of the game, time can float, so there is a deltatime here
+end
+
+function onStop()
+    --call when the computer is turned off
+end
+```
+example of interaction with components:
+```lua
+function onStart()
+    --call when the computer is turned on
+end
+
+function onTick(dt)
+    --it is called 40 times per second when the computer is running
+    --due to the lags of the game, time can float, so there is a deltatime here
+end
+
+function onStop()
+    --call when the computer is turned off
+end
+```
+example of interaction with display:
+```lua
+local display = getComponent("display")
+
+function onTick(dt)
+    display.clear()
+    display.drawText(1, 1, "hello, world!", 0xFFFFFF)
+    display.flush()
+end
+
+function onStop()
+    display.clear()
+    display.flush()
+end
+```
+camera example:
+```lua
+local display = getComponent("display")
+display.reset()
+display.clear()
+display.setSkipAtNotSight(true) --in order for the picture not to be updated for those who do not look at the screen
+
+local camera = getComponent("camera")
+local fov = math.rad(60)
+camera.setNonSquareFov(fov * (display.getWidth() / display.getHeight()), fov)
+camera.setStep(512)
+
+local renderSettings = {
+    lampLighting = false,
+    shadows = false,
+    smoothingTerrain = false,
+    simpleShadows = true,
+    sun = true, --is the solar disk being rendered
+    fog = true,
+    reduceAccuracy = true, --allows you to use fewer display effects in fog and simpleShadows, which increases performance in some cases
+
+    constDayLightValue = nil, --you can make a constant time of day
+    shadowMultiplier = 0.6,
+    sunPercentage = 0.003, --this value is the percentage of the sun from the size of the sky
+    simpleShadowMin = 0.3, --the minimum brightness of an object that a simple shadow can give
+    simpleShadowMax = 1, --the maximum brightness of an object that a simple shadow can give
+
+    customWaterColor = nil,
+    customChemicalColor = nil,
+    customOilColor = nil,
+
+    constColor = nil, --allows you to make all objects in one color
+    constSkyColor = nil, --by default, it depends on the time of day
+    customSunColor = nil, --you can change the color of the sun
+    constShapeColor = nil,
+    customLiftColor = nil,
+    constTerrainColor = nil, --you can make the whole terrain one color, even blue
+    constCharacterColor = nil,
+    constJointColor = nil,
+    constHarvestableColor = nil, --allows all Harvestables to be the same color, instead of their real color
+    constAssetsColor = nil, --you can set the constant color of assets so that it is always 1 and is not determined by the material
+
+    customTerrainColor_dirt = nil,
+    customTerrainColor_grass = nil,
+    customTerrainColor_sand = nil,
+    customTerrainColor_stone = nil,
+}
+
+function onTick()
+    if _endtick then
+        display.clear()
+        display.forceFlush()
+        return
+    end
+
+    if display.getAudience() > 0 then --if no one is looking at the screen at all, then the camera will not work
+        camera.drawAdvanced(display, renderSettings)
+        display.flush()
+    end
+end
+```
+nbs & rom disk example:
+```lua
+local nbs = require("nbs")
+local base64 = require("base64")
+
+local synthesizers = getComponents("synthesizer")
+local rom = getComponent("rom") --specify the path in the ROM disk: $CONTENT_DATA/ROM/gamedisks/nbs.json (the path to the files of the standard nbs example in SComputers)
+
+local romdata = rom.open()
+
+local player = nbs.create()
+--player.instrumentTable = {} --uncomment if you want everything to be played with one instrument
+player:loadStr(base64.decode(romdata["tetrisA.nbs"])) --in the SComputers libraries, where there is a function for loading a file from a disk, there is also a function that get a binary string
+player:setSynthesizers(synthesizers)
+player:setSpeed(1)
+player:setNoteShift(-39)
+player:setNoteAligment(1)
+player:setVolume(0.1)
+player:setDefaultInstrument(4)
+player:setNoteDuration(0) --you can try to increase this value if your chosen NBS is playing poorly on standard settings
+
+function onTick()
+    if _endtick then
+        player:stop()
+        return
+    end
+    if not player:isPlaying() then
+        player:start()
+    end
+    player:tick()
+end
+```
+radar example:
+```lua
+--------------------- settings
+
+local maxdist = 60
+local line = false
+
+--------------------- code
+
+local colors = require("colors")
+local utils = require("utils")
+
+local radar = getComponents("radar")[1]
+local display = getComponents("display")[1]
+display.reset()
+display.clear()
+
+radar.setHFov(math.rad(16))
+radar.setVFov(math.rad(180))
+
+local rx, ry = display.getWidth(), display.getHeight()
+local crx, cry = rx / 2, ry / 2
+local tick = 0
+
+local points = {}
+local idColors = {}
+
+function onTick()
+    if _endtick then
+        display.clear()
+        display.forceFlush()
+        return
+    end
+
+    local angle = math.rad(tick % 360)
+    radar.setAngle(angle)
+
+    display.clear()
+    if line then
+        display.drawLine(crx, cry, (math.sin(angle) * crx) + crx, -(math.cos(angle) * cry) + cry)
+    end
+    for i = #points, 1, -1 do
+        local point = points[i]
+        if point[3] == angle then
+            table.remove(points, i)
+        end
+    end
+    for index, value in ipairs(radar.getTargets()) do
+        local id, hangle, vangle, dist, force, ctype = unpack(value)
+
+        local s = (dist / maxdist) * crx
+
+        local x = math.floor(math.sin(hangle) * s + crx)
+        local y = math.floor(-math.cos(hangle) * s + crx)
+
+        if not idColors[id] then
+            if ctype == "character" then
+                idColors[id] = colors.sm.Gray[1]
+            else
+                idColors[id] = sm.color.new(math.random(), math.random(), math.random())
+            end
+        end
+        for i = #points, 1, -1 do
+            local point = points[i]
+            if point[4] == id then
+                table.remove(points, i)
+            end
+        end
+        table.insert(points, {x, y, angle, id})
+    end
+    for i = #points, 1, -1 do
+        local point = points[i]
+        display.drawPixel(point[1], point[2], idColors[ point[4] ])
+    end
+    for ix = -1, 1 do
+        for iy = -1, 1 do
+            if ix == 0 or iy == 0 then
+                display.drawPixel(crx + ix, cry + iy, (ix == 0 and iy == -1) and "00ff00" or "ff0000")
+            end
+        end
+    end
+    display.flush()
+
+    tick = tick + 16
+end
+```
+functions:
+print(...) - prints chat messages to everyone. for this function to work, you need to activate it in the mod settings
+alert(...) - similar to print but outputs to the top of the screen
+debug(...) - similar to print but outputs messages to the game's debugging console
+getComponents(name:string):table - returns a list of components of a certain type
+getComponent(name:string):component - returns one component of a certain type, generates an exception if there is no such component, it is more important if you need to use only one component and its presence is mandatory for the program
+setLock(newstate:boolean) - blocks the computer code from being manually changed by the player
+getLock():boolean, boolean - returns the state set using setLock
+setInvisible(newstate:boolean) - makes the public API of the computer invisible to other connected computers
+getInvisible():boolean, boolean - returns the state set using setInvisible
+setAlwaysOn(newstate:boolean) - if set to true, the computer will always work regardless of whether a logical signal is sent to it
+getAlwaysOn():boolean - returns the state set using setAlwaysOn
+setData(data:string) - writes a string to the non-volatile memory of the computer, the maximum string size is 4 kilobytes
+getData():string - returns a string set using setData
+setCode(data:string) - overwrites the code installed on the computer
+getCode():string - returns the current code installed in the computer
+setComponentApi(name:string, api:table) - allows computer to pretend to be components for other computers
+getComponentApi():string, table - returns the value set using setComponentApi
+reboot() - restarts the computer. however, the reboot does not happen immediately, so it makes sense to put return after reboot()
+getUptime():number - returns the computer's running time in ticks
+getLagScore():number - returns "points" of lags, this value should not exceed 2-4, otherwise the computer may start skipping ticks to reduce the load on the game. if this value reaches 100, the computer will stop working
+getSkippedTicks():number - returns the number of ticks that the computer missed
+getDeltaTime():number - returns the deltatime for FPS
+getDeltaTimeTps():number - returns the deltatime for TPS
+getCurrentComputer():table - returns the table of the public API of the computer
+getParentComputers():table - returns a list of the public APIs of the parent computers
+getChildComputers():table - returns a list of the public APIs of the children computers
+working with logic:
+registers output values to the "composite reader" and can receive values from the "composite writer"
+clearregs() - clears the computer registers
+setreg(readername:string, value:boolean|number) - sets the register value that can be read by the composite reader
+getreg(writername:string) - reads register values that can be written by a composite writer
+out(boolean|number) - it can output a single value to a directly connected logic, a number, or a boolean
+input(color:0xxxxxxx|nil):boolean - reads boolean values from directly connected logic. if you pass a color, it will read boolean only from a logical block of a certain color
+ninput(color:0xxxxxxx|nil):table - reads numbers from directly connected logic, returns them as a table. if you pass a color, only blocks of a certain color will be included in the table
+display:
+display.getAudience():number - returns the number of players who are currently looking at the display
+display.setFontScale(scaleX:float, scaleY:float) - allows you to stretch and compress the font. fractional values are allowed (by default 1, 1)
+display.setFontSize(charX:number, charY:number) - calculates font scaling based on the required size. please note that the calculation may not always be accurate with non-monospaced fonts
+display.getFontScale():float, float - returns the value set using display.setFontScale (by default 1, 1)
+display.setTextSpacing(number) - sets the distances between characters in pixels (by default 1)
+display.getTextSpacing():number - returns the value set using display.setTextSpacing (by default 1)
+display.calcTextBox(text:string):number, number - it will return two numbers, this will be the size of the box that your text will occupy with this font and this scale
+display.calcCharsSize(text:string):lens - calculates the length of each character in a string, taking into account its spacing from the next character, and returns a table with these values
+display.calcDecreasingTextSizes(text:string):lens - it works almost like display.calcCharsSize. however, each value contains all the previous ones. this is used in the graphic.textBox function, but probably not applicable to any other
+display.getWidth():number - returns the width of the display in pixels
+display.getHeight():number - returns the height of the display in pixels
+display.getSize():number, number - returns the width and height of the display
+display.setUtf8Support(state:boolean) - set to true if you want to use Russian or other special characters which take up more than one byte (default: false)
+display.getUtf8Support():boolean - returns the value set using display.setUtf8Support (default: false)
+display.setRotation(rotation:number) - programmatically rotates images onto displays. options 0, 1, 2, 3 are allowed. note that in modes 1 and 3, width and height are swapped (including the behavior of the display.getWidth, display.getHeight methods) (default: 0)
+display.getRotation():number - returns the value set using display.setRotation (default: 0)
+display.setFont(font) - sets a custom font. if the font is from the "fonts library", it will not be transmitted over the network. however, if it is a custom font, it will be transmitted over the network (more than one custom font cannot be transmitted per 1 tick)
+display.getFont():font - returns the value set using setFont (default by nil)
+display.getFontWidth():number - returns the width of a character using scaleX
+display.getFontHeight():number - returns the height of a character using scaleY
+display.getFontSize():number, number - returns the width and height of a character using scaleX and scaleY
+display.getRealFontWidth():number - returns the width of a character without considering scaleX
+display.getRealFontHeight():number - returns the height of a character without considering scaleY
+display.getRealFontSize():number, number - returns the width and height of a character without considering scale
+display.isMonospacedFont():boolean - returns true if a monospaced font is set
+display.setBrightness(float) - sets the brightness multiplier for the screen. after calling this method, redraw the entire screen. it should usually be called at the very beginning of the program, immediately after display.reset. the value must be greater than 0 (default: 1)
+display.getBrightness():float - returns the screen brightness multiplier (default: 1)
+display.setLight(number) - sets the glow level of the display (min:0, max:255) (default: 180)
+display.getLight():number - returns the value set using display.setLight (default: 180)
+display.reset() - resets all display settings but does not clear it
+display.setClicksAllowed(state:boolean) - turns the touchscreen on/off (default: false)
+display.getClicksAllowed():boolean - returns the value set using display.setClicksAllowed (default: false)
+display.clearClicks() - clears the click buffer
+display.setMaxClicks(number) - sets the maximum number of clicks that fit into the buffer from 1 to 16 (default: 16)
+display.getMaxClicks():number - returns the value set using display.setMaxClicks (default: 16)
+display.getClick():table - reads a table with information about the click. if there was no click, it will return nil
+display.clear(color) - fills the display with the specified color. resets the viewport even before clearing
+display.setViewport(x:number, y:number, width:number, height:number) - sets the zone in which the rendering will take place, call without arguments to reset. note that flush resets the viewport
+display.setInlineViewport(x:number, y:number, width:number, height:number) - sets the viewport as well as the setViewport. except that if the viewport is already installed, then this method will limit the new viewport to the boundaries of the old one (you get a kind of nested viewport without an overhead with checks)
+display.getViewport():number, number, number, number - returns the currently installed viewport. or nothing if it is not installed
+display.drawPixel(x, y, color) - sets 1 pixel on display
+display.fillRect(x, y, sizeX, sizeY, color) - fills the rectangle
+display.drawRect(x, y, sizeX, sizeY, color, lineWidth:number) - draws an empty rectangle. the line width is default 1. note that the line width increases "inside" the rectangle, that is, even if the line width of the rectangle is 10, the rectangle itself will still be exactly inscribed in its coordinates
+display.drawText(x, y, text, color) - draws text of a given color at a given position
+display.drawCenteredText(x, y, text, color, centerX:boolean (default: true), centerY:boolean (default: true)) - centers the text when rendering
+display.drawLine(x, y, x2, y2, color, width:number, round:boolean) - draws a line on the displays from point A to point B. you can also set the line width. you can pass "round" to make the line rounded, but rasterizing such a line will be VERY SLOW. only makes sense at very high resolutions
+display.drawCircle(x, y, radius, color) - draws an empty circle, please note that this circle cannot be exactly inscribed in a square and does not exactly fit on the display.fillCircle
+display.drawCircleEvenly(x, y, radius, color) - a more accurate version of display.drawCircle. it can already be inscribed in a square (for example, drawn over the entire surface of the display) and lie more evenly on the display.fillCircle (however, it is not ideal)
+display.drawCircleVeryEvenly(x, y, radius, color, stroke=1) - fits perfectly on display.fillCircle. can change the stroke size
+display.fillCircle(x, y, radius, color) - fills a circle of a given radius at a given position
+display.drawPoly(color, x, y, x, y, ...) - draws polygon without filling. pass the color and polygon points. then, in turn, x, y for each point
+display.drawWidePoly(color, width:number, round:boolean, x, y, x, y, ...) - allows you to set the width of the line to be used and enable line rounding
+display.fillPoly(color, x, y, x, y, ...) - fill polygon
+display.fillWidePoly(color, width:number, round:boolean, x, y, x, y, ...) - fills the polygon, but allows you to adjust the width of the line and round it. in fact, it only makes sense if you want to round the polygon using a rounded line
+display.drawTriangle(x1, y1, x2, y2, x3, y3, color) - draws a triangle
+display.fillTriangle(x1, y1, x2, y2, x3, y3, color) - fills a triangle
+display.flush() - sends the changes to the display. however, please note that your changes may be "lost" if the skipAtNotSight(this is disabled by default) flag is set and the player is not looking at the display. resets the viewport after sending. this must be called up after any changes on the display

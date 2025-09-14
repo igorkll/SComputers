@@ -1,0 +1,17 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$SURVIVAL_DATA/Objects/Mesh/industrial/obj_industrial_antenna02.fbx",
+         "subMeshList" : [
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}

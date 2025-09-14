@@ -1,0 +1,206 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Widget" skin="LogicGateBG" position_real="0 0 0.7177734375 0.8447265625" name="BackPanel">
+        <Property key="Colour" value="1 1 1"/>
+        <Property key="Alpha" value="1"/>
+        <Widget type="TextBox" skin="TextBox" position_real="0 0 0.68707482993197277 0.03121387283236994" name="Title">
+            <Property key="TextAlign" value="Center"/>
+            <Property key="TextShadow" value="true"/>
+            <Property key="Caption" value="computer configurator"/>
+        </Widget>
+        <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.013605442176870748 0.04046242774566474 0.65850340136054419 0.60693641618497107" name="ScriptData">
+            <Property key="TextAlign" value="Default"/>
+            <Property key="MultiLine" value="true"/>
+            <Property key="MaxTextLength" value="100000"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TabPrinting" value="true"/>
+        </Widget>
+        <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.013605442176870748 0.71098265895953761 0.65850340136054419 0.17341040462427745" name="ExceptionData">
+            <Property key="TextAlign" value="Default"/>
+            <Property key="MultiLine" value="true"/>
+            <Property key="ReadOnly" value="true"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="MaxTextLength" value="100000"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.0068027210884353739 0.64739884393063585 0.13469387755102041 0.06358381502890173" name="ScriptSave">
+            <Property key="Caption" value="Save"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Colour" value="1 1 1"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.86394557823129248 0.93641618497109824 0.13469387755102041 0.06358381502890173" name="CloseGui">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="exit"/>
+            <Property key="Colour" value="1 1 1"/>
+        </Widget>
+        <Widget type="Button" skin="CheckBox" position_real="0.013605442176870748 0.89017341040462428 0.027210884353741496 0.028901734104046242" name="alwaysOn"/>
+        <Widget type="TextBox" skin="TextBox" position_real="0.038095238095238099 0.89017341040462428 0.088435374149659865 0.023121387283236993">
+            <Property key="Caption" value="always on"/>
+        </Widget>
+        <Widget type="Button" skin="CheckBox" position_real="0.013605442176870748 0.92485549132947975 0.027210884353741496 0.028901734104046242" name="editLock"/>
+        <Widget type="TextBox" skin="TextBox" position_real="0.038095238095238099 0.92485549132947975 0.088435374149659865 0.023121387283236993">
+            <Property key="Caption" value="edit lock"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.67346938775510201 0.75144508670520227 0.12925170068027211 0.06358381502890173" name="reboot">
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="reboot"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="Colour" value="1 1 1"/>
+        </Widget>
+        <Widget type="Button" skin="CheckBox" position_real="0.013605442176870748 0.95953757225433522 0.027210884353741496 0.028901734104046242" name="invisible"/>
+        <Widget type="TextBox" skin="TextBox" position_real="0.038095238095238099 0.95953757225433522 0.088435374149659865 0.023121387283236993">
+            <Property key="Caption" value="invisible"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.68707482993197277 0.03121387283236994 0.23129251700680273 0.046242774566473986" name="eBios">
+            <Property key="Caption" value="BIOS"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="FontHeight" value="25"/>
+            <Property key="Colour" value="1 1 1"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.69387755102040816 0 0.29251700680272108 0.03121387283236994">
+            <Property key="Caption" value="examples"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.080924855491329481 0.14285714285714285 0.023121387283236993" name="eCamera">
+            <Property key="Caption" value="tank camera"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.52601156069364163 0.14285714285714285 0.023121387283236993" name="eSiren">
+            <Property key="Caption" value="siren"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.14557823129251701 0.66127167630057804 0.027210884353741496 0.04046242774566474" name="notsaved">
+            <Property key="Colour" value="1 1 1"/>
+            <Property key="Alpha" value="1"/>
+            <Property key="Enabled" value="true"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.17006802721088435 0.66473988439306353 0.095238095238095233 0.028901734104046242">
+            <Property key="Caption" value="not saved"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="CheckBox" position_real="0.12925170068027211 0.92485549132947975 0.027210884353741496 0.028901734104046242" name="lperm"/>
+        <Widget type="TextBox" skin="TextBox" position_real="0.15646258503401361 0.92485549132947975 0.14965986394557823 0.023121387283236993">
+            <Property key="Caption" value="lock permanently"/>
+        </Widget>
+        <Widget type="Button" skin="CheckBox" position_real="0.12925170068027211 0.95953757225433522 0.027210884353741496 0.028901734104046242" name="linvs"/>
+        <Widget type="TextBox" skin="TextBox" position_real="0.15646258503401361 0.95953757225433522 0.14965986394557823 0.023121387283236993">
+            <Property key="Caption" value="invs permanently"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.67346938775510201 0.80924855491329484 0.18367346938775511 0.06358381502890173" name="openStorage">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="internal storage"/>
+        </Widget>
+        <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.68027210884353739 0.71098265895953761 0.30612244897959184 0.04046242774566474" name="lastMessage">
+            <Property key="ReadOnly" value="true"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.68027210884353739 0.67630057803468213 0.30612244897959184 0.028901734104046242">
+            <Property key="Caption" value="last message"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontHeight" value="17"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.45664739884393063 0.14285714285714285 0.023121387283236993" name="eLeds">
+            <Property key="Caption" value="leds blick"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.15028901734104047 0.14285714285714285 0.023121387283236993" name="eHolo">
+            <Property key="Caption" value="hologram"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.12716763005780346 0.14285714285714285 0.023121387283236993" name="eGuicamera">
+            <Property key="Caption" value="gui camera"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.21965317919075145 0.14285714285714285 0.023121387283236993" name="eGuiexample">
+            <Property key="Caption" value="gui"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.31213872832369943 0.14285714285714285 0.023121387283236993" name="eImgdraw">
+            <Property key="Caption" value="image"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.31292517006802723 0.92485549132947975 0.45578231292517007 0.023121387283236993" name="scrMode">
+            <Property key="FontHeight" value="17"/>
+            <Property key="Caption" value="Script Mode: luaInLua-safe-printOFF"/>
+            <Property key="TextAlign" value="Left VCenter"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.24161849710982658 0.14285714285714285 0.023121387283236993" name="eFs">
+            <Property key="Caption" value="fs"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.43352601156069365 0.14285714285714285 0.023121387283236993" name="eDText">
+            <Property key="Caption" value="running line"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.33526011560693642 0.14285714285714285 0.028901734104046242" name="eImgdraw2">
+            <Property key="Caption" value="smooth image"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.19653179190751446 0.14285714285714285 0.023121387283236993" name="eMidi">
+            <Property key="Caption" value="midi"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.26127167630057802 0.14285714285714285 0.023121387283236993" name="eTerm">
+            <Property key="Caption" value="terminal"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.10404624277456648 0.14285714285714285 0.023121387283236993" name="eSCamera">
+            <Property key="Caption" value="disk camera"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.47976878612716761 0.14285714285714285 0.023121387283236993" name="eScar">
+            <Property key="Caption" value="smart car"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.50289017341040465 0.14285714285714285 0.023121387283236993" name="eVmtest">
+            <Property key="Caption" value="vm tester"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.28901734104046245 0.14285714285714285 0.023121387283236993" name="eIo">
+            <Property key="Caption" value="io"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.36416184971098264 0.14285714285714285 0.023121387283236993" name="eIb">
+            <Property key="Caption" value="Internet Bridge"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.38728323699421963 0.14285714285714285 0.023121387283236993" name="eGPS">
+            <Property key="Caption" value="gps"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.41040462427745666 0.14285714285714285 0.023121387283236993" name="eRamfs">
+            <Property key="Caption" value="ramfs"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.17341040462427745 0.14285714285714285 0.023121387283236993" name="eVD">
+            <Property key="Caption" value="holo display"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.31292517006802723 0.95953757225433522 0.45578231292517007 0.023121387283236993" name="lscrMode">
+            <Property key="Caption" value="Local Script Mode: luaInLua-safe-printOFF"/>
+            <Property key="FontHeight" value="17"/>
+            <Property key="TextAlign" value="Left VCenter"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.54913294797687862 0.14285714285714285 0.023121387283236993" name="eCR">
+            <Property key="Caption" value="Custom Render"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.5722543352601156 0.14285714285714285 0.023121387283236993" name="eAR">
+            <Property key="Caption" value="Advanced Render"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.69387755102040816 0.59537572254335258 0.14285714285714285 0.023121387283236993" name="eRR">
+            <Property key="Caption" value="raw ray"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.83673469387755106 0.080924855491329481 0.14285714285714285 0.023121387283236993" name="eRadar">
+            <Property key="Caption" value="radar"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.83673469387755106 0.10404624277456648 0.14285714285714285 0.023121387283236993" name="eWASD">
+            <Property key="Caption" value="wasd"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.83673469387755106 0.12716763005780346 0.14285714285714285 0.023121387283236993" name="eRD">
+            <Property key="Caption" value="radar detector"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.83673469387755106 0.15028901734104047 0.14285714285714285 0.023121387283236993" name="eST">
+            <Property key="Caption" value="smart truster"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.83673469387755106 0.17341040462427745 0.14285714285714285 0.023121387283236993" name="eIE">
+            <Property key="Caption" value="Inertial Engine"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.83673469387755106 0.19653179190751446 0.14285714285714285 0.023121387283236993" name="eCF">
+            <Property key="Caption" value="Custom Font"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.83673469387755106 0.21965317919075145 0.14285714285714285 0.023121387283236993" name="eHSD">
+            <Property key="Caption" value="spherical display"/>
+        </Widget>
+        <Widget type="Button" skin="Button" position_real="0.83673469387755106 0.24277456647398843 0.14285714285714285 0.023121387283236993" name="eHTD">
+            <Property key="Caption" value="toroidal display"/>
+        </Widget>
+    </Widget>
+    <CodeGeneratorSettings>
+        <Property key="IncludeDirectory" value=""/>
+        <Property key="PanelName" value=""/>
+        <Property key="PanelNamespace" value=""/>
+        <Property key="SourceDirectory" value=""/>
+    </CodeGeneratorSettings>
+</MyGUI>

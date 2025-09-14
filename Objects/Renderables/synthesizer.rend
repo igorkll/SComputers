@@ -1,0 +1,40 @@
+{
+	"lodList": [
+		{
+			"minViewSize": 13,
+			"mesh": "$GAME_DATA/Objects/Mesh/interactive/obj_interactive_robotdrumhead01_off.fbx",
+			"pose0": "$GAME_DATA/Objects/Mesh/interactive/obj_interactive_robotdrumhead01_on.fbx",
+						"includes": [
+							"POSITION",
+							"UV0",
+							"UV1",
+							"NORMAL",
+							"TANGENTS"
+						],
+			"subMeshMap": {
+				"robotbasshead": {
+					"material": "PoseAnimDifAsgNorAo",
+					"textureList": [
+						"$CONTENT_DATA/Objects/Textures/synthesizer_dif.tga",
+						"$GAME_DATA/Objects/Textures/interactive/obj_interactive_robotbasshead01_asg.tga",
+						"$GAME_DATA/Objects/Textures/interactive/obj_interactive_robotbasshead01_nor.tga",
+						"$GAME_DATA/Objects/Textures/interactive/obj_interactive_robotbasshead01_ao.tga"
+					]
+				}
+			}
+		},
+		{
+			"mesh": "$GAME_DATA/Objects/Mesh/interactive/obj_interactive_robotdrumhead01_lod1.fbx",
+			"subMeshMap": {
+				"robotbasshead": {
+					"material": "DifAsg",
+					"textureList": [
+						"$CONTENT_DATA/Objects/Textures/synthesizer_dif.tga",
+						"$GAME_DATA/Objects/Textures/interactive/obj_interactive_robotbasshead01_asg.tga",
+						""
+					]
+				}
+			}
+		}
+	]
+}

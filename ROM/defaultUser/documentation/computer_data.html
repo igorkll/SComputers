@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        
+                
+        
+        <p class="text">
+            you can get computer data using getCurrentComputer(), getChildComputers() and getParentComputers()
+            <br/>
+            computer data can be used for direct data transfer between computers
+            <br/>
+            it is a very low-level API and is not recommended for use. it is better to use the setComponentApi or network port and provide access only to the API required for operation
+            <br/>
+            getChildComputers() and getParentComputers() CANNOT SEE computers with the invisibility flag!
+            <br/>
+            getChildComputers() and getParentComputers() return a table with tables containing the data of all connected computers
+        </p>
+
+        <p class="text">fields:</p>
+        <ul class="list">
+            <li><span>computerdata.env - direct access to the ENV of the connected computer. you can see all the global variables of this computer</span></li>
+            <li><span>computerdata.registers - direct access to the registers of this computer</span></li>
+            <li><span>computerdata.crashstate - you can read the computer error message from this table. contains the following fields: hasException, exceptionMsg</span></li>
+        </ul>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

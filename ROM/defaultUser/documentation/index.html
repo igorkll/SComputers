@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link rel="manifest" href="manifest.json">
+    </head>
+    <body>
+        <center>
+            <a target="_blank" href="https://steamcommunity.com/sharedfiles/filedetails/?id=2949350596">
+                <img src="preview.png" class="image" />
+            </a>
+
+            </br>
+            <button class="cool-button green" onclick="window.open('https://steamcommunity.com/sharedfiles/filedetails/?id=2949350596', '_blank').focus();">download mod from steam</button>
+            <button class="cool-button brown" onclick="window.open('https://drive.google.com/file/d/11VVqinQiF5fHHOTCC9qOoIL2sU_MefA3/view?usp=sharing', '_blank').focus();">download mod from google drive (version: 5.4.1)</button>
+            <button class="cool-button red" onclick="window.location.href = './api.html'">api reference</button>
+            <button class="cool-button blue" onclick="window.location.href = './addons.html'">addon list</button>
+            <button class="cool-button yellow" onclick="window.location.href = './contact_me.html'">contact me</button>
+            </br>
+            <button class="cool-button purple" id="installButton" style="display: none;">install SComputers application</button>
+            <button class="cool-button gray" id="theme-toggle">change theme</button>
+            </br>
+            <button class="cool-button purple" onclick="window.location.href = './scmframework.html'">scmframework</button>
+            <button class="cool-button purple" onclick="window.location.href = './canvasAPI.html'">canvasAPI</button>
+            <button class="cool-button purple" onclick="window.open('https://steamcommunity.com/sharedfiles/filedetails/?id=3009550168', '_blank').focus();">SComputers Integrable</button>
+            
+            </br>
+            <div class="cool-text">
+                <div class="text">
+                    SComputers is the best mod adding computers to Scrap Mechanic at the moment!<br/>
+                    this mod originates from the ScriptableComputer mod, which is no longer supported by the developer<br/>
+                    in fact, SComputers is an improved version of ScriptableComputer that has retained full compatibility with the original<br/>
+                    the author of the original ScriptableComputer(TheFattestCat) doesn't mind that I'm doing a fork. and i got permission to create a fork
+                </div>
+        
+                <p class="text">advantages of SComputers compared to other computer mods:</p>
+                <ul class="list">
+                    <li><span>displays almost do not cause lags</span></li>
+                    <li><span>it is impossible to crash the game from the computer with the standard mod settings</span></li>
+                    <li><span>a large number of addons</span></li>
+                    <li><span>there are many interesting components</span></li>
+                    <li><span>crafting support for survival with the help of third-party craft loaders</span></li>
+                    <li><span>real-time font scaling</span></li>
+                    <li><span>support for custom fonts</span></li>
+                </ul>
+            </div>
+        </center>
+        
+        <script>
+            let deferredPrompt;
+            window.addEventListener('beforeinstallprompt', (e) => {
+                deferredPrompt = e;
+                if (typeof deferredPrompt.prompt === 'function') {
+                    const installButton = document.getElementById('installButton');
+                    installButton.style.display = 'inline-block';
+                }
+            });
+
+            const installButton = document.getElementById('installButton');
+            installButton.addEventListener('click', async () => {
+                if (deferredPrompt !== null) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        deferredPrompt = null;
+
+                        const installButton = document.getElementById('installButton');
+                        installButton.style.display = 'none';
+                    }
+                }
+            });
+        </script>
+
+        <script src="main.js"></script>
+    </body>
+</html>

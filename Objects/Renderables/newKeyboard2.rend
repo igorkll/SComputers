@@ -1,0 +1,17 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Mesh/keyboard_v3.obj",
+         "subMeshList" : [
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_v3.tga",
+                  "$GAME_DATA/Textures/Default/default_asg.tga",
+                  "$GAME_DATA/Textures/Default/default_nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}

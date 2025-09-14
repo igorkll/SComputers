@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            usage: require("graphic")<br/>
+            this library contains various methods for rendering graphics that are not available in the usual display API
+        </p>
+
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>graphic.textBox(<br/>
+                <ul class="list">
+                    <li><span>display,</span></li>
+                    <li><span>x:number,</span></li>
+                    <li><span>y:number,</span></li>
+                    <li><span>width:number,</span></li>
+                    <li><span>height:number,</span></li>
+                    <li><span>text:string,</span></li>
+                    <li><span>color:number,</span></li>
+                    <li><span>centerX:boolean (default: false),</span></li>
+                    <li><span>centerY:boolean (default: false),</span></li>
+                    <li><span>spacingY:number (default 1),</span></li>
+                    <li><span>autoNewline:boolean (default: true),</span></li>
+                    <li><span>tool (string/utf8) - default if utf8 is enabled on display, it will be used, otherwise string,</span></li>
+                    <li><span>myGuiColorPrefixSupport:boolean|nil - if you activate it, then you will have text color changes working through #rrggbb to escape the character # just put it twice in a row</span></li>
+                </ul>
+            ) - renders text in a box<br/>
+            </span></li>
+        </ul>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

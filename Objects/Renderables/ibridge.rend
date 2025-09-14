@@ -1,0 +1,26 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Mesh/ibridge.fbx",
+         "minViewSize" : 20,
+         "subMeshList" : [
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Textures/crystal/base.tga",
+                  "$CONTENT_DATA/Textures/crystal/asg.tga",
+                  "$CONTENT_DATA/Textures/crystal/nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}

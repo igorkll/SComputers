@@ -1,0 +1,58 @@
+{
+    "partList": [
+        {
+            "box": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+            },
+            "color": "222222",
+            "physicsMaterial": "Mechanical",
+            "ratings": {
+                "buoyancy": 3,
+                "density": 2,
+                "durability": 2,
+                "friction": 3
+            },
+            "renderable": "$CONTENT_DATA/Objects/Renderables/small_hdd.rend",
+            "rotationSet": "PropY",
+            "scripted": {
+                "classname": "hdd",
+                "data": {
+                    "size": 65536
+                },
+                "filename": "$CONTENT_DATA/Scripts/hdd.lua"
+            },
+            "showInInventory": false,
+            "stackSize": 10,
+            "uuid": "abcd9bdb-c3b7-4818-b5b5-09e08ae059a0"
+        },
+        {
+            "box": {
+                "x": 1,
+                "y": 1,
+                "z": 1
+            },
+            "color": "222222",
+            "physicsMaterial": "Mechanical",
+            "ratings": {
+                "buoyancy": 3,
+                "density": 2,
+                "durability": 2,
+                "friction": 3
+            },
+            "renderable": "$CONTENT_DATA/Objects/Renderables/small_hdd.rend",
+            "rotationSet": "PropY",
+            "scripted": {
+                "classname": "hdd",
+                "data": {
+                    "size": 65536
+                },
+                "filename": "$CONTENT_DATA/Scripts/hdd.lua"
+            },
+            "showInInventory": false,
+            "stackSize": 10,
+            "uuid": "6bf0ba41-8e3d-4abb-9d88-a044ab584f6d"
+        }
+    ]
+}

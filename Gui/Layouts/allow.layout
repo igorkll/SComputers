@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Widget" skin="LogicGateBG" position_real="0.1708984375 0.2734375 0.654296875 0.47265625">
+        <Property key="Alpha" value="1"/>
+        <Property key="Colour" value="1 1 1"/>
+        <Widget type="TextBox" skin="TextBox" position_real="0.014925373134328358 0.11363636363636363 0.97014925373134331 0.092975206611570244">
+            <Property key="Caption" value="allow computers to work in this gaming session?"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="FontHeight" value="25"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.014925373134328358 0.010330578512396695 0.97014925373134331 0.092975206611570244">
+            <Property key="FontHeight" value="25"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="Caption" value="SComputers"/>
+            <Property key="TextAlign" value="Center"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.014925373134328358 0.22727272727272727 0.47014925373134331 0.1962809917355372" name="yes">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="yes"/>
+            <Property key="Colour" value="0 1 0"/>
+            <Property key="FontHeight" value="40"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.5149253731343284 0.22727272727272727 0.47014925373134331 0.1962809917355372" name="no">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="no"/>
+            <Property key="Colour" value="1 0 0"/>
+            <Property key="FontHeight" value="40"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.014925373134328358 0.78512396694214881 0.97014925373134331 0.092975206611570244">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="if you have a computer that breaks the game, turn off the computers and put it away"/>
+            <Property key="FontHeight" value="19"/>
+        </Widget>
+        <Widget type="TextBox" skin="TextBox" position_real="0.014925373134328358 0.89876033057851235 0.97014925373134331 0.082644628099173556">
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="Caption" value="to open this menu, type the command: /computers"/>
+            <Property key="FontHeight" value="19"/>
+        </Widget>
+    </Widget>
+    <CodeGeneratorSettings/>
+</MyGUI>

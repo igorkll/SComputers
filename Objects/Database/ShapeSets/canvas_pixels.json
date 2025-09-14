@@ -1,0 +1,78 @@
+{
+   "blockList" : [
+      {
+         "asg" : "$CONTENT_DATA/Textures/pixel_glass_asg.tga",
+         "dif" : "$CONTENT_DATA/Textures/pixel_glass_dif.tga",
+         "nor" : "$CONTENT_DATA/Textures/pixel_glass_nor.tga",
+         "glass" : true,
+         "physicsMaterial" : "Water",
+         "showInInventory" : false,
+         "tiling" : 4,
+         "uuid" : "a683f897-5b8a-4c96-9c46-7b9fbc76d186"
+      },
+      {
+         "asg" : "$CONTENT_DATA/Textures/pixel_glass2_asg.tga",
+         "dif" : "$CONTENT_DATA/Textures/pixel_glass_dif.tga",
+         "nor" : "$CONTENT_DATA/Textures/pixel_glass_nor.tga",
+         "glass" : true,
+         "physicsMaterial" : "Water",
+         "showInInventory" : false,
+         "tiling" : 4,
+         "uuid" : "53f43c79-f8e3-4c70-b746-f8c35634fab8"
+      }
+   ],
+   "partList" : [
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "FFFFFF",
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/pixel.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "8328a29d-35e0-471b-8bfe-06952e9d916d"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "FFFFFF",
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/plasticPixel.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "82d2da58-6597-4ffa-9b53-1af3b707fa7a"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "FFFFFF",
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/pixel.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "a23a4ea2-96da-4bb2-a723-af8c27de2511"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "FFFFFF",
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/pixel2.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "b46ae32a-9037-4360-9f98-3bef1cd4f366"
+      }
+   ]
+}

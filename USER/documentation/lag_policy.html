@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p>
+            SComputers has a lag-score mechanic that prevents lags from being called
+            <br/>
+            if the computer runs the code for a long time (it takes a lot of processor time) then he is credited with a lag-score, which can lead to missing clock cycles. which actually means that you won't get control for the next tick of the game
+        </p>
+
+        <ul class="list">
+            <li><span>SComputers has excellent display optimization. however, your code can still cause lags if it uses too much CPU time</span></li>
+            <li><span>the processor time available to your code is set in the permission tool</span></li>
+            <li><span>if you exceed it, your computer will immediately terminate code execution with a "too long without yielding" error</span></li>
+            <li><span>you can handle the error using pcall/xpcall/callback_error. however, if you exceed the code execution time several times in a row in a short period of time, then you will not be able to handle the error, as well as such a computer can no longer be restarted by sending a logical signal to the reboot gate or calling reboot from another computer</span></li>
+            <li><span>a computer that crashed with a "too long without yielding" error bypassing processing is a malicious violator, and its operation can only be restored manually by pressing the reboot button in its interface or by pressing the reboot gate button E</span></li>
+            <li><span>besides. if your code or your display causes lags, then you are awarded a lag score. if the lag score value becomes greater than or equal to 100, then your computer will shut down with a "too long without yielding" error without the possibility of processing and automated reboot</span></li>
+            <li><span>if your computer caused lags and then stopped, then the lag points will be deducted at 1 per tick</span></li>
+            <li><span>if the lag score value reaches 10, then there is a high probability that your computer will not receive control for the next game tick</span></li>
+            <li><span>if your code causes lags, it may start skipping a lot of ticks at once</span></li>
+            <li><span>also, your code can start skipping bars if the game is lagging for another reason</span></li>
+            <li><span>you can get the lag score value using getLagScore(). you can also get the number of missed ticks using getSkippedTicks()</span></li>
+            <li><span>if your code skipped a clock cycle/clock cycles then getUptime() will skip the value. consider this</span></li>
+            <li><span>getTick() does not skip ticks when the computer skips them. it counts each iteration of the computer, regardless of how many ticks have passed between iterations</span></li>
+            <li><span>the <a class="hyper" href="./timer.html">timer library</a> makes automatic correction based on the ticks missed by the computer</span></li>
+        </ul>
+
+        <br/>
+        <div class="text">
+            if you don't need lag protection, you can turn it off in the permission tool<br/>
+            to do this, simply turn off "drop freq at lags" and set anti-lag to 0<br/>
+            also, if you want, you can increase the maximum processor time to 40 ticks or even disable the limit (with the execution time limit disabled, you can accidentally make the game freeze)<br/>
+            if you have disabled protection and your game is frozen by incorrect code, then close it and when entering the world, click "NO" (do not activate the mod) then remove the computer with the bad code and turn on the mod through the Permission Tool
+        </div>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

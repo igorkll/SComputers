@@ -1,0 +1,43 @@
+{
+   "partList" : [
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "f002a8",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$GAME_DATA/Objects/Renderable/decor/obj_decor_babyduck.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "PermissionTool",
+            "filename" : "$CONTENT_DATA/Scripts/Tools/PermissionTool.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-Y",
+         "uuid" : "abb7eb4d-67d1-400d-a1e6-48e3ae50b0e7"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "444444",
+         "physicsMaterial" : "Plastic",
+         "renderable" : "$GAME_DATA/Objects/Renderable/decor/obj_decor_babyduck.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "PermissionTool",
+            "data" : {
+               "survival" : true
+            },
+            "filename" : "$CONTENT_DATA/Scripts/Tools/PermissionTool.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-Y",
+         "uuid" : "10e2710c-eff7-4b03-a5a1-dd849283b997"
+      }
+   ]
+}

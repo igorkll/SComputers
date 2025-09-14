@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Widget" skin="BackgroundLiftExport" position_real="0.27812500000000001 0.36527777777777776 0.390625 0.20416666666666666">
+        <Widget type="TextBox" skin="TextBox" position_real="0.012 0.061224489795918366 0.96199999999999997 0.21088435374149661">
+            <Property key="Caption" value="Better Disk"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontName" value="SM_Button"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.28000000000000003 0.3401360544217687 0.42999999999999999 0.27210884353741499" name="clear">
+            <Property key="Caption" value="clear"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="FontName" value="SM_Button"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.28000000000000003 0.61224489795918369 0.42999999999999999 0.27210884353741499" name="open">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="open folder"/>
+        </Widget>
+    </Widget>
+    <CodeGeneratorSettings/>
+</MyGUI>

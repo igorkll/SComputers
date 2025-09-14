@@ -1,0 +1,173 @@
+local fonts = require("fonts")
+
+local display = getComponent("display")
+local cameras = getComponents("camera")
+local wasd = getComponents("wasd")[1]
+
+local width, height = display.getSize()
+display.reset()
+display.setFont(fonts.lgc_5x5)
+display.setTextSpacing(2)
+display.clearClicks()
+display.setClicksAllowed(true)
+display.clear()
+display.flush()
+
+local xEngine = require("xEngine")
+local engine = xEngine.create()
+
+local gui = require("gui").new(display)
+local objs = require("objs")
+local styles = require("styles")
+local scene = gui:createScene(0x888888)
+
+local lastObject = scene:createText(2, 2, "CAMERAS LIST")
+local function createCameraButton(title, camera, settings)
+    local button_createWindow = scene:createButton(nil, nil, 64, 16, false, title)
+    button_createWindow:setDown(lastObject, 2)
+    button_createWindow:attachCallback(function(self, state, inZone)
+        if not state and inZone then
+            local window = scene:createWindow(nil, nil, 128, 96, 0x333333)
+            window:setCenter()
+            window:setDraggable(true)
+            window:upPanel(0xff00ff, 0xffffff, title, true)
+    
+            local cameraObject = window:createCustom(2, display.getFontHeight() + 4, window.sizeX - 4, window.sizeY - 11, objs.camera, camera, "drawAdvanced", settings)
+            cameraObject:setFov(90)
+    
+            function window:onTick()
+                if not window.up_hide then
+                    cameraObject:capture()
+                end
+            end
+    
+            local button_close = window:panelButton(7, false, "X", "#bb0ac9", "#e167eb")
+            button_close:attachCallback(function(self, state, inZone)
+                if not state and inZone then
+                    window:destroy()
+                end
+            end)
+        end
+    end)
+    lastObject = button_createWindow
+end
+
+local speed = 0.3
+local rotationSpeed = 3
+local cameraPosition = sm.vec3.new(0, 2, 1)
+local cameraRotation = 0
+
+function onStart()
+    for ix = -4, 4 do
+        for iy = -4, 4 do
+            local shape = engine:addShape(xEngine.shapes.box_16x16x1,
+                sm.vec3.new(ix * 4, iy * 4, 0),
+                sm.quat.fromEuler(sm.vec3.new(0, 0, 0)),
+                false
+            )
+            shape:setColor((ix + iy) % 2 == 0 and 0xff0000 or 0xffff00)
+        end
+    end
+
+    local shapeX, shapeY = 4, 2
+    for i = 1, 80 do
+        local shape = engine:addShape(xEngine.shapes.box_1x1x1,
+            sm.vec3.new(shapeX, shapeY, 2 + (i / 2)),
+            sm.quat.fromEuler(sm.vec3.new(0, 0, 0)),
+            true
+        )
+    end
+    sphere = engine:addShape(xEngine.shapes.sphere_16,
+        sm.vec3.new(shapeX - 2, shapeY - 2, 50),
+        sm.quat.fromEuler(sm.vec3.new(0, 0, 0)),
+        true
+    )
+
+    local fov = math.rad(90)
+    camera = engine:addCamera()
+    camera.api.setStep(512)
+    camera.api.setNonSquareFov(fov * (display.getWidth() / display.getHeight()), fov)
+    camera.api.setDistance(64)
+
+    for i, camera in ipairs(cameras) do
+        createCameraButton("CAMERA " .. i, camera)
+    end
+
+    createCameraButton("engine", camera.api, {
+        lampLighting = false,
+        shadows = true,
+        smoothingTerrain = false,
+        simpleShadows = true,
+        sun = true, --is the solar disk being rendered
+        fog = true,
+        reduceAccuracy = false, --allows you to use fewer display effects in fog and simpleShadows, which increases performance in some cases
+    
+        constColor = nil, --allows you to make all objects in one color
+        constDayLightValue = 0.5, --you can make a constant time of day
+        shadowMultiplier = 0.3,
+        sunPercentage = 0.003, --this value is the percentage of the sun from the size of the sky
+        simpleShadowMin = 0.3, --the minimum brightness of an object that a simple shadow can give
+        simpleShadowMax = 1, --the maximum brightness of an object that a simple shadow can give
+    
+        customWaterColor = nil,
+        customChemicalColor = nil,
+        customOilColor = nil,
+    
+        constSkyColor = nil, --by default, it depends on the time of day
+        customSunColor = nil, --you can change the color of the sun
+        constShapeColor = nil,
+        customLiftColor = nil,
+        constTerrainColor = nil, --you can make the whole terrain one color, even blue
+        constCharacterColor = nil,
+        constJointColor = nil,
+        constHarvestableColor = nil, --allows all Harvestables to be the same color, instead of their real color
+        constAssetsColor = nil, --you can set the constant color of assets so that it is always 1 and is not determined by the material
+    
+        customTerrainColor_dirt = nil,
+        customTerrainColor_grass = nil,
+        customTerrainColor_sand = nil,
+        customTerrainColor_stone = nil,
+    })
+
+    scene:select()
+end
+
+function onTick()
+    if wasd then
+        if wasd.isW() then
+            cameraPosition.x = cameraPosition.x + (math.cos(math.rad(cameraRotation)) * speed)
+            cameraPosition.y = cameraPosition.y + (math.sin(math.rad(cameraRotation)) * speed)
+        elseif wasd.isS() then
+            cameraPosition.x = cameraPosition.x - (math.cos(math.rad(cameraRotation)) * speed)
+            cameraPosition.y = cameraPosition.y - (math.sin(math.rad(cameraRotation)) * speed)
+        end
+        if wasd.isA() then
+            cameraRotation = cameraRotation + rotationSpeed
+        elseif wasd.isD() then
+            cameraRotation = cameraRotation - rotationSpeed
+        end
+    end
+    camera:setPosition(cameraPosition)
+    camera:setRotation(sm.quat.fromEuler(sm.vec3.new(90, cameraRotation + 90, 0)))
+
+    local uptime = getUptime()
+    if sphere:exists() and uptime > 160 then
+        local mass = sphere:getMass()
+        sphere:applyImpulse(sm.vec3.new(math.cos(math.rad(uptime * 16)) * mass, math.sin(math.rad(uptime * 16)) * mass, 0), true)
+        sphere:setColor(sm.color.new(1, 0, 1))
+    end
+
+    engine:tick()
+    gui:tick()
+    if gui:needFlush() then
+        gui:draw()
+        display.flush()
+    end
+end
+
+function onStop()
+    display.clear()
+    display.flush()
+end
+
+_enableCallbacks = true

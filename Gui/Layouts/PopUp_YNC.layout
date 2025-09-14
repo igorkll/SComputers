@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Widget" skin="BackgroundPromptNarrow" position_real="0 0 0.2705078125 0.5126953125" name="BackPanel">
+        <Property key="NeedKey" value="false"/>
+        <Property key="InheritsAlpha" value="false"/>
+        <Widget type="Widget" skin="PanelEmpty" position_real="0.11191335740072202 0.057142857142857141 0.76895306859205781 0.81904761904761902">
+            <Widget type="ImageBox" skin="ImageBox" position_real="0.43661971830985913 0.055813953488372092 0.12206572769953052 0.10930232558139535">
+                <Property key="ImageTexture" value="gui_icon_popup_alert.png"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position_real="0 0.18372093023255814 1 0.097674418604651161" name="Title">
+                <Property key="FontName" value="SM_Button"/>
+                <Property key="Caption" value="#{WARNING_TUNNELING_TITLE}"/>
+                <Property key="TextAlign" value="Center"/>
+            </Widget>
+            <Widget type="EditBox" skin="TextBox" position_real="0.098591549295774641 0.29767441860465116 0.7981220657276995 0.1744186046511628" name="Message">
+                <Property key="Caption" value="Message"/>
+                <Property key="FontName" value="SM_Text"/>
+                <Property key="TextAlign" value="Center"/>
+                <Property key="WordWrap" value="true"/>
+                <Property key="Static" value="true"/>
+                <Property key="MultiLine" value="true"/>
+            </Widget>
+            <Widget type="Button" skin="PrimaryButton" position_real="0.089201877934272297 0.47674418604651164 0.81690140845070425 0.13488372093023257" name="Yes">
+                <Property key="Caption" value="#{MENU_YN_YES}"/>
+                <Property key="FontName" value="SM_Button"/>
+                <Property key="TextAlign" value="Center"/>
+            </Widget>
+            <Widget type="Button" skin="SecondaryButton" position_real="0.10328638497652583 0.64418604651162792 0.78873239436619713 0.10930232558139535" name="No">
+                <Property key="Caption" value="#{MENU_YN_NO}"/>
+                <Property key="FontName" value="SM_Button"/>
+                <Property key="TextAlign" value="Center"/>
+            </Widget>
+            <Widget type="Button" skin="SecondaryButton" position_real="0.10328638497652583 0.79534883720930227 0.78873239436619713 0.10930232558139535" name="Cancel">
+                <Property key="Caption" value="#{MENU_YN_CANCEL}"/>
+                <Property key="FontName" value="SM_Button"/>
+                <Property key="TextAlign" value="Center"/>
+            </Widget>
+        </Widget>
+    </Widget>
+    <CodeGeneratorSettings/>
+</MyGUI>

@@ -1,0 +1,21 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Mesh/pixel_sun.obj",
+         "minViewSize" : 15,
+         "subMeshList" : [
+            {
+               "custom" : {
+                  "shadow" : false
+               },
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Textures/pixel_dif.tga",
+                  "$CONTENT_DATA/Textures/pixel_plastic_asg.tga",
+                  "$CONTENT_DATA/Textures/pixel_nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}

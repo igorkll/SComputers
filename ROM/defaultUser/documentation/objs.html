@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            usage: require("objs")<br/>
+            contains an additional set of objects for the <a href="gui.html" class="hyper">gui library</a><br/>
+            you can add them to a scene or window using sceneOrWindow:createCustom(x, y, sizeX, sizeY, class, ...):guiobject<br/>
+            the arguments of the objects are passed after the class to the createCustom method
+        </p>
+
+        <p class="text">elements:</p>
+        <ul class="list">
+            <li><span>objs.camera(camera, func, ...) - allows you to display the contents of the camera in the GUI</span></li>
+            <li><span>objs.bufferedCamera(camera, func, ...) - allows you to display the contents of the camera in the GUI. works via with a frame buffer</span></li>
+            <li><span>objs.tabbar(background, verticle, buttonSize, offset, bg, fg, bg_press, fg_press) - creates a tabbar</span></li>
+            <li><span>objs.seekbar(verticle, thickness (default: size / 5), lineColor (default: 0x686868), circleColor (default: 0x00ff00), value (default: 0.5), minValue (default: 0), maxValue (default: 1)) - creates a seekbar</span></li>
+        </ul>
+
+        <p class="text">tabbar:</p>
+        <ul class="list">
+            <li><span>tabbar:setSelected(index)</span></li>
+            <li><span>tabbar:getSelected():index</span></li>
+            <li><span>tabbar:addTab(title:string, tab:guiobject)</span></li>
+            <li><span>tabbar:createOtherspaceWindow():window - creates a window for all the remaining available space on this object that is not occupied by the tabbar</span></li>
+        </ul>
+        
+        <p class="text">seekbar methods:</p>
+        <ul class="list">
+            <li><span>seekbar:setValue(value)</span></li>
+            <li><span>seekbar:getValue():value</span></li>
+        </ul>
+
+        <p class="text">seekbar callbacks:</p>
+        <ul class="list">
+            <li><span>seekbar:onValueChanged(newvalue:number)</span></li>
+        </ul>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">--the example was created for a 128x128 screen
+local objs = require("objs")
+
+local display = getComponents("display")[1]
+display.reset()
+display.clearClicks()
+display.setClicksAllowed(true)
+local rx, ry = display.getWidth(), display.getHeight()
+
+local cameras = getComponents("camera")
+
+local gui = require("gui").new(display)
+local styles = require("styles")
+local scene = gui:createScene("777777")
+scene:setDefaultOffset(0)
+
+local function addWindow(index, posX, posY)
+    local window = scene:createWindow(nil, nil, nil, nil, "2d2d2d")
+    window:upPanel("058db8", "ffffff", "camera", true)
+    window:setDraggable(true)
+    window:setSize(rx / 2, ry / 2)
+    window:setPosition(posX * (rx / 2), posY * (ry / 2))
+
+    local closeButton = window:panelButton(7, false, "X", "00a2d5", "0054a1", "00c2ff", "0085ff")
+    closeButton:attachCallback(function(self, state, inZone)
+        if not state and inZone then
+            window:destroy()
+        end
+    end)
+
+    local cameraViewer = window:createCustom(nil, nil, nil, nil, objs.bufferedCamera, cameras[(index % #cameras) + 1].fork(), "drawAdvanced", true)
+    cameraViewer:setFov(math.rad(90))
+    cameraViewer:setDisabled(true)
+
+    function cameraViewer:onTick()
+        cameraViewer:update()
+    end
+end
+
+for i = 0, 3 do
+    addWindow(i, i % 2, math.floor(i / 2))
+end
+
+function callback_loop()
+    if _endtick then
+        display.clear()
+        display.flush()
+        return
+    end
+
+    gui:tick()
+    if gui:needFlush() then
+        gui:draw()
+        display.flush()
+    end
+end</code>
+        </pre>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">--the example was created for a 128x128 screen
+local objs = require("objs")
+
+local display = getComponent("display")
+display.reset()
+display.clearClicks()
+display.setClicksAllowed(true)
+local rx, ry = display.getWidth(), display.getHeight()
+
+local gui = require("gui").new(display)
+local scene = gui:createScene("333333")
+
+local offset = 4
+local thickness = 16
+
+local seekbar1 = scene:createCustom(offset, offset, rx - (offset * 2), thickness, objs.seekbar, false)
+local seekbar2 = scene:createCustom(offset, (offset * 2) + thickness, thickness, ry - thickness - (offset * 3), objs.seekbar, true)
+
+local function onValueChanged(self, value)
+    print("value changed: ", self.seekbarNumber, value)
+end
+
+seekbar1.onValueChanged = onValueChanged
+seekbar2.onValueChanged = onValueChanged
+seekbar1.seekbarNumber = 1
+seekbar2.seekbarNumber = 2
+
+function callback_loop()
+    if _endtick then
+        display.clear()
+        display.flush()
+        return
+    end
+
+    gui:tick()
+    if gui:needFlush() then
+        gui:draw()
+        display.flush()
+    end
+end</code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

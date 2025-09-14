@@ -1,0 +1,17 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$MOD_DATA/Objects/Mesh/stepper_motor_mini.obj",
+         "subMeshList" : [
+            {
+               "material" : "DifAsg",
+               "textureList" : [
+                  "$MOD_DATA/Objects/Textures/obj_steppermotor_dif.png",
+                  "$MOD_DATA/Objects/Textures/obj_stepper_motor_asg.png",
+                  ""
+               ]
+            }
+         ]
+      }
+   ]
+}

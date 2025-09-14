@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
+    </head>
+    <body>
+        <a target="_blank" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3360952754">
+            <img src="addons/minimap_component.jpg" class="image" />
+        </a>
+
+        <br/>
+        <p class="text">
+            this is an addon for the minimap in SComputers!<br/>
+            in fact, this is a camera with an additional API.<br/>
+            It also supports waypoints.<br/>
+            survival crafting is also supported.<br/>
+            supports isometric rendering
+        </p>
+
+        <br/>
+        <p class="text">
+            it completely inherits the <a class="text" href="camera.html">camera</a> API<br/>
+            the camera is fixed somewhere on top, you can control it using an additional API<br/>
+            also, this unit can be connected using CameraTunnel<br/>
+            component name - camera
+        </p>
+
+        <p class="text">additional API:</p>
+        <ul class="list">
+            <li><span>camera.setMinimapHeight(height:number) - sets the height of the camera in meters</span></li>
+            <li><span>camera.getMinimapHeight():number</span></li>
+            <li><span>camera.setMinimapRotation(rotation:number, rotateSync:boolean(default: true)) - the first argument works the same way as camera.setImageRotation, and the second one indicates whether the rotation will be tied to the rotation of the minimap block (default: true)</span></li>
+            <li><span>camera.getMinimapRotation():number, boolean</span></li>
+            <li><span>camera.setIsometricRender(enable:boolean) - enables or disables isometric rendering. when the isometric render is enabled, instead of fov and height, you need to change isometric size using setIsometricSize. and it is better to set the height to 1000 (in order to see high-rise creations) fov does not affect anything in this mode</span></li>
+            <li><span>camera.isIsometricRender():boolean</span></li>
+            <li><span>camera.setIsometricSize(isometricSize:float, isometricSize:float) - changes the size of the area captured by the isometric renderer</span></li>
+            <li><span>camera.getIsometricSize():float, float</span></li>
+            <li><span>camera.setMinimapOffset(number, number) - sets the offset of the minimap relative to the minimap block</span></li>
+            <li><span>camera.getMinimapOffset():number, number</span></li>
+            <li><span>camera.getWaypoints(width, height):{{x, y, color}, ...} - searches for all labels for a specific monitor resolution. all of them get a position on a specific point of the monitor - accordingly, they are not relevant for long</span></li>
+            <li><span>camera.drawWaypoints(display, drawer:function(display, waypoint)) - draws all the waypoints on the monitor in a pre-prepared way. if you do not pass the drawer function, then the rendering will take place in the form of ordinary circles</span></li>
+            <li><span>camera.getRealRotation():number - returns the actual rotation of the minimap</span></li>
+            <li><span>camera.setWorldMode(boolean) - enables the world positioning mode in which you set the position of the minimap relative to the center of the game map using setMinimapOffset. When using this mode, it is recommended to disable rotateSync ( camera.setMinimapRotation(0, false) ) (default: false)</span></li>
+            <li><span>camera.isWorldMode():boolean - returns the value set using setWorldMode</span></li>
+        </ul>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">local styles = require("styles")
+
+local display = getComponent("display")
+display.reset()
+display.setClicksAllowed(true)
+display.setLight(255)
+display.clear()
+display.flush()
+local fwidth, fheight = display.getFontWidth(), display.getFontHeight()
+
+local camera = getComponent("camera")
+local cameraStep = 512
+camera.setStep(512)
+camera.setDistance(2048)
+camera.setMinimapOffset(0, 0)
+camera.setMinimapRotation(0, true)
+camera.setWorldMode(false)
+
+local function rotateVector(x, y, angle)
+    local x_new = x * math.cos(angle) - y * math.sin(angle)
+    local y_new = x * math.sin(angle) + y * math.cos(angle)
+    return x_new, y_new
+end
+
+local zoneSize = 64
+local offsetX, offsetY = 0, 0
+local isometric
+local waypoints = true
+local function setIsometric(_isometric)
+    isometric = _isometric
+    camera.setIsometricRender(isometric)
+    if isometric then
+        camera.setMinimapHeight(1000)
+        camera.setIsometricSize(zoneSize * (display.getWidth() / display.getHeight()), zoneSize)
+    else
+        local fov = math.rad(60)
+        camera.setNonSquareFov(fov * (display.getWidth() / display.getHeight()), fov)
+        camera.setMinimapHeight(zoneSize)
+    end
+end
+setIsometric(true)
+
+local function setMinimapOffset(_offsetX, _offsetY)
+    offsetX = _offsetX
+    offsetY = _offsetY
+    camera.setMinimapOffset(offsetX, offsetY)
+end
+
+local renderSettings = {
+    lampLighting = false,
+    shadows = false,
+    smoothingTerrain = false,
+    simpleShadows = false,
+    sun = false,
+    fog = false,
+    reduceAccuracy = false
+}
+
+local gui = require("gui").new(display)
+local pressedPosX, pressedPosY
+local scene = gui:createScene(function ()
+    camera.drawAdvanced(display, renderSettings)
+    if waypoints then
+        camera.drawWaypoints(display)
+    end
+end, function (_, click)
+    if click[3] == "pressed" then
+        pressedPosX, pressedPosY = click[1], click[2]
+    elseif click[3] == "drag" then
+        if pressedPosX then
+            local perPixel = zoneSize / display.getHeight()
+            local lOffsetX, lOffsetY = rotateVector(((click[2] - pressedPosY) * perPixel), ((click[1] - pressedPosX) * perPixel), -camera.getRealRotation())
+            offsetX = offsetX + lOffsetX
+            offsetY = offsetY + lOffsetY
+            pressedPosX, pressedPosY = click[1], click[2]
+            camera.setMinimapOffset(offsetX, offsetY)
+        end
+    end
+end)
+scene:setAlwaysRedraw(true)
+
+local isometricSwitch = scene:createButton(2, 2, 16, fheight + 2, true, nil, "444444", "ffffff", "ee2222", "ffffff")
+isometricSwitch.state = isometric
+isometricSwitch:setCustomStyle(styles.switch)
+isometricSwitch:attachCallback(function (_, state)
+    setIsometric(state)
+end)
+
+local isometricSwitchText = scene:createText(nil, nil, "isometric")
+isometricSwitchText.sizeY = fheight
+isometricSwitchText:setCenterRight(isometricSwitch, 3)
+
+local waypointsSwitch = scene:createButton(nil, nil, 16, fheight + 2, true, nil, "444444", "ffffff", "ee2222", "ffffff")
+waypointsSwitch:setDown(isometricSwitch, 3)
+waypointsSwitch.state = waypoints
+waypointsSwitch:setCustomStyle(styles.switch)
+waypointsSwitch:attachCallback(function (_, state)
+    waypoints = state
+end)
+
+local waypointsSwitchText = scene:createText(nil, nil, "waypoints")
+waypointsSwitchText.sizeY = fheight
+waypointsSwitchText:setCenterRight(waypointsSwitch, 3)
+
+local worldSwitch = scene:createButton(nil, nil, 16, fheight + 2, true, nil, "444444", "ffffff", "ee2222", "ffffff")
+worldSwitch:setDown(waypointsSwitch, 3)
+worldSwitch.state = false
+worldSwitch:setCustomStyle(styles.switch)
+worldSwitch:attachCallback(function (_, state)
+    setMinimapOffset(0, 0)
+    camera.setMinimapRotation(0, not state)
+    camera.setWorldMode(state)
+end)
+
+local worldSwitchText = scene:createText(nil, nil, "world mode")
+worldSwitchText.sizeY = fheight
+worldSwitchText:setCenterRight(worldSwitch, 3)
+
+local increaseScale = scene:createButton(nil, nil, 8, 8, false, "+")
+increaseScale:setDown(worldSwitch, 3)
+increaseScale:attachCallback(function (_, state)
+    if state then
+        zoneSize = zoneSize + 16
+        if zoneSize > 1024 then
+            zoneSize = 1024
+        else
+            changeScale()
+        end
+    end
+end)
+
+local reduceScale = scene:createButton(nil, nil, 8, 8, false, "-")
+reduceScale:setRight(increaseScale, 2)
+reduceScale:attachCallback(function (_, state)
+    if state then
+        zoneSize = zoneSize - 16
+        if zoneSize < 16 then
+            zoneSize = 16
+        else
+            changeScale()
+        end
+    end
+end)
+
+local zoneText = scene:createText()
+zoneText.sizeY = fheight
+zoneText:setCenterRight(reduceScale, 2)
+
+local increaseStep = scene:createButton(nil, nil, 8, 8, false, "+")
+increaseStep:setDown(increaseScale, 3)
+increaseStep:attachCallback(function (_, state)
+    if state then
+        cameraStep = cameraStep + 128
+        if cameraStep > 2048 then
+            cameraStep = 2048
+        else
+            changeSpeed()
+        end
+    end
+end)
+
+local reduceStep = scene:createButton(nil, nil, 8, 8, false, "-")
+reduceStep:setRight(increaseStep, 2)
+reduceStep:attachCallback(function (_, state)
+    if state then
+        cameraStep = cameraStep - 128
+        if cameraStep < 128 then
+            cameraStep = 128
+        else
+            changeSpeed()
+        end
+    end
+end)
+
+local scaleText = scene:createText()
+scaleText.sizeY = fheight
+scaleText:setCenterRight(reduceStep, 2)
+
+local resetOffset = scene:createButton(nil, nil, nil, 8, false, "RESET OFFSET")
+resetOffset:setDown(increaseStep, 2)
+resetOffset:attachCallback(function (_, state)
+    if state then
+        setMinimapOffset(0, 0)
+    end
+end)
+
+function changeSpeed()
+    scaleText:clear()
+    scaleText:setText("speed: " .. cameraStep)
+    camera.setStep(cameraStep)
+end
+changeSpeed()
+
+function changeScale()
+    zoneText:clear()
+    zoneText:setText("zone: " .. zoneSize)
+    setIsometric(isometric)
+end
+changeScale()
+
+function callback_loop()
+    if _endtick then
+        display.clear()
+        display.forceFlush()
+        return
+    end
+
+    gui:tick()
+    if gui:needFlush() then
+        gui:draw()
+        display.flush()
+    end
+end</code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

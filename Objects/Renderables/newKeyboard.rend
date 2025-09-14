@@ -1,0 +1,241 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Mesh/newKeyboard.fbx",
+         "subMeshList" : [
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$GAME_DATA/Textures/Default/default_dif.tga",
+                  "$GAME_DATA/Textures/Default/default_asg.tga",
+                  "$GAME_DATA/Textures/Default/default_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$CONTENT_DATA/Objects/Textures/keyboard_button_dif.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_asg.tga",
+                  "$GAME_DATA/Objects/Textures/interactive/obj_interactive_switchbutton_nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}

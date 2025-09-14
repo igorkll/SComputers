@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
+    </head>
+    <body>
+        <p class="text">
+            usage: require("process")<br/>
+            this library is primarily intended for creating <a class="hyper" href="./scriptableOS.html">operating systems</a><br/>
+            it doesn't implement multithreading or anything like that, it implements sandbox creation mechanisms for running SComputers scripts<br/>
+            it implements support for callbacks such as callback_loop, callback_error and newer ones onTick, OnStart, onStop, onError<br/>
+            and if the new entry point (callback_loop/onTick) is not declared, then the entire program will be a loop, as it was in the original ScriptableComputer<br/>
+            in this library, you also need to use the _enableCallbacks flag to include new callbacks in place of the old ones<br/>
+            note that some functions refer to each other inside the ENV. for example, if you redefine getComponents, it will automatically change the behavior of all obsolete methods such as getDisplays, getPorts, etc. if you redefine setData/getData, it will automatically redefine setTable/getTable<br/>
+            more information about the work of callbacks is described here: <a class="hyper" href="./env.html#callbacks_and_flags">environment</a><br/>
+            note that if you create a chain of nested processes, then at each level below processlibrary.createEnv in the library, the process will be redefined so that first call the createEnv user function at a higher level<br/>
+            thus, if you have several nested processes each using createEnv, then when creating an ENV, the entire createEnv chain will be called up to the top level to apply all modifications to the ENV
+        </p>
+
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>processlibrary.createHost():processhost - creates a host on which processes can be created</span></li>
+            <li><span>processlibrary.createEnv():table - creates a new basic ENV</span></li>
+        </ul>
+
+        <p class="text">processhost methods:</p>
+        <ul class="list">
+            <li><span>processhost:create(function() return env end):process - starts a new process. redefines the reboot, getTick, getUptime and getSkippedTicks functions to match the internal timer of the process.<br/>
+            you are not passing env here, but a function that returns env! because the process can use a software reboot (which will require re-creating the ENV)<br/>
+            the process can also create its own environment, which will require running your function repeatedly to use it as a base environment
+            </span></li>
+            <li><span>processhost:tick() - updates all currently running processes</span></li>
+            <li><span>processhost:stop() - stops all currently running processes</span></li>
+            <li><span>processhost:list():{process, process, ...} - returns all currently running processes</span></li>
+            <li><span>processhost:destroy() - destroys all processes</span></li>
+        </ul>
+
+        <p class="text">process methods:</p>
+        <ul class="list">
+            <li><span>process:load(chunk:string, chunkname:string, mode:string, ...) - loads the code into the process. this function must be called after the process is created.<br/>
+            the code is loaded via "load", you can also pass arguments that will be accepted by the process to the main function
+            </span></li>
+            <li><span>process:enluaLoad(bytecode:string, ...) - it works the same way as process:load, but uses the <a class="hyper" href="./enlua.html">enlua</a> library to load encrypted code<br/>
+            the code is loaded via "enlua.load", you can also pass arguments that will be accepted by the process to the main function
+            </span></li>
+            <li><span>process:isStopped():boolean - returns true if the process was stopped</span></li>
+            <li><span>process:getError():string|nil - if the process failed with an error, this function returns it. it also returns a syntax error if the process:load function initially failed</span></li>
+            <li><span>process:stop() - stops the process</span></li>
+            <li><span>process:getEnv():table - returns the env table of the given process</span></li>
+            <li><span>process:getTick():number - returns the current tick counter value of this process</span></li>
+            <li><span>process:getUptime():number - returns the current uptime counter value of this process</span></li>
+            <li><span>process:reboot() - restarts the process</span></li>
+            <li><span>process:destroy() - stops the process and destroys it. after that, it will no longer be in the process list and it can no longer be restarted</span></li>
+        </ul>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">local processlibrary = require("process")
+local processhost = processlibrary.createHost()
+
+local code = [[print("init", getTick())
+
+function onStart()
+    print("start", getTick())
+end
+
+function onTick()
+    print("tick", getTick())
+    if getTick() > 40 then
+        error("test")
+    end
+end
+
+function onStop()
+    print("stop", getTick())
+end
+
+function onError(err)
+    print("err", err, getTick())
+end
+
+_enableCallbacks = true]]
+
+local process = processhost:create(function()
+    local env = processlibrary.createEnv()
+    env.print = logPrint
+    env.logPrint = logPrint
+    env.alert = logPrint
+    env.warning = logPrint
+    env.log = logPrint
+    return env
+end)
+process:load(code, "=VM")
+
+function onTick()
+    processhost:tick()
+    local error = process:getError()
+    if error then
+        logPrint("process error: ", error)
+        process:reboot()
+    end
+end
+
+function onStop()
+    processhost:stop()
+end
+
+_enableCallbacks = true</code>
+        </pre>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;">local processlibrary = require("process")
+local processhost = processlibrary.createHost()
+
+local code = [[print("init", getTick())
+
+function onStart()
+    print("start", getTick())
+end
+
+function onTick()
+    print("tick", getTick())
+    if getTick() > 40 then
+        error("test")
+    end
+end
+
+function onStop()
+    print("stop", getTick())
+end
+
+function onError(err)
+    print("err", err, getTick())
+    return true --calling a software reboot in case of an error
+end
+
+_enableCallbacks = true]]
+
+local process = processhost:create(function()
+    local env = processlibrary.createEnv()
+    env.print = logPrint
+    env.logPrint = logPrint
+    env.alert = logPrint
+    env.warning = logPrint
+    env.log = logPrint
+    return env
+end)
+process:load(code, "=VM")
+
+function onTick()
+    processhost:tick()
+    local error = process:getError()
+    if error then
+        logPrint("process error: ", error) --in this example, this line of code will never work because it triggers a software reboot from the script itself in case of an error
+    end
+end
+
+function onStop()
+    processhost:stop()
+end
+
+_enableCallbacks = true</code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

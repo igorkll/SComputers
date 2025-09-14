@@ -1,0 +1,143 @@
+{
+   "partList" : [
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Metal",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Radar1.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "SmallRadar",
+            "filename" : "$CONTENT_DATA/Scripts/Radars/SmallRadar.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-Y",
+         "uuid" : "ab2672e2-4f2f-4e7b-8be1-4dcfc4ccb151"
+      },
+      {
+         "box" : {
+            "x" : 2,
+            "y" : 2,
+            "z" : 2
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Metal",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Radar2.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "Radar",
+            "filename" : "$CONTENT_DATA/Scripts/Radars/Radar.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-Y",
+         "uuid" : "92877a40-097d-45be-be06-faa30d7846df"
+      },
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 3,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Metal",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Radar3.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "BigRadar",
+            "filename" : "$CONTENT_DATA/Scripts/Radars/BigRadar.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-Y",
+         "uuid" : "5123feac-7a92-45bd-8935-d1342d27cb04"
+      },
+      {
+         "box" : {
+            "x" : 4,
+            "y" : 4,
+            "z" : 4
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Metal",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/Radar4.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "ExtraBigRadar",
+            "filename" : "$CONTENT_DATA/Scripts/Radars/ExtraBigRadar.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-Y",
+         "uuid" : "a33417df-19f3-4fef-8595-0efc6ae15e5b"
+      },
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 1,
+            "z" : 3
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 7,
+            "durability" : 4,
+            "friction" : 7
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/radarDetector.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "radarDetector",
+            "filename" : "$CONTENT_DATA/Scripts/radarDetector.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Z+Z-Y",
+         "uuid" : "d4bf6cb5-17af-491b-abbc-f6492ae5e03c"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "222222",
+         "physicsMaterial" : "Mechanical",
+         "ratings" : {
+            "buoyancy" : 3,
+            "density" : 7,
+            "durability" : 4,
+            "friction" : 7
+         },
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/radarDetector_mini.rend",
+         "rotationSet" : "PropY",
+         "scripted" : {
+            "classname" : "radarDetector",
+            "filename" : "$CONTENT_DATA/Scripts/radarDetector.lua"
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "sticky" : "-X+X-Z+Z-Y",
+         "uuid" : "73df7328-ab7b-4654-9248-d0ea5e105927"
+      },
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "333333",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Models/chaff2/renderable.rend",
+         "rotationSet" : "PropZ",
+         "scripted" : {
+            "classname" : "chaff",
+            "filename" : "$CONTENT_DATA/Scripts/chaff.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Z-Y+Y",
+         "uuid" : "2ce74e6b-188d-40c0-ad8a-0afc6925dc9f"
+      }
+   ]
+}

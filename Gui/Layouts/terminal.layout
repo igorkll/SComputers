@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Widget" skin="BackgroundPopup" position_real="0 0 0.9521484375 0.791015625" name="BackPanel">
+        <Property key="Colour" value="1 1 1"/>
+        <Property key="Alpha" value="1"/>
+        <Widget type="TextBox" skin="TextBox" position_real="0 0 1 0.037037037037037035" name="Title">
+            <Property key="TextAlign" value="Center"/>
+            <Property key="TextShadow" value="true"/>
+            <Property key="Caption" value="Terminal"/>
+        </Widget>
+        <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.010256410256410256 0.041975308641975309 0.97948717948717945 0.84074074074074079" name="log">
+            <Property key="TextAlign" value="Default"/>
+            <Property key="MultiLine" value="true"/>
+            <Property key="MaxTextLength" value="100000"/>
+            <Property key="FontName" value="DejaVuSansFont_15"/>
+            <Property key="ReadOnly" value="true"/>
+        </Widget>
+        <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.010256410256410256 0.89506172839506171 0.85641025641025637 0.085185185185185183" name="text">
+            <Property key="TextAlign" value="Left VCenter"/>
+            <Property key="MultiLine" value="false"/>
+            <Property key="ReadOnly" value="false"/>
+            <Property key="FontName" value="DejaVuSansFont_15"/>
+            <Property key="WordWrap" value="false"/>
+            <Property key="VisibleVScroll" value="false"/>
+            <Property key="VisibleHScroll" value="false"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.8666666666666667 0.88271604938271608 0.092307692307692313 0.1111111111111111" name="send">
+            <Property key="Caption" value="send"/>
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Colour" value="1 1 1"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.9538461538461539 0.88888888888888884 0.041025641025641026 0.055555555555555552" name="up">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="/\"/>
+        </Widget>
+        <Widget type="Button" skin="PrimaryButton" position_real="0.9538461538461539 0.9320987654320988 0.041025641025641026 0.055555555555555552" name="down">
+            <Property key="FontName" value="SM_Button"/>
+            <Property key="TextAlign" value="Center"/>
+            <Property key="Caption" value="\/"/>
+        </Widget>
+    </Widget>
+    <CodeGeneratorSettings>
+        <Property key="IncludeDirectory" value=""/>
+        <Property key="PanelName" value=""/>
+        <Property key="PanelNamespace" value=""/>
+        <Property key="SourceDirectory" value=""/>
+    </CodeGeneratorSettings>
+</MyGUI>

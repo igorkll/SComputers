@@ -1,0 +1,18 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$MOD_DATA/Objects/Mesh/LolzComputer2.fbx",
+         "subMeshList" : [
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$MOD_DATA/Objects/Textures/computer_dif.png",
+                  "$MOD_DATA/Objects/Textures/computer_asg.tga",
+                  "$MOD_DATA/Objects/Textures/computer_nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}
+

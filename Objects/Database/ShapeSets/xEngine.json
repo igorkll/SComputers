@@ -1,0 +1,390 @@
+{
+   "partList" : [
+      {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "bb395d17-1b52-43d0-8d7d-3ecc09d46b07"
+      },
+      {
+         "box" : {
+            "x" : 2,
+            "y" : 2,
+            "z" : 2
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "648b1ae8-7c9e-4cb3-b527-935fd543c3f3"
+      },
+      {
+         "box" : {
+            "x" : 3,
+            "y" : 3,
+            "z" : 3
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "3b2fde74-4b3d-4e4e-aec9-e9b87755802f"
+      },
+      {
+         "box" : {
+            "x" : 16,
+            "y" : 16,
+            "z" : 1
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "3053bc20-bac7-4d69-9559-8664bfa2bbcc"
+      },
+      {
+         "box" : {
+            "x" : 64,
+            "y" : 64,
+            "z" : 1
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "8c4fb2ec-e54b-4a0a-9a5b-ea10a9dc1682"
+      },
+      {
+         "box" : {
+            "x" : 16,
+            "y" : 16,
+            "z" : 4
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "f9a43261-6b19-4beb-9476-3399e7cd9601"
+      },
+      {
+         "box" : {
+            "x" : 4,
+            "y" : 4,
+            "z" : 4
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "97fb655e-e0ea-4359-bf7c-61d1327e70b4"
+      },
+      {
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "sphere" : {
+            "diameter" : 1
+         },
+         "uuid" : "7f15869c-9d69-4f43-946c-3bd822b2820f"
+      },
+      {
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "sphere" : {
+            "diameter" : 2
+         },
+         "uuid" : "1de75f5c-42d6-45c6-876f-3d557f1b04df"
+      },
+      {
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "sphere" : {
+            "diameter" : 3
+         },
+         "uuid" : "ca3ba192-e93f-4d84-9865-b09ea4847989"
+      },
+      {
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "sphere" : {
+            "diameter" : 4
+         },
+         "uuid" : "e957c3d4-68b5-4470-999e-3254839f6539"
+      },
+      {
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "sphere" : {
+            "diameter" : 5
+         },
+         "uuid" : "c821761a-e812-4d61-bf07-18d4220de3e1"
+      },
+      {
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "sphere" : {
+            "diameter" : 6
+         },
+         "uuid" : "20f9bc86-5f4f-4d1f-aaf8-d30e526be22c"
+      },
+      {
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "sphere" : {
+            "diameter" : 7
+         },
+         "uuid" : "0aee86b9-cbf7-45f6-94a0-3b38905a6780"
+      },
+      {
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "sphere" : {
+            "diameter" : 8
+         },
+         "uuid" : "288b89f2-b0e2-4b92-9e65-0a386e9a2641"
+      },
+      {
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "sphere" : {
+            "diameter" : 9
+         },
+         "uuid" : "e985b8b5-4372-4f6c-bd40-d68c4692b175"
+      },
+      {
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "sphere" : {
+            "diameter" : 10
+         },
+         "uuid" : "5351d1bb-4094-4992-a729-1f014f84c9ba"
+      },
+      {
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "sphere" : {
+            "diameter" : 16
+         },
+         "uuid" : "2a2874ac-046f-440e-891a-fbbca4ec446e"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 1
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "2b8a00e5-c633-4366-be7e-627a3df8a8b9"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 2
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "a3c4e935-94cb-40dc-ae93-a3ada4d37f35"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 3
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "2ec00f80-ba09-4258-ac53-e1c791e57f45"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 4
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "3bec5538-1983-41be-a656-6389bc723889"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 5
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "f07a77f6-27fd-44f2-b65b-ed16649203d6"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 6
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "de400276-b74e-4e5a-8096-632a0110020d"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 7
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "ce797b59-881b-4612-bac9-8c8f94d78b46"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 8
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "653983c9-e0ec-4e2e-b662-de5999758582"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 9
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "7fcc8b1e-b1f7-4a0d-aeab-e604ad0e35c0"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 10
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "fc70d559-3537-4c40-8bd1-d69587d9826a"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 11
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "d8be5062-c7ee-4627-a6a0-679360cef4c1"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 12
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "fb29acb4-a8a3-4283-b43c-e70c900e30b0"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 13
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "796c258e-863d-4aae-b77c-3b181b376a7a"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 14
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "1f2eadb3-da28-4797-97ed-c570a35ab7b5"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 15
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "d8ed36bb-a863-42ee-809c-9526cd521250"
+      },
+      {
+         "cylinder" : {
+            "axis" : "Y",
+            "depth" : 1,
+            "diameter" : 16
+         },
+         "physicsMaterial" : "Default",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/NULL.rend",
+         "rotationSet" : "Default",
+         "showInInventory" : false,
+         "uuid" : "6a6a9e70-9630-4391-a7ad-37c51fb8c013"
+      }
+   ]
+}

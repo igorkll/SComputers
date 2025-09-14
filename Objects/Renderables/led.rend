@@ -1,0 +1,14 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$MOD_DATA/Objects/Mesh/box.fbx",
+         "minViewSize" : 20,
+         "subMeshList" : [
+            {
+               "material" : "DifAsg",
+               "textureList" : [ "$GAME_DATA/Textures/transparent.tga", "$CONTENT_DATA/Objects/Textures/glow_asg.tga", "" ]
+            }
+         ]
+      }
+   ]
+}

@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+            hljs.highlightAll();
+        </script>
+    </head>
+    <body>
+        <h1>scriptableOS</h1>
+        <p class="text">
+            the SComputers mod has its own operating system called scriptableOS<br/>
+            to run this operating system, you first need to import the BIOS from the mod examples into your computer<br/>
+            then you need to import the operating system itself to the disk. to do this, press the E button on the disk, clear it and import scriptableOS
+        </p>
+
+        <br/>
+        <h1>BIOS</h1>
+        <h2>boot</h2>
+        <p class="text">
+            the BIOS works as follows: it first searches for the OS on all connected ROM disks, trying to interpret each one as an "image" type file system and then a "dump" type<br/>
+            if this fails, it opens the rom disk as a table and if there is a string in the "init" key, it tries to load it as a code<br/>
+            if no initialization code was found on any of the ROM disks, then it switches to general disks<br/>
+            in file systems, the BIOS searches for the "/init.lua" file and tries to interpret it as the operating system startup code<br/>
+            when the BIOS manages to find and load the initialization code, it runs it through the <a class="hyper" href="./process.html">process</a> library<br/>
+            the disk from which the operating system starts is passed to the executable code as an argument so that it knows which disk to read its files from.<br/>
+            please note that if the load is carried out from a ROM disk, then if it was possible to interpret it as a filesystem,<br/>
+            then the filesystem will be passed, and if not (the ROM disk was read as a table and the code was taken from the "init" key), then the ROM disk itself<br/>
+            when the BIOS finds the startup code, it first tries to load it as encrypted using the <a class="hyper" href="./enlua.html">enlua</a> library, and if this fails, it loads the code as normal.
+        </p>
+
+        <br/>
+        <h2>env</h2>
+        <p class="text">
+            the BIOS loads the initialization code through the <a class="hyper" href="./process.html">process</a> library,<br/>
+            which allows you to use all the callbacks as in the SComputers computer itself and run scripts from SComputers in this way<br/>
+            however, it overrides the behavior of some standard functions, and if you need to access the original functions,<br/>
+            it provides you with access to the "biosenv" table, which contains the functions of SComputers itself that are not affected by the BIOS<br/>
+            <p class="text">list of redefined functions:</p>
+            <ul class="list">
+                <li><span>reboot - redefined by the process library. it only restarts your code, but it does not restart the computer and, as a result, the BIOS</span></li>
+                <li><span>getTick - redefined by the process library. returns the tick of the process itself, not the computer</span></li>
+                <li><span>getUptime - redefined by the process library. returns the uptime of the process itself, not the computer</span></li>
+                <li><span>getSkippedTicks - redefined by the process library</span></li>
+                <li><span>setCode - it is redefined in such a way that it does not overwrite the computer code (where the BIOS is located), but the code of the /init.lua file</span></li>
+                <li><span>getCode - redefined to read the /init.lua file</span></li>
+                <li><span>setData/setTable - saves it to a file /.fastsave, not into computer memory</span></li>
+                <li><span>getData/getTable - reads the file /.fastsave, not into computer memory</span></li>
+                <li><span>setEncryptedCode - redefined to work with the /init.lua file</span></li>
+                <li><span>encryptCode - redefined to work with the /init.lua file</span></li>
+                <li><span>isCodeEncrypted - redefined to work with the /init.lua file</span></li>
+            </ul>
+        </p>
+
+        <br/>
+        <h1>Operating System</h1>
+        <h2>description</h2>
+        <p class="text">
+            the scriptableOS operating system provides a set of applications and libraries, a graphical and console interface<br/>
+            scriptableOS uses the <a class="hyper" href="./vfs.html">vfs</a> library to implement a virtual file system with the ability to mount disks<br/>
+            scriptableOS redefines the "require" function so that it can be used both to load system libraries and to load mod libraries<br/>
+            please note that inside scriptableOS, functions such as setCode/getCode and setData/getData work for your application and not for the computer or OS, just as it is done in the BIOS<br/>
+            if you want to access untouched functions inside the system environment, use "systemenv" and if you want to access computer functions, use "biosenv"<br/>
+            <p class="text">list of redefined functions:</p>
+            <ul class="list">
+                <li><span>reboot - redefined by the process library. it only restarts your code, but it does not restart the computer</span></li>
+                <li><span>getTick - redefined by the process library. returns the tick of the process itself, not the computer</span></li>
+                <li><span>getUptime - redefined by the process library. returns the uptime of the process itself, not the computer</span></li>
+                <li><span>getSkippedTicks - redefined by the process library</span></li>
+                <li><span>setCode - it is redefined in such a way that it does not overwrite the computer code, but the code of the main.lua file</span></li>
+                <li><span>getCode - redefined to read the main.lua file</span></li>
+                <li><span>setData/setTable - saves it to a file .appdata, not into computer memory</span></li>
+                <li><span>getData/getTable - reads the file .appdata, not into computer memory</span></li>
+                <li><span>setEncryptedCode - redefined to work with the main.lua file</span></li>
+                <li><span>encryptCode - redefined to work with the main.lua file</span></li>
+                <li><span>isCodeEncrypted - redefined to work with the main.lua file</span></li>
+                <li><span>getComponent/getComponents - redefined to change the order of components when running SComputers scripts</span></li>
+            </ul>
+        </p>
+
+        <br/>
+        <h2>system features</h2>
+        <ul class="list">
+            <li><span>please note that if your application is running in fullscreen or terminal mode,<br/>
+            this component will be installed as the first in the list of components in addition to being available in arguments via scriptData<br/>
+            this was done for compatibility with scripts written for SComputers itself, so that the system could also run them
+            </span></li>
+        </ul>
+
+        <br/>
+        <h2>terminal commands</h2>
+        <ul class="list">
+            <li><span>close - closes the currently running application (can be executed while the application is running)</span></li>
+            <li><span>clear - clears the terminal (can be executed while the application is running)</span></li>
+            <li><span>current - outputs the name of the currently running application (can be executed while the application is running)</span></li>
+            <li><span>applist - displays a list of applications</span></li>
+            <li><span>allapplist - displays a list of all applications, including those that cannot be run in the terminal and hidden</span></li>
+        </ul>
+
+        <br/>
+        <h2>filesystem structure</h2>
+        <ul class="list">
+            <li><span>/init.lua - the main file of the system, runs from the BIOS</span></li>
+            <li><span>/libs - there are libraries of the system here</span></li>
+            <li><span>/services - the system's services are located in this directory</span></li>
+            <li><span>/apps - system applications</span></li>
+            <li><span>/user/apps - user applications</span></li>
+        </ul>
+
+        <br/>
+        <h2>application structure</h2>
+        <ul class="list">
+            <li><span>main.lua - the main executable file of the application (can be read and written via setCode/getCode)</span></li>
+            <li><span>config.json - application configuration</span></li>
+            <li><span>.appdata - application data created via setData/getData</span></li>
+            <li><span>service.lua - the background script of your application runs as a separate process and runs with the system when initializing your application</span></li>
+        </ul>
+
+        <br/>
+        <h2>globals</h2>
+        <ul class="list">
+            <li><span>loadfile(path, mode, env):function, string - loads the code from a file</span></li>
+            <li><span>dofile(path, ...):... - executes code from a file</span></li>
+            <li><span>require(name):table - loads the library. It can be used both to load mod libraries, to load scriptableOS libraries, and to load libraries from a file</span></li>
+        </ul>
+
+        <br/>
+        <h2>system library</h2>
+        <ul class="list">
+            <li><span>system.fs - a virtual root file system created through <a class="hyper" href="./vfs.html">vfs</a></span></li>
+            <li><span>system.processhost - processhost created through the <a class="hyper" href="./process.html">process</a> library</li>
+            <br/>
+            <li><span>system.execute(nameOrPath:string, args:table):scriptData|nil, string - tries to launch applications by its name or by the path to the executable file, if successful, it returns the "script data" table in case of failure, nil, and the error text</li>
+            <li><span>system.initApp(appinfo):boolean - initializes the application. returns true if the application was successfully initialized</li>
+            <li><span>system.uninitApp(appinfo):boolean - deinitializes the application. returns true if the application was successfully de-initialized</li>
+            <li><span>system.uninstallApp(appinfo):boolean - deletes the app</li>
+            <li><span>system.closeApp(scriptData):boolean - closes the application. returns true if successful</li>
+            <li><span>system.isRunning(scriptData):boolean - returns true if the application is still running</li>
+            <li><span>system.isSystemApp(appinfo):boolean - returns true if the application is system-based</li>
+            <li><span>system.getAppConfig(appinfo):table - returns a table with the constant configuration of the application (json from the config.json file) if it cannot be read, it returns an empty table</li>
+            <li><span>system.installedApps():{appinfo, appinfo, ...} - return the list of all installed applications (appinfo)</li>
+            <li><span>system.findAppByName(name:string):appinfo|nil - it searches for the app by its name and returns appinfo if successful</li>
+            <li><span>system.parseCommand(input:string):table - the command parser</li>
+            <li><span>system.filteredApps(requirements:table):{appinfo, appinfo, ...} - It works the same way as system.installedApps, but it does not return hidden applications and allows you to specify a table with requirements in the configuration (appinfo)</li>
+            <li><span>system.mount(tag, index, filesystem) - mounts the file system with the specified tag and index. if such a mount point already exists, then increments the index until an unoccupied mount point is found. returns the actual path where the file system was mounted</span></li>
+            <li><span>system.checkAttachDetachComponents(componentType:string, checkTable:table, callback(attach, component, data)) - calls your callback when attach/detach a component of the specified type. you also get a table with data (where there is already an index field) in which you can put anything to access this data when the component is detached</span></li>
+        </ul>
+
+        <br/>
+        <h2>scriptData</h2>
+        <p class="text">
+            when your library or application loads, the "scriptData" table is passed to it (first argument)<br/>
+            this can be used so that the script can get some information about itself<br/>
+            <p class="text">scriptData table:</p>
+            <ul class="list">
+                <li><span>selfScriptPath - path to the script</span></li>
+                <li><span>selfScriptDirectory - the directory where the script is located</span></li>
+                <li><span>type - maybe "lib" or "app"</span></li>
+                <li><span>process - the process in which this application is running (only for applications)</span></li>
+                <li><span>appinfo - your own appinfo (only for applications)</span></li>
+                <li><span>args - the table where the arguments for launching your application are located (only for applications)</span></li>
+                <li><span>args.terminal - if your application is running in terminal mode (only when running through the terminal)</span></li>
+                <li><span>args.display - if your app is running in fullscreen mode (only when starting on the display)</span></li>
+                <li><span>args.guiscene - a scene or window where you can create a window for your application (only when starting on the display)</span></li>
+            </ul>
+        </p>
+
+        <br/>
+        <h2>appinfo</h2>
+        <p class="text">
+            each app has its own appinfo table<br/>
+            it can be obtained from scriptData or from system.installedApps()<br/>
+            <p class="text">appinfo table:</p>
+            <ul class="list">
+                <li><span>name - "example"</span></li>
+                <li><span>dir - "/app/example.app"</span></li>
+                <li><span>exec - "/app/example.app/main.lua"</span></li>
+                <li><span>baseDir - "/app"</span></li>
+            </ul>
+        </p>
+
+        <br/>
+        <h2>config.json</h2>
+        <p class="text">
+            this file must be present in your application to provide information about your application<br/>
+            this table shows the default values of the fields, as they will be if you do not specify them or if you do not have a config.json at all<br/>
+            you can get the application configuration from appinfo using the system.getAppConfig function<br/>
+            <p class="text">config table:</p>
+            <pre>
+                <code class="language-json" style="width: fit-content;">{
+    "terminal" : true, //specify as true if your application can run in terminal mode
+    "display" : true, //set it as true if your app can run in fullscreen mode
+    "gui" : false, //set true if your application can run in gui mode
+    "hidden" : false //set to true if the application should not be displayed
+}</code>
+            </pre>
+        </p>
+
+        <pre>
+            <code class="language-lua" style="width: fit-content;"></code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

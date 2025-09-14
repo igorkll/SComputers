@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            usage: require("enlua")<br/>
+            allows you to compile lua code into encrypted bytecode, the contents of which cannot be viewed or decompiled<br/>
+            the encrypted code is loaded using the same library<br/>
+            this library uses the same code as the code encryption in the SComputers menu<br/>
+            sometimes there is a new version of the compiler that encrypts the code more securely and a new version of the interpreter for it<br/>
+            the library retains backward compatibility with older versions of the interpreter so that previously compiled code continues to work<br/>
+            the compiled code contains information about which version of the interpreter it should run on, so you shouldn't worry about it<br/>
+            when you encrypt code using this library, it is encrypted using the latest version of the compiler<br/>
+            the library can be used to encrypt code outside the computer block (for example, to encrypt code on a disk)<br/>
+        </p>
+
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>enlua.compile(code:string):string|nil, err - encrypts a line of code into an encrypted bytecode that can be loaded using enlua.load(bytecode, env)</span></li>
+            <li><span>enlua.load(bytecode:string, env:table|nil):function|nil, err - it is trying to load an encrypted bytecode. returns either the function if it was loaded successfully or nil and the error text if it failed</span></li>
+            <li><span>enlua.version(bytecode:string):number - returns the version of the encryptor that was used to compile this bytecode. if it was compiled just now, it will be equal to enlua.lastVersion(). if the bytecode was compiled earlier, the value will be equal to the current one at the time of compilation</span></li>
+            <li><span>enlua.lastVersion():number - returns a last version of the encrypted bytecode interpreter</span></li>
+        </ul>
+
+        <br/>
+        <h2 class="text">an example of working with a library:</h2>
+        <pre>
+            <code class="language-lua" style="width: fit-content;">--the library can be used to encrypt code outside the computer block (for example, to encrypt code on a disk)
+local enlua = require("enlua")
+
+local bytecode = assert(enlua.compile("myenvtest('hello, encrypted code!')"))
+
+logPrint("last enlua version: ", enlua.lastVersion())
+logPrint("bytecode   version: ", enlua.version(bytecode))
+
+local func = assert(enlua.load(bytecode, {myenvtest = logPrint})) --you can execute encrypted code in the sandbox in exactly the same way as in the case of a regular loadstring
+func()
+
+function callback_loop()
+end</code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

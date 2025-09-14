@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<MyGUI type="Layout" version="3.2.0">
+    <Widget type="Widget" skin="BackgroundPromptNarrow" position_real="0 0.0048828125 0.458984375 0.56640625" name="BackPanel">
+        <Property key="InheritsAlpha" value="false"/>
+        <Widget type="Widget" skin="PanelEmpty" position_real="0.065957446808510636 0.051724137931034482 0.87021276595744679 0.84482758620689657">
+            <Property key="NeedKey" value="false"/>
+            <Property key="InheritsAlpha" value="false"/>
+            <Widget type="ImageBox" skin="ImageBox" position_real="0.47677261613691929 0.091836734693877556 0.063569682151589244 0.095918367346938774">
+                <Property key="ImageTexture" value="gui_icon_popup_alert.png"/>
+            </Widget>
+            <Widget type="EditBox" skin="TextBox" position_real="0.23227383863080683 0.19387755102040816 0.52078239608801957 0.10204081632653061" name="Title">
+                <Property key="Caption" value="R E S E T   T O   D E F A U L T"/>
+                <Property key="FontName" value="SM_Button"/>
+                <Property key="TextAlign" value="Center"/>
+                <Property key="WordWrap" value="true"/>
+                <Property key="Static" value="true"/>
+                <Property key="MultiLine" value="true"/>
+            </Widget>
+            <Widget type="EditBox" skin="EditBoxEmpty" position_real="0.23227383863080683 0.30612244897959184 0.52567237163814184 0.16326530612244897" name="Message">
+                <Property key="FontName" value="SM_Text"/>
+                <Property key="Caption" value="Are you sure you want to reset the key bindings to their default?"/>
+                <Property key="WordWrap" value="true"/>
+                <Property key="TextAlign" value="HCenter Top"/>
+                <Property key="TextColour" value="0.564706 0.572549 0.572549"/>
+                <Property key="ReadOnly" value="true"/>
+                <Property key="Static" value="true"/>
+            </Widget>
+            <Widget type="Button" skin="PrimaryButton" position_real="0.23227383863080683 0.86734693877551017 0.20782396088019561 0.11836734693877551" name="Yes">
+                <Property key="Caption" value="#{MENU_YN_YES}"/>
+                <Property key="FontName" value="SM_Button"/>
+                <Property key="TextAlign" value="Center"/>
+            </Widget>
+            <Widget type="Button" skin="SecondaryButton" position_real="0.56234718826405872 0.87755102040816324 0.19070904645476772 0.095918367346938774" name="No">
+                <Property key="Caption" value="#{MENU_YN_NO}"/>
+                <Property key="FontName" value="SM_Button"/>
+                <Property key="TextAlign" value="Center"/>
+            </Widget>
+            <Widget type="EditBox" skin="EditBox_LiftInput" position_real="0.08557457212713937 0.55102040816326525 0.83129584352078245 0.31632653061224492" name="UserMessage">
+                <Property key="TabPrinting" value="true"/>
+                <Property key="ReadOnly" value="false"/>
+                <Property key="MultiLine" value="true"/>
+                <Property key="TextAlign" value="Left Top"/>
+            </Widget>
+            <Widget type="TextBox" skin="TextBox" position_real="0.23227383863080683 0.47959183673469385 0.52567237163814184 0.061224489795918366">
+                <Property key="Caption" value="M E S S A G E"/>
+                <Property key="FontName" value="SM_Button"/>
+                <Property key="TextAlign" value="Center"/>
+            </Widget>
+        </Widget>
+    </Widget>
+    <CodeGeneratorSettings/>
+</MyGUI>

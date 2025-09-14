@@ -1,0 +1,50 @@
+{
+   "lodList" : [
+      {
+         "mesh" : "$CONTENT_DATA/Objects/Mesh/WorldAntenna.fbx",
+         "minViewSize" : 20,
+         "subMeshList" : [
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/blocks/blk_metal02_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_nor.tga"
+               ]
+            },
+            {
+               "material" : "DifAsgNor",
+               "textureList" : [
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_dif.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_asg.tga",
+                  "$SURVIVAL_DATA/Objects/Textures/industrial/obj_industrial_satellite_nor.tga"
+               ]
+            }
+         ]
+      }
+   ]
+}
