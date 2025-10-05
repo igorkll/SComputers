@@ -2,9 +2,10 @@ count = 250;
 radius = 32;
 seed = 0;
 
-chaff_lenght = 1;
-chaff_width = 0.5;
-chaff_height = 0.001;
+chaff_scale = 0.25;
+chaff_lenght = 1 * chaff_scale;
+chaff_width = 0.5 * chaff_scale;
+chaff_height = 0.001 * chaff_scale;
 
 rs = rands(0, radius, count, seed);
 thetas = rands(0, 180, count, seed+1);
