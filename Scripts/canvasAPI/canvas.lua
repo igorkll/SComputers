@@ -1975,18 +1975,17 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
     ]]
 
     --local maxVal = math_sqrt((255 ^ 2) + (255 ^ 2) + (255 ^ 2))
-    local function colorEquals_smart(color1, color2)
+
+    local function hexToRGB256(color)
+        return math_floor(color / 256 / 256), math_floor(color / 256) % 256, color % 256
+    end
+
+    local function colorEquals(color1, color2)
         if color1 == color2 then return true end
         local rVal, gVal, bVal = hexToRGB256(color1)
         local rVal2, gVal2, bVal2 = hexToRGB256(color2)
         --return (math_sqrt(((rVal - rVal2) ^ 2) + ((gVal - gVal2) ^ 2) + ((bVal - bVal2) ^ 2)) / maxVal) <= optimizationValue
         return ((math_abs(rVal - rVal2) + math_abs(gVal - gVal2) + math_abs(bVal - bVal2)) / 1024) <= optimizationValue
-    end
-
-    local colorEquals = colorEquals_smart
-
-    local function colorEquals_raw(color1, color2)
-        return color1 == color2
     end
 
     local function getFillZone(eindex)
@@ -3299,11 +3298,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
     function obj.setCanvasOptimizationLevel(value)
         optimizationLevel = value
-        if value == 0 then
-            colorEquals = colorEquals_raw
-        else
-            colorEquals = colorEquals_smart
-        end
         optimizationValue = optimizationLevelToValue(optimizationLevel)
     end
 
