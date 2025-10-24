@@ -1963,6 +1963,19 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         nodeEffects = {}
     end
 
+    --[[
+    local function forceRecreateNodeEffects()
+        nodeEffects = {}
+        for i, effectData in pairs(effects) do
+            if effectData[7] == i then
+                nodeEffects[i] = effectData
+            end
+        end
+    end
+    ]]
+
+    --local maxVal = math_sqrt((255 ^ 2) + (255 ^ 2) + (255 ^ 2))
+
     local function hexToRGB256(color)
         return math_floor(color / 256 / 256), math_floor(color / 256) % 256, color % 256
     end
@@ -1971,6 +1984,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         if color1 == color2 then return true end
         local rVal, gVal, bVal = hexToRGB256(color1)
         local rVal2, gVal2, bVal2 = hexToRGB256(color2)
+        --return (math_sqrt(((rVal - rVal2) ^ 2) + ((gVal - gVal2) ^ 2) + ((bVal - bVal2) ^ 2)) / maxVal) <= optimizationValue
         return ((math_abs(rVal - rVal2) + math_abs(gVal - gVal2) + math_abs(bVal - bVal2)) / 1024) <= optimizationValue
     end
 
@@ -1979,7 +1993,23 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         return fillX1, fillY1, fillX1 + (effectDatas[eindex+3] - 1), fillY1 + (effectDatas[eindex+4] - 1)
     end
 
+    local sumAttachTime = 0
+    local sumAttachFillTime = 0
     local function tryLongAttach(changedList, hideList, index, px, py, color, sizeX, sizeY)
+        --local startTime = os_clock()
+
+        --[[
+        local origIndex = effects[index]
+        local sizeX, sizeY = 1, 1
+        local origEffect
+        if origIndex then
+            origEffect = nodeEffects[origIndex]
+            local eindex = getEIndex(origIndex)
+            index, px, py = origIndex, effectDatas[eindex+1], effectDatas[eindex+2]
+            sizeX, sizeY = effectDatas[eindex+3], effectDatas[eindex+4]
+        end
+        ]]
+
         local upParentE, upParent = getRootEIndexAtPos(px, py - 1)
         local downParentE, downParent = getRootEIndexAtPos(px, py + sizeY)
         local upAvailable = upParentE and nodeEffects[upParent] and effectDatas[upParentE+1] == px and effectDatas[upParentE+3] == sizeX and colorEquals(effectDatas[upParentE], color)
@@ -1988,6 +2018,15 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         local fillOptional = false
         local fillX1, fillY1, fillX2, fillY2
         local fill2X1, fill2Y1, fill2X2, fill2Y2
+
+        --[[
+        if origEffect and (upAvailable or downAvailable) then
+            hideEffectLater(origEffect, hideList)
+            changedList[origIndex] = nil
+            changedColorList[origIndex] = nil
+            nodeEffects[origIndex] = nil
+        end
+        ]]
 
         local newIndex, newEIndex
         local fillVal
@@ -1999,6 +2038,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
             hideEffectLater(nodeEffects[downParent], hideList)
             changedList[downParent] = nil
+            --changedColorList[downParent] = nil
             nodeEffects[downParent] = nil
 
             effectDatas[upParentE+4] = effectDatas[upParentE+4] + addSizeY
@@ -2016,6 +2056,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             fill2X1, fill2Y1, fill2X2, fill2Y2 = getFillZone(downParentE)
 
             changedList[downParent] = nil
+           --changedColorList[downParent] = nil
 
             nodeEffects[index] = nodeEffects[downParent]
             nodeEffects[downParent] = nil
@@ -2044,6 +2085,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         if nodeEffects[index] and (leftAvailable or rightAvailable) then
             hideEffectLater(nodeEffects[index], hideList)
             changedList[index] = nil
+            --changedColorList[index] = nil
             nodeEffects[index] = nil
         end
 
@@ -2056,6 +2098,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
             hideEffectLater(nodeEffects[rightParent], hideList)
             changedList[rightParent] = nil
+            --changedColorList[rightParent] = nil
             nodeEffects[rightParent] = nil
 
             effectDatas[leftParentE+3] = effectDatas[leftParentE+3] + addSizeX
@@ -2073,6 +2116,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             fill2X1, fill2Y1, fill2X2, fill2Y2 = getFillZone(rightParentE)
 
             changedList[rightParent] = nil
+            --changedColorList[rightParent] = nil
 
             nodeEffects[index] = nodeEffects[rightParent]
             nodeEffects[rightParent] = nil
@@ -2087,9 +2131,16 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             fillVal = index
         end
 
+        --sumAttachTime = sumAttachTime + (os_clock() - startTime)
+
         if fillVal then
             changedList[fillVal] = true
+            --changedColorList[fillVal] = true
 
+            --[[
+            local eindex = getEIndex(fillVal)
+            local fillX1, fillY1 = effectDatas[eindex+1], effectDatas[eindex+2]
+            local fillX2, fillY2 = fillX1 + (effectDatas[eindex+3] - 1), fillY1 + (effectDatas[eindex+4] - 1)
             local ix, iy = fillX1, fillY1
             for _ = 1, ((fillX2 - fillX1) + 1) * ((fillY2 - fillY1) + 1) do
                 effects[effectIndexAtPos(ix, iy)] = fillVal
@@ -2099,6 +2150,35 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                     iy = iy + 1
                 end
             end
+            ]]
+
+            --startTime = os_clock()
+
+            --fillOptional = false
+            --if not fillOptional or not origEffect then
+                local ix, iy = fillX1, fillY1
+                for _ = 1, ((fillX2 - fillX1) + 1) * ((fillY2 - fillY1) + 1) do
+                    effects[effectIndexAtPos(ix, iy)] = fillVal
+                    ix = ix + 1
+                    if ix > fillX2 then
+                        ix = fillX1
+                        iy = iy + 1
+                    end
+                end
+            --[[else
+                local ix, iy = fillX1, fillY1
+                for _ = 1, ((fillX2 - fillX1) + 1) * ((fillY2 - fillY1) + 1) do
+                    if fillVal ~= effects[effectIndexAtPos(ix, iy)] then
+                        print("WTTT", fillVal, effects[effectIndexAtPos(ix, iy)])
+                    end
+                    ix = ix + 1
+                    if ix > fillX2 then
+                        ix = fillX1
+                        iy = iy + 1
+                    end
+                end
+                ]]
+            --end
 
             if fill2X1 then
                 local ix, iy = fill2X1, fill2Y1
@@ -2111,18 +2191,45 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                     end
                 end
             end
+
+            --sumAttachFillTime = sumAttachFillTime + (os_clock() - startTime)
+
+            --fillVal = tryAttach(changedList, changedColorList, index, px, py, color) or fillVal
         end
 
         return fillVal
     end
 
     local function tryAttach(changedList, hideList, index, px, py, color, sizeX, sizeY)
+        --local startTime = os_clock()
+
+        --[[
+        local origIndex = effects[index]
+        local sizeX, sizeY = 1, 1
+        local origEffect
+        if origIndex then
+            origEffect = nodeEffects[origIndex]
+            local eindex = getEIndex(origIndex)
+            index, px, py = origIndex, effectDatas[eindex+1], effectDatas[eindex+2]
+            sizeX, sizeY = effectDatas[eindex+3], effectDatas[eindex+4]
+        end
+        ]]
+
         local upParentE, upParent = getRootEIndexAtPos(px, py - 1)
         local upAvailable = upParentE and nodeEffects[upParent] and effectDatas[upParentE+1] == px and effectDatas[upParentE+3] == sizeX and colorEquals(effectDatas[upParentE], color)
 
         local fillX1, fillY1, fillX2, fillY2
         local newIndex, newEIndex, fillVal
         if upAvailable then
+            --[[
+            if origEffect then
+                hideEffectLater(origEffect, hideList)
+                changedList[origIndex] = nil
+                changedColorList[origIndex] = nil
+                nodeEffects[origIndex] = nil
+            end
+            ]]
+
             fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
 
             effectDatas[upParentE+4] = effectDatas[upParentE+4] + sizeY
@@ -2139,6 +2246,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             if nodeEffects[index] then
                 hideEffectLater(nodeEffects[index], hideList)
                 changedList[index] = nil
+                --changedColorList[index] = nil
                 nodeEffects[index] = nil
             end
 
@@ -2147,8 +2255,13 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             fillVal = leftParent
         end
 
+        --sumAttachTime = sumAttachTime + (os_clock() - startTime)
+
         if fillVal then
             changedList[fillVal] = true
+            --changedColorList[fillVal] = true
+
+            --startTime = os_clock()
             local ix, iy = fillX1, fillY1
             for _ = 1, ((fillX2 - fillX1) + 1) * ((fillY2 - fillY1) + 1) do
                 effects[effectIndexAtPos(ix, iy)] = fillVal
@@ -2158,11 +2271,13 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                     iy = iy + 1
                 end
             end
+            --sumAttachFillTime = sumAttachFillTime + (os_clock() - startTime)
         end
 
         return fillVal
     end
 
+    local sumFillTime = 0
     local function fillBlock(x, y, sx, sy, changedList, hideList, color, effect)
         if sx <= 0 or sy <= 0 then
             return false
@@ -2171,6 +2286,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         local newRIndex = effectIndexAtPos(x, y)
         nodeEffects[newRIndex] = effect or createEffectUnhide(hideList)
         changedList[newRIndex] = true
+        --changedColorList[newRIndex] = true
 
         local newEIndex = getEIndex(newRIndex)
         effectDatas[newEIndex] = color
@@ -2179,6 +2295,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         effectDatas[newEIndex+3] = sx
         effectDatas[newEIndex+4] = sy
         
+        --local startTime = os_clock()
         local ix, iy = x, y
         local six = ix
         local mix = six + sx
@@ -2190,6 +2307,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                 iy = iy + 1
             end
         end
+        --sumFillTime = sumFillTime + (os_clock() - startTime)
 
         return true
     end
@@ -2202,6 +2320,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         local newRIndex = effectIndexAtPos(x, y)
         nodeEffects[newRIndex] = effect or createEffectUnhide(hideList)
         changedList[newRIndex] = true
+        --changedColorList[newRIndex] = true
 
         local newEIndex = getEIndex(newRIndex)
         effectDatas[newEIndex] = color
@@ -2213,7 +2332,10 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         return true
     end
 
+    local sumExtractTime = 0
     local function extractPixel(changedList, hideList, index, px, py, sizeX, sizeY)
+        --local startTime = os_clock()
+
         local rindex = effects[index]
         local eindex = getEIndex(rindex)
         local rpx, rpy = effectDatas[eindex+1], effectDatas[eindex+2]
@@ -2223,13 +2345,16 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
         local effect = nodeEffects[rindex]
         changedList[rindex] = nil
+        --changedColorList[rindex] = nil
         nodeEffects[rindex] = nil
 
         local color = effectDatas[eindex]
-        if fillBlockWithoutIteracte(rpx, rpy, lx, rsy, changedList, hideList, color, effect) then effect = nil end
-        if fillBlock(rpx + lx + sizeX, rpy, rsx - lx - sizeX, rsy, changedList, hideList, color, effect) then effect = nil end
-        if fillBlock(rpx + lx, rpy, sizeX, ly, changedList, hideList, color, effect) then effect = nil end
-        if fillBlock(rpx + lx, rpy + ly + sizeY, sizeX, rsy - ly - sizeY, changedList, hideList, color, effect) then effect = nil end
+        --local block1, block2, block3, block4 = false, false, false, false
+        if fillBlockWithoutIteracte(rpx, rpy, lx, rsy, changedList, hideList, color, effect) then --[[block1 = true]] effect = nil end
+        if fillBlock(rpx + lx + sizeX, rpy, rsx - lx - sizeX, rsy, changedList, hideList, color, effect) then --[[block2 = true]] effect = nil end
+        if fillBlock(rpx + lx, rpy, sizeX, ly, changedList, hideList, color, effect) then --[[block3 = true]] effect = nil end
+        if fillBlock(rpx + lx, rpy + ly + sizeY, sizeX, rsy - ly - sizeY, changedList, hideList, color, effect) then --[[block4 = true]] effect = nil end
+        --fillBlock(rpx + lx, rpy + ly + sizeY, sizeX, rsy - ly - sizeY, changedList, hideList, color, true, effect)
 
         local ix, iy, endX = px, py, px + (sizeX - 1)
         for _ = 1, sizeX * sizeY do
@@ -2244,7 +2369,38 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         if effect then
             hideEffectLater(effect, hideList)
         end
+
+        --sumExtractTime = sumExtractTime + (os_clock() - startTime)
+
+        --if block1 then tryAttach(changedList, changedColorList, effectIndexAtPos(rpx, rpy), rpx, rpy, color) end
+        --if block2 then tryAttach(changedList, changedColorList, effectIndexAtPos(block2X, rpy), block2X, rpy, color) end
+        --if block3 then tryAttach(changedList, changedColorList, effectIndexAtPos(block3X, rpy), block3X, rpy, color) end
+        --if block4 then tryAttach(changedList, changedColorList, effectIndexAtPos(block4X, block4Y), block4X, block4Y, color) end
     end
+
+    --[[
+    local function extractXLine(changedList, changedColorList, hideList, index, px, py)
+        local rindex = effects[index]
+        local eindex = getEIndex(rindex)
+        local rpx, rpy = effectDatas[eindex+1], effectDatas[eindex+2]
+        local rsx, rsy = effectDatas[eindex+3], effectDatas[eindex+4]
+        local ly = py - rpy
+
+        local effect = nodeEffects[rindex]
+        changedList[rindex] = nil
+        changedColorList[rindex] = nil
+        nodeEffects[rindex] = nil
+        effects[index] = nil
+
+        local color = effectDatas[eindex]
+        if fillBlock(rpx, rpy, rsx, ly, changedList, changedColorList, hideList, color, false, effect) then effect = nil end
+        if fillBlock(rpx, rpy + ly + 1, rsx, rsy - ly - 1, changedList, changedColorList, hideList, color, true, effect) then effect = nil end
+
+        if effect then
+            hideEffectLater(effect, hideList)
+        end
+    end
+    ]]
 
     local function fillEffectsLinks(index, px, py, sizeX, sizeY)
         local ix, iy, endX = px, py, px + (sizeX - 1)
@@ -2257,6 +2413,114 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             end
         end
     end
+
+    --[[
+    local sumIsFullChangeTime = 0
+    local function isFullChangeAvailable(fullChecked, changes, _changes, rindex, eindex, forDestroy)
+        local effectID = nodeEffects[rindex].id
+        if fullChecked[effectID] then
+            return false
+        end
+        fullChecked[effectID] = true
+
+
+        local startTime = os_clock()
+
+        local fillX1, fillY1 = effectDatas[eindex+1], effectDatas[eindex+2]
+        local fillX2, fillY2 = fillX1 + (effectDatas[eindex+3] - 1), fillY1 + (effectDatas[eindex+4] - 1)
+        local baseColor = lastNewBuffer[effectIndexAtPos(fillX1, fillY1)] or lastBase
+
+        local ix, iy = fillX1 + 1, fillY1
+        if ix > fillX2 then
+            ix = fillX1
+            iy = iy + 1
+        end
+        for _ = 2, ((fillX2 - fillX1) + 1) * ((fillY2 - fillY1) + 1) do
+            local color = lastNewBuffer[effectIndexAtPos(ix, iy)] or lastBase
+            if color ~= baseColor then
+                sumIsFullChangeTime = sumIsFullChangeTime + (os_clock() - startTime)
+                return false
+            end
+            ix = ix + 1
+            if ix > fillX2 then
+                ix = fillX1
+                iy = iy + 1
+            end
+        end
+
+        ix, iy = fillX1, fillY1
+        if not forDestroy then
+            for _ = 1, ((fillX2 - fillX1) + 1) * ((fillY2 - fillY1) + 1) do
+                local index = effectIndexAtPos(ix, iy)
+                _changes[index] = true
+                ix = ix + 1
+                if ix > fillX2 then
+                    ix = fillX1
+                    iy = iy + 1
+                end
+            end
+        end
+
+        sumIsFullChangeTime = sumIsFullChangeTime + (os_clock() - startTime)
+        return true
+    end
+    ]]
+
+    --[[
+    local function getBlockSize(rindex, index, px, py, color)
+        local sizeX = 1
+        --local sizeY = 1
+        --[[
+        for i = 1, maxY - py do
+            if rindex ~= effects[index+i] or (lastNewBuffer[index+i] or lastBase) ~= color then
+                break
+            end
+            sizeY = sizeY + 1
+        end
+        ] ]
+        for i = 1, maxX - px do
+            local lindex = effectIndexAtPos(px+i, py)
+            if rindex ~= effects[lindex] or (lastNewBuffer[lindex] or lastBase) ~= color then
+                break
+            end
+            sizeX = sizeX + 1
+        end
+
+        local ix, iy, endX = 0, 1, sizeX - 1
+        for _ = 1, sizeX * (maxY - py) do
+            local lindex = effectIndexAtPos(px+ix, py+iy)
+            if rindex ~= effects[lindex] or (lastNewBuffer[lindex] or lastBase) ~= color then
+                break
+            end
+            
+            ix = ix + 1
+            if ix > endX then
+                ix = 0
+                iy = iy + 1
+                --sizeY = sizeY + 1
+            end
+        end
+
+        --[[
+        for iy = 1, maxY - py do
+            local multibrake = false
+            for ix = 0, sizeX - 1 do
+                local lindex = effectIndexAtPos(px+ix, py+iy)
+                if rindex ~= effects[lindex] or (lastNewBuffer[lindex] or lastBase) ~= color then
+                    multibrake = true
+                    break
+                end
+            end
+            if multibrake then
+                break
+            end
+            sizeY = sizeY + 1
+        end
+        ] ]
+
+        return sizeX, iy
+    end
+    ]]
 
     local function getBlockSize(index, px, py, color)
         local sizeX = 1
@@ -2357,10 +2621,16 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         end
 
         local changedList = {}
+        --local changedColorList = {}
         local hideList = {}
+        --local fullChecked = {}
+
+        --print("changesCount 1", changesCount)
 
         local oldChanges
         if clearBackplate then
+            --local startTime = os_clock()
+
             oldChanges = {}
             for index in pairs(changes) do
                 oldChanges[index] = true
@@ -2373,28 +2643,192 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                     changes[index] = true
                 end
             end
+
+            --profiller("clear-loop", startTime)
         end
 
+        --[[
+        local _changesSize = 0
+        for k, v in pairs(_changes) do
+            _changesSize = _changesSize + 1
+        end
+        print(tostring(_changes), _changesSize)
+        ]]
+
+        --print("changesCount 2", changesCount)
+
+        --[[
+        local startTime = os_clock()
+        table_sort(changesIndex, function (a, b)
+            return a < b
+        end)
+        profiller("stack-sort", startTime)
+        ]]
+
+        --[[
+        local startTime = os_clock()
         for i2 = 1, changesCount do
             local index = changesIndex[i2]
             local color = newBuffer[index] or base
             local rindex = effects[index]
             if rindex then
                 local eindex = getEIndex(rindex)
+                if not colorEquals(effectDatas[eindex], color) then
+                    local px = math_floor(index / sizeY)
+                    local py = index % sizeY
+                    local aSizeX, aSizeY = effectDatas[eindex+3] > 1, effectDatas[eindex+4] > 1
+                    local backplateColor = color == oldBackplateColor
+                    if isFullChangeAvailable(fullChecked, changes, _changes, rindex, eindex, backplateColor) then
+                        if backplateColor then
+                            changedList[rindex] = nil
+                            changedColorList[rindex] = nil
+                            hideEffectDataLater(rindex, hideList)
+                        elseif not tryAttach(changedList, changedColorList, hideList, index, px, py, color) then
+                            effectDatas[eindex] = color
+                            changedColorList[rindex] = true
+                        end
+                    elseif backplateColor then
+                        if aSizeX or aSizeY then
+                            extractPixel(changedList, changedColorList, hideList, index, px, py)
+                        else
+                            changedList[rindex] = nil
+                            changedColorList[rindex] = nil
+                            hideEffectDataLater(rindex, hideList)
+                        end
+                    else
+                        _changes[index] = true
+
+                        if aSizeX or aSizeY then
+                            extractPixel(changedList, changedColorList, hideList, index, px, py)
+                        end
+
+                        if not tryAttach(changedList, changedColorList, hideList, index, px, py, color) then
+                            local eindex = getEIndex(index)
+
+                            if not nodeEffects[index] then
+                                local effect = createEffectUnhide(hideList)
+
+                                local bSizeX, bSizeY = 1, 1
+                                effectDatas[eindex+1] = px
+                                effectDatas[eindex+2] = py
+                                effectDatas[eindex+3] = bSizeX
+                                effectDatas[eindex+4] = bSizeY
+                                fillEffectsLinks(index, px, py, bSizeX, bSizeY)
+                                
+                                nodeEffects[index] = effect
+                                changedList[index] = true
+                            end
+
+                            effectDatas[eindex] = color
+                            changedColorList[index] = true
+                        end
+                    end
+                end
+            elseif color ~= oldBackplateColor then
+                _changes[index] = true
+                local px = math_floor(index / sizeY)
+                local py = index % sizeY
+                if not tryAttach(changedList, changedColorList, hideList, index, px, py, color) then
+                    local effect = createEffectUnhide(hideList)
+
+                    nodeEffects[index] = effect
+
+                    local eindex = getEIndex(index)
+                    local bSizeX, bSizeY = getBlockSize(index, px, py)
+                    effectDatas[eindex] = color
+                    effectDatas[eindex+1] = px
+                    effectDatas[eindex+2] = py
+                    effectDatas[eindex+3] = bSizeX
+                    effectDatas[eindex+4] = bSizeY
+                    fillEffectsLinks(index, px, py, bSizeX, bSizeY)
+                    
+                    changedList[index] = true
+                    changedColorList[index] = true
+                end
+            end
+        end
+        profiller("change-loop", startTime)
+        ]]
+
+        --local localEffectsBlacklist = {}
+
+        --local startTime = os_clock()
+        for i2 = 1, changesCount do
+            local index = changesIndex[i2]
+            local color = newBuffer[index] or base
+            local rindex = effects[index]
+            if rindex --[[and not localEffectsBlacklist[rindex] ]] then
+                local eindex = getEIndex(rindex)
+                --local isBackgroundColor = color == oldBackplateColor
+                --if color == oldBackplateColor or not colorEquals(effectDatas[eindex], color) then
                 if realBuffer[index] ~= color then
+                    --local px = math_floor(index / sizeY)
+                    --local py = index % sizeY
+                    --local aSizeX, aSizeY = effectDatas[eindex+3] > 1, effectDatas[eindex+4] > 1
+                    --[[if isFullChangeAvailable(fullChecked, changes, _changes, rindex, eindex, backplateColor) then
+                        if backplateColor then
+                            changedList[rindex] = nil
+                            changedColorList[rindex] = nil
+                            hideEffectDataLater(rindex, hideList)
+                        else
+                            effectDatas[eindex] = color
+                            changedColorList[rindex] = true
+                        end
+                    else]]
+                    
+                    --local aSizeX, aSizeY = effectDatas[eindex+3], effectDatas[eindex+4]
                     if effectDatas[eindex+3] > 1 or effectDatas[eindex+4] > 1 then
                         local px = math_floor(index / sizeY)
                         local py = index % sizeY
+                        --local bSizeX, bSizeY = getBlockSize(rindex, index, px, py, color)
+                        --extractPixel(changedList, hideList, index, px, py, bSizeX, bSizeY)
                         extractPixel(changedList, hideList, index, px, py, getChangesBlockSize(rindex, index, changes, px, py, color))
+                        --extractPixel(changedList, hideList, index, px, py, 1, 1)
+
+                        --[[
+                        local bSizeX, bSizeY = getBlockSize(rindex, index, px, py, color)
+                        if aSizeX == bSizeX and aSizeY == bSizeY then
+                            effectDatas[eindex] = color
+                            changedColorList[rindex] = true
+                        else
+                            extractPixel(changedList, changedColorList, hideList, index, px, py, bSizeX, bSizeY)
+                        end
+                        ]]
+
+                        --[[
+                        if not isBackgroundColor then
+                            if not tryAttach(changedList, changedColorList, hideList, index, px, py, color, bSizeX, bSizeY) then
+                                local effect = createEffectUnhide(hideList)
+
+                                nodeEffects[index] = effect
+
+                                local eindex = getEIndex(index)
+                                effectDatas[eindex] = color
+                                effectDatas[eindex+1] = px
+                                effectDatas[eindex+2] = py
+                                effectDatas[eindex+3] = bSizeX
+                                effectDatas[eindex+4] = bSizeY
+                                fillEffectsLinks(index, px, py, bSizeX, bSizeY)
+                                
+                                changedList[index] = true
+                                changedColorList[index] = true
+                                localEffectsBlacklist[index] = true
+                            end
+                        end
+                        ]]
                     else
                         changedList[rindex] = nil
+                        --changedColorList[rindex] = nil
                         hideEffectDataLater(rindex, hideList)
                     end
                 end
             end
             realBuffer[index] = color
         end
+        --profiller("extract-loop", startTime)
 
+        --local blockSizeCache = {}
+        --local startTime = os_clock()
         for i2 = 1, changesCount do
             local index = changesIndex[i2]
             local color = newBuffer[index] or base
@@ -2406,6 +2840,17 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                     local py = index % sizeY
 
                     if not tryLongAttach(changedList, hideList, index, px, py, color, 1, 1) then
+                        --[[
+                        local blockSize
+                        if blockSizeCache[index] then
+                            blockSize = blockSizeCache[index]
+                            print("LOAD", index, blockSize)
+                        else
+                            blockSize = {getBlockSize(index, px, py, color)}
+                            blockSizeCache[index] = blockSize
+                        end
+                        ]]
+
                         local bSizeX, bSizeY = getBlockSize(index, px, py, color)
                         if not tryLongAttach(changedList, hideList, index, px, py, color, bSizeX, bSizeY) then
                             local effect = createEffectUnhide(hideList)
@@ -2421,25 +2866,166 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                             fillEffectsLinks(index, px, py, bSizeX, bSizeY)
                             
                             changedList[index] = true
+                            --changedColorList[index] = true
                         end
+
+                        --[[
+                        local effect = createEffectUnhide(hideList)
+
+                        nodeEffects[index] = effect
+                        effects[index] = index
+
+                        local eindex = getEIndex(index)
+                        effectDatas[eindex] = color
+                        effectDatas[eindex+1] = px
+                        effectDatas[eindex+2] = py
+                        effectDatas[eindex+3] = 1
+                        effectDatas[eindex+4] = 1
+                        
+                        changedList[index] = true
+                        ]]
                     end
                 end
             end
         end
+        --profiller("add-loop", startTime)
+
+        --[[
+        local localEffectsBlacklist = {}
+        local startTime = os_clock()
+        for i2 = 1, changesCount do
+            local index = changesIndex[i2]
+            local color = newBuffer[index] or base
+            local rindex = effects[index]
+            if rindex then
+                if not localEffectsBlacklist[rindex] then
+                    local eindex = getEIndex(rindex)
+                    local isBackgroundColor = color == oldBackplateColor
+                    if isBackgroundColor or not colorEquals(effectDatas[eindex], color) then
+                        if effectDatas[eindex+3] > 1 or effectDatas[eindex+4] > 1 then
+                            local px = math_floor(index / sizeY)
+                            local py = index % sizeY
+                            local bSizeX, bSizeY = getBlockSize(rindex, index, px, py, color)
+                            extractPixel(changedList, changedColorList, hideList, index, px, py, bSizeX, bSizeY)
+
+                            if not isBackgroundColor then
+                                _changes[index] = true
+
+                                if not tryAttach(changedList, changedColorList, hideList, index, px, py, color) then
+                                    local effect = createEffectUnhide(hideList)
+
+                                    nodeEffects[index] = effect
+
+                                    local eindex = getEIndex(index)
+                                    effectDatas[eindex] = color
+                                    effectDatas[eindex+1] = px
+                                    effectDatas[eindex+2] = py
+                                    effectDatas[eindex+3] = bSizeX
+                                    effectDatas[eindex+4] = bSizeY
+                                    fillEffectsLinks(index, px, py, bSizeX, bSizeY)
+                                    
+                                    changedList[index] = true
+                                    changedColorList[index] = true
+                                    localEffectsBlacklist[index] = true
+                                end
+                            end
+                        elseif not isBackgroundColor then
+                            _changes[index] = true
+
+                            local px = math_floor(index / sizeY)
+                            local py = index % sizeY
+                            if not tryAttach(changedList, changedColorList, hideList, index, px, py, color) then
+                                effectDatas[eindex] = color
+                                changedColorList[rindex] = true
+                            end
+                        else
+                            changedList[rindex] = nil
+                            changedColorList[rindex] = nil
+                            hideEffectDataLater(rindex, hideList)
+                        end
+                    end
+                end
+            elseif color ~= oldBackplateColor then
+                _changes[index] = true
+
+                local px = math_floor(index / sizeY)
+                local py = index % sizeY
+                if not tryAttach(changedList, changedColorList, hideList, index, px, py, color) then
+                    local effect = createEffectUnhide(hideList)
+
+                    nodeEffects[index] = effect
+
+                    local eindex = getEIndex(index)
+                    local bSizeX, bSizeY = getBlockSize(nil, index, px, py, color)
+                    effectDatas[eindex] = color
+                    effectDatas[eindex+1] = px
+                    effectDatas[eindex+2] = py
+                    effectDatas[eindex+3] = bSizeX
+                    effectDatas[eindex+4] = bSizeY
+                    fillEffectsLinks(index, px, py, bSizeX, bSizeY)
+                    
+                    changedList[index] = true
+                    changedColorList[index] = true
+                    localEffectsBlacklist[index] = true
+                end
+            end
+        end
+        profiller("change-loop", startTime)
+        ]]
 
         local contentUpdated = false
 
+        --startTime = os_clock()
         for index in pairs(changedList) do
             setEffectDataParams(index)
             contentUpdated = true
         end
+        --profiller("apply-params", startTime)
 
+        --[[
+        startTime = os_clock()
+        for index in pairs(changedColorList) do
+            local color = effectDatas[getEIndex(index)]
+            if not colorCache[color] then
+                colorCache[color] = color_new_fromSmallNumber(color, alpha)
+            end
+            effect_setParameter(nodeEffects[index], "color", colorCache[color])
+        end
+        profiller("apply-colors", startTime)
+        ]]
+        --[[
+        startTime = os_clock()
+        local colorobj = color_new(0)
+        for index in pairs(changedColorList) do
+            local color = effectDatas[getEIndex(index)]
+            colorobj.r, colorobj.g, colorobj.b = hexToRGB(color)
+            colorobj.a = alpha / 255
+            effect_setParameter(nodeEffects[index], "color", colorobj)
+            contentUpdated = true
+        end
+        profiller("apply-colors", startTime)
+        ]]
+
+        --startTime = os_clock()
         for effect in pairs(hideList) do
             _setPosition(effect, hiddenOffset)
         end
+        --profiller("later-hide", startTime)
+
+        --profillerPrint("fill-sum", sumFillTime)
+        --profillerPrint("extract-sum", sumExtractTime)
+        --profillerPrint("attach-sum", sumAttachTime)
+        --profillerPrint("attach-fill-sum", sumAttachFillTime)
+        --profillerPrint("isFullChange-sum", sumIsFullChangeTime)
+        --sumIsFullChangeTime = 0
+        sumFillTime = 0
+        sumExtractTime = 0
+        sumAttachTime = 0
+        sumAttachFillTime = 0
         
         if clearBackplate then
             drawer.setOldChanges(oldChanges)
+            --clearBackplate = false
         end
 
         if clearOnly then
