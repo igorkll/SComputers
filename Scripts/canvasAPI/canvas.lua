@@ -2405,23 +2405,21 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                     local px = math_floor(index / sizeY)
                     local py = index % sizeY
 
-                    if not tryLongAttach(changedList, hideList, index, px, py, color, 1, 1) then
-                        local bSizeX, bSizeY = getBlockSize(index, px, py, color)
-                        if not tryLongAttach(changedList, hideList, index, px, py, color, bSizeX, bSizeY) then
-                            local effect = createEffectUnhide(hideList)
+                    local bSizeX, bSizeY = getBlockSize(index, px, py, color)
+                    if not tryLongAttach(changedList, hideList, index, px, py, color, bSizeX, bSizeY) then
+                        local effect = createEffectUnhide(hideList)
 
-                            nodeEffects[index] = effect
+                        nodeEffects[index] = effect
 
-                            local eindex = getEIndex(index)
-                            effectDatas[eindex] = color
-                            effectDatas[eindex+1] = px
-                            effectDatas[eindex+2] = py
-                            effectDatas[eindex+3] = bSizeX
-                            effectDatas[eindex+4] = bSizeY
-                            fillEffectsLinks(index, px, py, bSizeX, bSizeY)
-                            
-                            changedList[index] = true
-                        end
+                        local eindex = getEIndex(index)
+                        effectDatas[eindex] = color
+                        effectDatas[eindex+1] = px
+                        effectDatas[eindex+2] = py
+                        effectDatas[eindex+3] = bSizeX
+                        effectDatas[eindex+4] = bSizeY
+                        fillEffectsLinks(index, px, py, bSizeX, bSizeY)
+                        
+                        changedList[index] = true
                     end
                 end
             end
