@@ -1939,21 +1939,12 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         bufferedEffects[bufferedEffectsIndex] = effect
         bufferedEffectsUpdateTime[bufferedEffectsIndex] = game_getCurrentTick()
         hideList[effect] = true
-        --_setPosition(effect, hiddenOffset)
     end
 
     local function hideEffectDataLater(index, hideList)
         hideEffectLater(nodeEffects[index], hideList)
         clearEffectFromBuffer(index)
     end    
-    
-    local function hideEffectsWithColor(color)
-        for index in pairs(nodeEffects) do
-            if effectDatas[getEIndex(index)] == color then
-                hideEffectData(index)
-            end
-        end
-    end
 
     local function delAllEffects()
         for _, effect in pairs(nodeEffects) do
@@ -2407,9 +2398,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
                     local bSizeX, bSizeY = getBlockSize(index, px, py, color)
                     if not tryLongAttach(changedList, hideList, index, px, py, color, bSizeX, bSizeY) then
-                        local effect = createEffectUnhide(hideList)
-
-                        nodeEffects[index] = effect
+                        nodeEffects[index] = createEffectUnhide(hideList)
 
                         local eindex = getEIndex(index)
                         effectDatas[eindex] = color
