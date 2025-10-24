@@ -3763,18 +3763,12 @@ function canvasAPI.createScriptableApi(width, height, dataTunnel, flushCallback,
     local optimizationValue = optimizationLevelToValue(16)
 
     --local maxVal = math_sqrt((255 ^ 2) + (255 ^ 2) + (255 ^ 2))
-    local function colorEquals_smart(color1, color2)
+    local function colorEquals(color1, color2)
         if color1 == color2 then return true end
         local rVal, gVal, bVal = hexToRGB256(color1)
         local rVal2, gVal2, bVal2 = hexToRGB256(color2)
         --return (math_sqrt(((rVal - rVal2) ^ 2) + ((gVal - gVal2) ^ 2) + ((bVal - bVal2) ^ 2)) / maxVal) <= optimizationValue
         return ((math_abs(rVal - rVal2) + math_abs(gVal - gVal2) + math_abs(bVal - bVal2)) / 1024) <= optimizationValue
-    end
-
-    local colorEquals = colorEquals_smart
-
-    local function colorEquals_raw(color1, color2)
-        return color1 == color2
     end
 
     ----------------
@@ -3812,12 +3806,6 @@ function canvasAPI.createScriptableApi(width, height, dataTunnel, flushCallback,
             if value > 255 then value = 255 end
             if dataTunnel.optimizationLevel ~= value then
                 optimizationValue = optimizationLevelToValue(value)
-                if value == 0 then
-                    colorEquals = colorEquals_raw
-                else
-                    colorEquals = colorEquals_smart
-                end
-
                 dataTunnel.optimizationLevel = value
                 dataTunnel.dataUpdated = true
             end
