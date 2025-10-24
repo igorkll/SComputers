@@ -46,7 +46,7 @@ canvasAPI.multi_layer[tostring(canvasAPI.material.classic)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.plastic)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.smoothed)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.glowing)] = true
-canvasAPI.version = 61
+canvasAPI.version = 62
 
 canvasAPI.materialList = {
     [0] = canvasAPI.material.glass,
@@ -2279,9 +2279,9 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
     end
 
     local sumFillTime = 0
-    local function fillBlock(x, y, sx, sy, changedList, hideList, color, iterate, effect)
+    local function fillBlock(x, y, sx, sy, changedList, hideList, color, effect)
         if sx <= 0 or sy <= 0 then
-            return
+            return false
         end
 
         local newRIndex = effectIndexAtPos(x, y)
@@ -2295,10 +2295,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         effectDatas[newEIndex+2] = y
         effectDatas[newEIndex+3] = sx
         effectDatas[newEIndex+4] = sy
-
-        if not iterate then
-            return true
-        end
         
         --local startTime = os_clock()
         local ix, iy = x, y
@@ -2313,6 +2309,26 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             end
         end
         --sumFillTime = sumFillTime + (os_clock() - startTime)
+
+        return true
+    end
+
+    local function fillBlockWithoutIteracte(x, y, sx, sy, changedList, hideList, color, effect)
+        if sx <= 0 or sy <= 0 then
+            return false
+        end
+
+        local newRIndex = effectIndexAtPos(x, y)
+        nodeEffects[newRIndex] = effect or createEffectUnhide(hideList)
+        changedList[newRIndex] = true
+        --changedColorList[newRIndex] = true
+
+        local newEIndex = getEIndex(newRIndex)
+        effectDatas[newEIndex] = color
+        effectDatas[newEIndex+1] = x
+        effectDatas[newEIndex+2] = y
+        effectDatas[newEIndex+3] = sx
+        effectDatas[newEIndex+4] = sy
 
         return true
     end
@@ -2335,10 +2351,11 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
         local color = effectDatas[eindex]
         --local block1, block2, block3, block4 = false, false, false, false
-        if fillBlock(rpx, rpy, lx, rsy, changedList, hideList, color, false, effect) then --[[block1 = true]] effect = nil end
-        if fillBlock(rpx + lx + sizeX, rpy, rsx - lx - sizeX, rsy, changedList, hideList, color, true, effect) then --[[block2 = true]] effect = nil end
-        if fillBlock(rpx + lx, rpy, sizeX, ly, changedList, hideList, color, true, effect) then --[[block3 = true]] effect = nil end
-        if fillBlock(rpx + lx, rpy + ly + sizeY, sizeX, rsy - ly - sizeY, changedList, hideList, color, true, effect) then --[[block4 = true]] effect = nil end
+        if fillBlockWithoutIteracte(rpx, rpy, lx, rsy, changedList, hideList, color, effect) then --[[block1 = true]] effect = nil end
+        if fillBlock(rpx + lx + sizeX, rpy, rsx - lx - sizeX, rsy, changedList, hideList, color, effect) then --[[block2 = true]] effect = nil end
+        if fillBlock(rpx + lx, rpy, sizeX, ly, changedList, hideList, color, effect) then --[[block3 = true]] effect = nil end
+        if fillBlock(rpx + lx, rpy + ly + sizeY, sizeX, rsy - ly - sizeY, changedList, hideList, color, effect) then --[[block4 = true]] effect = nil end
+        --fillBlock(rpx + lx, rpy + ly + sizeY, sizeX, rsy - ly - sizeY, changedList, hideList, color, true, effect)
 
         local ix, iy, endX = px, py, px + (sizeX - 1)
         for _ = 1, sizeX * sizeY do
