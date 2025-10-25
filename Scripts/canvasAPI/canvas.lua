@@ -2462,7 +2462,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             return
         end
 
-        if backplate and not lastDrawWithClear then --WHAT? (fixed)
+        if backplate and not lastDrawWithClear then
             mathPopularColor()
             if lastPopularColor ~= oldBackplateColor then
                 effect_setParameter(backplate, "color", color_new_fromSmallNumber(lastPopularColor, alpha))
@@ -2480,9 +2480,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         effectDatas = {}
 
         local changedList = {}
-        --local changedColorList = {}
 
-        --local startTime = os.clock()
         local index = 0
         while index <= maxEffectArrayBuffer do
             local px = math_floor(index / sizeY)
@@ -2510,44 +2508,16 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                     effectDatas[eindex+4] = 1
                     
                     changedList[index] = true
-                    --changedColorList[index] = true
                     index = index + 1
                 end
-
-                --[[
-                local bSizeX, bSizeY = getBlockSizeOptimization(index, px, py, color)
-                local effect = createEffectUnhide(hideList)
-
-                nodeEffects[index] = effect
-                effectDatas[eindex] = color
-                effectDatas[eindex+1] = px
-                effectDatas[eindex+2] = py
-                effectDatas[eindex+3] = bSizeX
-                effectDatas[eindex+4] = bSizeY
-                fillEffectsLinks(index, px, py, bSizeX, bSizeY)
-
-                changedList[index] = true
-                index = index + bSizeY
-                ]]
             else
                 index = index + 1
             end
         end
-        --print("recreate-loop time:", os.clock() - startTime)
 
         for index in pairs(changedList) do
             setEffectDataParams(index)
         end
-
-        --[[
-        local colorobj = color_new(0)
-        for index in pairs(changedColorList) do
-            local color = effectDatas[getEIndex(index)]
-            colorobj.r, colorobj.g, colorobj.b = hexToRGB(color)
-            colorobj.a = alpha / 255
-            effect_setParameter(nodeEffects[index], "color", colorobj)
-        end
-        ]]
 
         for effect in pairs(hideList) do
             _setPosition(effect, hiddenOffset)
