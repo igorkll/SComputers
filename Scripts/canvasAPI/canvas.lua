@@ -2356,6 +2356,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             for index in pairs(changes) do
                 oldChanges[index] = true
             end
+            drawer.setOldChanges(oldChanges)
 
             for index in pairs(_changes) do
                 if not changes[index] then
@@ -2415,10 +2416,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
         for effect in pairs(hideList) do
             _setPosition(effect, hiddenOffset)
-        end
-        
-        if clearBackplate then
-            drawer.setOldChanges(oldChanges)
         end
 
         if clearOnly then
