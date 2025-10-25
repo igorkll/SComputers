@@ -2370,17 +2370,15 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             local index = changesIndex[i2]
             local color = newBuffer[index] or base
             local rindex = effects[index]
-            if rindex then
+            if rindex and realBuffer[index] ~= color then
                 local eindex = getEIndex(rindex)
-                if realBuffer[index] ~= color then
-                    if effectDatas[eindex+3] > 1 or effectDatas[eindex+4] > 1 then
-                        local px = math_floor(index / sizeY)
-                        local py = index % sizeY
-                        extractPixel(changedList, hideList, index, px, py, getChangesBlockSize(rindex, index, changes, px, py, color))
-                    else
-                        changedList[rindex] = nil
-                        hideEffectDataLater(rindex, hideList)
-                    end
+                if effectDatas[eindex+3] > 1 or effectDatas[eindex+4] > 1 then
+                    local px = math_floor(index / sizeY)
+                    local py = index % sizeY
+                    extractPixel(changedList, hideList, index, px, py, getChangesBlockSize(rindex, index, changes, px, py, color))
+                else
+                    changedList[rindex] = nil
+                    hideEffectDataLater(rindex, hideList)
                 end
             end
             realBuffer[index] = color
