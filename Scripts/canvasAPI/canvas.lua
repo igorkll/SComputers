@@ -1976,12 +1976,11 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         local upAvailable = upParentE and nodeEffects[upParent] and effectDatas[upParentE+1] == px and effectDatas[upParentE+3] == sizeX and colorEquals(effectDatas[upParentE], color)
         local downAvailable = downParentE and nodeEffects[downParent] and effectDatas[downParentE+1] == px and effectDatas[downParentE+3] == sizeX and colorEquals(effectDatas[downParentE], color)
 
-        local fillOptional = false
-        local fillX1, fillY1, fillX2, fillY2
-        local fill2X1, fill2Y1, fill2X2, fill2Y2
+        local fillX1, fillY1, fillX2, fillY2 = 0, 0, 0, 0
+        local fill2X1, fill2Y1, fill2X2, fill2Y2 = -1, 0, 0, 0
 
-        local newIndex, newEIndex
-        local fillVal
+        local newIndex, newEIndex = 0, 0
+        local fillVal = -1
         if upAvailable and downAvailable then
             fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
             fill2X1, fill2Y1, fill2X2, fill2Y2 = getFillZone(downParentE)
@@ -2002,7 +2001,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             newIndex, newEIndex = upParent, upParentE
             fillVal = upParent
         elseif downAvailable then
-            fillOptional = true
             fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
             fill2X1, fill2Y1, fill2X2, fill2Y2 = getFillZone(downParentE)
 
@@ -2022,7 +2020,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             fillVal = index
         end
 
-        if fillVal then
+        if fillVal >= 0 then
             index, px, py = newIndex, effectDatas[newEIndex+1], effectDatas[newEIndex+2]
             sizeX, sizeY = effectDatas[newEIndex+3], effectDatas[newEIndex+4]
         end
@@ -2039,7 +2037,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         end
 
         if leftAvailable and rightAvailable then
-            fillOptional = false
             fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
             fill2X1, fill2Y1, fill2X2, fill2Y2 = getFillZone(rightParentE)
 
@@ -2052,14 +2049,12 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             effectDatas[leftParentE+3] = effectDatas[leftParentE+3] + addSizeX
             fillVal = leftParent
         elseif leftAvailable then
-            fillOptional = false
             fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
-            fill2X1, fill2Y1, fill2X2, fill2Y2 = nil, nil, nil, nil
+            fill2X1, fill2Y1, fill2X2, fill2Y2 = -1, 0, 0, 0
 
             effectDatas[leftParentE+3] = effectDatas[leftParentE+3] + sizeX
             fillVal = leftParent
         elseif rightAvailable then
-            fillOptional = not upAvailable and not downAvailable
             fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
             fill2X1, fill2Y1, fill2X2, fill2Y2 = getFillZone(rightParentE)
 
@@ -2078,7 +2073,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             fillVal = index
         end
 
-        if fillVal then
+        if fillVal >= 0 then
             changedList[fillVal] = true
 
             local ix, iy = fillX1, fillY1
@@ -2091,7 +2086,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                 end
             end
 
-            if fill2X1 then
+            if fill2X1 >= 0 then
                 local ix, iy = fill2X1, fill2Y1
                 for _ = 1, ((fill2X2 - fill2X1) + 1) * ((fill2Y2 - fill2Y1) + 1) do
                     effects[effectIndexAtPos(ix, iy)] = fillVal
@@ -2104,7 +2099,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             end
         end
 
-        return fillVal
+        return fillVal < 0
     end
 
     local function tryAttach(changedList, hideList, index, px, py, color, sizeX, sizeY)
@@ -2390,7 +2385,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                     local py = index % sizeY
 
                     local bSizeX, bSizeY = getBlockSize(index, px, py, color)
-                    if not tryLongAttach(changedList, hideList, index, px, py, color, bSizeX, bSizeY) then
+                    if tryLongAttach(changedList, hideList, index, px, py, color, bSizeX, bSizeY) then
                         nodeEffects[index] = createEffectUnhide(hideList)
 
                         local eindex = getEIndex(index)
