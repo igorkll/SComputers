@@ -2431,7 +2431,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
     _setWait(true)
 
     local function recreateCanvas()
-        do return end
         if not lastNewBuffer then
             return
         end
