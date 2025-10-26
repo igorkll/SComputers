@@ -1977,13 +1977,11 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         local downAvailable = downParentE and nodeEffects[downParent] and effectDatas[downParentE+1] == px and effectDatas[downParentE+3] == sizeX and colorEquals(effectDatas[downParentE], color)
 
         local fillX1, fillY1, fillX2, fillY2 = 0, 0, 0, 0
-        local fill2X1, fill2Y1, fill2X2, fill2Y2 = -1, 0, 0, 0
-
-        local newIndex, newEIndex = 0, 0
+        local newEIndex = 0
         local fillVal = -1
+
         if upAvailable and downAvailable then
-            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
-            fill2X1, fill2Y1, fill2X2, fill2Y2 = getFillZone(downParentE)
+            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1) + effectDatas[downParentE+4]
 
             effectDatas[upParentE+4] = effectDatas[upParentE+4] + sizeY + effectDatas[downParentE+4]
 
@@ -1991,17 +1989,16 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             changedList[downParent] = nil
             nodeEffects[downParent] = nil
             
-            newIndex, newEIndex = upParent, upParentE
+            newEIndex = upParentE
             fillVal = upParent
         elseif upAvailable then
             fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
 
             effectDatas[upParentE+4] = effectDatas[upParentE+4] + sizeY
-            newIndex, newEIndex = upParent, upParentE
+            newEIndex = upParentE
             fillVal = upParent
         elseif downAvailable then
-            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
-            fill2X1, fill2Y1, fill2X2, fill2Y2 = getFillZone(downParentE)
+            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1) + effectDatas[downParentE+4]
 
             changedList[downParent] = nil
 
@@ -2015,12 +2012,12 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             effectDatas[eindex+3] = effectDatas[downParentE+3]
             effectDatas[eindex+4] = effectDatas[downParentE+4] + sizeY
             
-            newIndex, newEIndex = index, eindex
+            newEIndex = eindex
             fillVal = index
         end
 
         if fillVal >= 0 then
-            index, px, py = newIndex, effectDatas[newEIndex+1], effectDatas[newEIndex+2]
+            index, px, py = fillVal, effectDatas[newEIndex+1], effectDatas[newEIndex+2]
             sizeX, sizeY = effectDatas[newEIndex+3], effectDatas[newEIndex+4]
         end
 
@@ -2036,8 +2033,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         end
 
         if leftAvailable and rightAvailable then
-            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
-            fill2X1, fill2Y1, fill2X2, fill2Y2 = getFillZone(rightParentE)
+            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1) + effectDatas[rightParentE+3], py + (sizeY - 1)
 
             effectDatas[leftParentE+3] = effectDatas[leftParentE+3] + sizeX + effectDatas[rightParentE+3]
 
@@ -2048,13 +2044,11 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             fillVal = leftParent
         elseif leftAvailable then
             fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
-            fill2X1, fill2Y1, fill2X2, fill2Y2 = -1, 0, 0, 0
 
             effectDatas[leftParentE+3] = effectDatas[leftParentE+3] + sizeX
             fillVal = leftParent
         elseif rightAvailable then
-            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
-            fill2X1, fill2Y1, fill2X2, fill2Y2 = getFillZone(rightParentE)
+            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1) + effectDatas[rightParentE+3], py + (sizeY - 1)
 
             changedList[rightParent] = nil
 
@@ -2081,18 +2075,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                 if ix > fillX2 then
                     ix = fillX1
                     iy = iy + 1
-                end
-            end
-
-            if fill2X1 >= 0 then
-                local ix, iy = fill2X1, fill2Y1
-                for _ = 1, ((fill2X2 - fill2X1) + 1) * ((fill2Y2 - fill2Y1) + 1) do
-                    effects[effectIndexAtPos(ix, iy)] = fillVal
-                    ix = ix + 1
-                    if ix > fill2X2 then
-                        ix = fill2X1
-                        iy = iy + 1
-                    end
                 end
             end
 
@@ -2449,6 +2431,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
     _setWait(true)
 
     local function recreateCanvas()
+        do return end
         if not lastNewBuffer then
             return
         end
