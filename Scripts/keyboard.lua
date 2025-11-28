@@ -76,6 +76,9 @@ function keyboard:server_onCreate()
         end,
         isSyntax = function()
             return self.syntax
+        end,
+        closeGui = function()
+            self.closeGuiOnClients = true
         end
     }
     self.btns = {}
@@ -106,6 +109,11 @@ function keyboard:server_onFixedUpdate()
     if self.flushSyntaxEnable then
         self.network:sendToClients("cl_setSyntaxEnable", self.syntax)
         self.flushSyntaxEnable = nil
+    end
+
+    if self.closeGuiOnClients then
+        self.network:sendToClients("cl_closeGuiOnClients")
+        self.closeGuiOnClients = nil
     end
 end
 
@@ -152,6 +160,10 @@ function keyboard:sv_getData(_, caller)
 end
 
 -------------------------------------------------------
+
+function keyboard:cl_closeGuiOnClients()
+    self.gui:close()
+end
 
 function keyboard:cl_createGui()
     if self.gui then
