@@ -159,7 +159,7 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
     local hResol = self.hResol
     local vResol = self.vResol
     local minDetectionMassRatio = self.minDetectionMassRatio
-    local error = (1 / hResol + 1 / vResol) / 2
+    local error = self.hResol and ((1 / hResol + 1 / vResol) / 2)
 
     local quatOffset = sm.quat.angleAxis(angle, sm.vec3.new(0, 1, 0))
     local vQuatOffset = sm.quat.angleAxis(vAngle, sm.vec3.new(0, 0, 1))
@@ -255,7 +255,9 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
                                 -- rawObject не возврашается пользователю
                                 rawObject = body,
                                 genNoise = passiveRadarTarget.genNoise or genNoise,
-                                error = passiveRadarTarget.error or error
+                                error = passiveRadarTarget.error or error,
+                                hResol = hResol,
+                                vResol = vResol
                             }
 
                             if addParameterMass then
@@ -327,7 +329,9 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
 
                             rawObject = character,
                             genNoise = passiveRadarTarget.genNoise or genNoise,
-                            error = passiveRadarTarget.error or error
+                            error = passiveRadarTarget.error or error,
+                            hResol = hResol,
+                            vResol = vResol
                         }
 
                         if addParameterMass then
