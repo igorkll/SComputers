@@ -12,7 +12,7 @@ PassiveRadar.componentType = "radar"
 
 function PassiveRadar.server_onCreate(self)
     self.passive = true
-	self.radar = sc.radar.createRadar(self, 128, 128, math.pi / 6, math.pi / 6, 1.5)
+	self.radar = sc.radar.createRadar(self)
 	sc.radar.server_onCreate(self.radar)
 end
 

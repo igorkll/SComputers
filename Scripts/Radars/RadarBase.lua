@@ -115,6 +115,40 @@ local function checkChaffCollision(pos1, pos2)
     end
 end
 
+local function rawObjectCompare(rawObject1, rawObject2)
+    if type(rawObject1) == "Body" and type(rawObject2) == "Body" then
+        return rawObject1.id == rawObject2.id
+    end
+
+    if type(rawObject1) == "Character" and type(rawObject2) == "Character" then
+        return rawObject1.id == rawObject2.id
+    end
+
+    return rawObject1 == rawObject2
+end
+
+local function getPassiveRadarTarget(self, rawObject)
+    if not self.scriptableObject.passive then
+        return {}
+    end
+
+    local ctick = sm.game.getCurrentTick()
+
+    local highLevelPassiveRadarTarget
+    local maxLevelRadar = -math.huge
+    for _, passiveRadarTarget in ipairs(sc.passiveRadarTargets) do
+        if ctick - passiveRadarTarget.ctick <= sc.passiveRadarDetectTimeFrame and rawObjectCompare(passiveRadarTarget.rawObject, rawObject) then
+            local radarLevel = passiveRadarTarget.self.hResol
+            if radarLevel > maxLevelRadar then
+                highLevelPassiveRadarTarget = passiveRadarTarget
+                maxLevelRadar = radarLevel
+            end
+        end
+    end
+
+    return highLevelPassiveRadarTarget
+end
+
 local zero = sm.vec3.zero()
 function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
     local hFov = self.hFov
@@ -123,8 +157,8 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
     local vResol = self.vResol
     local angle = self.angle
     local vAngle = self.vAngle
-
     local minDetectionMassRatio = self.minDetectionMassRatio
+    local error = (1 / hResol + 1 / vResol) / 2
 
     local quatOffset = sm.quat.angleAxis(angle, sm.vec3.new(0, 1, 0))
     local vQuatOffset = sm.quat.angleAxis(vAngle, sm.vec3.new(0, 0, 1))
@@ -170,37 +204,104 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
     local bodies = sm.body.getAllBodies()
     for i = 1, #bodies do
         local body = bodies[i]
+        local passiveRadarTarget = getPassiveRadarTarget(self, body)
+        if not self.scriptableObject.passive or passiveRadarTarget then
+            local id = body:getId()
 
-        local id = body:getId()
+            if id ~= sbodyId then
+                local gpos
+                if body:isStatic() then
+                    gpos = body:getShapes()[1].worldPosition
+                else
+                    gpos = body:getCenterOfMassPosition()
+                end
 
-        if id ~= sbodyId then
-            local gpos
-            if body:isStatic() then
-                gpos = body:getShapes()[1].worldPosition
-            else
-                gpos = body:getCenterOfMassPosition()
+                local lpos = vQuatOffset * quatOffset * shape:transformPoint(gpos)
+                local dir = lpos:normalize()
+
+                local len = (sgpos - gpos):length()
+
+                local massRatio = body:getMass() / len
+
+                if massRatio >= minDetectionMassRatio and radar_needRaycast(dir, halfHcos, halfVcos) and not checkChaffCollision(sgpos, gpos) then
+                    local valid, data = raycast(sgpos, gpos, sbody)
+                    local b = data:getBody()
+
+                    if valid and b and b:getId() == body:getId() then
+                        local hangle, vangle = radar_getAngles(dir)
+
+                        local hcoord = floor( hangle / hAngleStep + 0.5 )
+                        local vcoord = floor( vangle / vAngleStep + 0.5 )
+                        local pos = hcoord + vcoord * vResol
+
+                        if not sc.radarDetectedBodies[b.id] then sc.radarDetectedBodies[b.id] = {} end
+                        sc.radarDetectedBodies[b.id][self] = {ctick + 40, sgpos, {}}
+
+                        local d = points[pos]
+                        if d == nil then
+                            local radarObjectData = {
+                                x = hcoord,
+                                y = vcoord,
+
+                                distance = len,
+                                force = massRatio / minDetectionMassRatio,
+                                id = id,
+                                type = "body",
+
+                                -- rawObject не возврашается пользователю
+                                rawObject = body,
+                                genNoise = passiveRadarTarget.genNoise or genNoise
+                            }
+
+                            if addParameterMass then
+                                radarObjectData.mass = massRatio
+                            end
+
+                            points[pos] = radarObjectData
+                        elseif d.distance > len then
+                            d.distance = len
+                            d.id = id
+                            d.force = massRatio / minDetectionMassRatio
+                            d.mass = massRatio
+                        end
+                    end
+                end
             end
+        end
+    end
+
+    local characters = {}
+    for index, value in ipairs(sm.player.getAllPlayers()) do
+        table.insert(characters, value.character)
+    end
+    for index, value in ipairs(sm.unit.getAllUnits()) do
+        table.insert(characters, value.character)
+    end
+
+    for i = 1, #characters do
+        local character = characters[i]
+        local passiveRadarTarget = getPassiveRadarTarget(self, character)
+        if not self.scriptableObject.passive or passiveRadarTarget then
+            local id = character:getId()
+
+            local gpos = character:getWorldPosition()
 
             local lpos = vQuatOffset * quatOffset * shape:transformPoint(gpos)
             local dir = lpos:normalize()
 
             local len = (sgpos - gpos):length()
-
-            local massRatio = body:getMass() / len
+            local massRatio = character:getMass() / len
 
             if massRatio >= minDetectionMassRatio and radar_needRaycast(dir, halfHcos, halfVcos) and not checkChaffCollision(sgpos, gpos) then
                 local valid, data = raycast(sgpos, gpos, sbody)
-                local b = data:getBody()
+                local p = data:getCharacter()
 
-                if valid and b and b:getId() == body:getId() then
+                if valid and p and p:getId() == character:getId() then
                     local hangle, vangle = radar_getAngles(dir)
 
                     local hcoord = floor( hangle / hAngleStep + 0.5 )
                     local vcoord = floor( vangle / vAngleStep + 0.5 )
                     local pos = hcoord + vcoord * vResol
-
-                    if not sc.radarDetectedBodies[b.id] then sc.radarDetectedBodies[b.id] = {} end
-                    sc.radarDetectedBodies[b.id][self] = {ctick + 40, sgpos, {}}
 
                     local d = points[pos]
                     if d == nil then
@@ -211,7 +312,10 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
                             distance = len,
                             force = massRatio / minDetectionMassRatio,
                             id = id,
-                            type = "body"
+                            type = "character",
+
+                            rawObject = character,
+                            genNoise = passiveRadarTarget.genNoise or genNoise
                         }
 
                         if addParameterMass then
@@ -230,133 +334,94 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
         end
     end
 
-    local characters = {}
-    for index, value in ipairs(sm.player.getAllPlayers()) do
-        table.insert(characters, value.character)
-    end
-    for index, value in ipairs(sm.unit.getAllUnits()) do
-        table.insert(characters, value.character)
-    end
-
-    for i = 1, #characters do
-        local character = characters[i]
-
-        local id = character:getId()
-
-        local gpos = character:getWorldPosition()
-
-        local lpos = vQuatOffset * quatOffset * shape:transformPoint(gpos)
-        local dir = lpos:normalize()
-
-        local len = (sgpos - gpos):length()
-        local massRatio = character:getMass() / len
-
-        if massRatio >= minDetectionMassRatio and radar_needRaycast(dir, halfHcos, halfVcos) and not checkChaffCollision(sgpos, gpos) then
-            local valid, data = raycast(sgpos, gpos, sbody)
-            local p = data:getCharacter()
-
-            if valid and p and p:getId() == character:getId() then
-                local hangle, vangle = radar_getAngles(dir)
-
-                local hcoord = floor( hangle / hAngleStep + 0.5 )
-                local vcoord = floor( vangle / vAngleStep + 0.5 )
-                local pos = hcoord + vcoord * vResol
-
-                local d = points[pos]
-                if d == nil then
-                    local radarObjectData = {
-                        x = hcoord,
-                        y = vcoord,
-
-                        distance = len,
-                        force = massRatio / minDetectionMassRatio,
-                        id = id,
-                        type = "character"
-                    }
-
-                    if addParameterMass then
-                        radarObjectData.mass = massRatio
-                    end
-
-                    points[pos] = radarObjectData
-                elseif d.distance > len then
-                    d.distance = len
-                    d.id = id
-                    d.force = massRatio / minDetectionMassRatio
-                    d.mass = massRatio
-                end
-            end
-        end
-    end
-
     for i = 1, #sc.sv_chaff_objects do
         local chaffObject = sc.sv_chaff_objects[i]
-        local id = chaffObject.id
-        local gpos = chaffObject.position
+        local passiveRadarTarget = getPassiveRadarTarget(self, chaffObject)
+        if not self.scriptableObject.passive or passiveRadarTarget then
+            local id = chaffObject.id
+            local gpos = chaffObject.position
 
-        local lpos = vQuatOffset * quatOffset * shape:transformPoint(gpos)
-        local dir = lpos:normalize()
+            local lpos = vQuatOffset * quatOffset * shape:transformPoint(gpos)
+            local dir = lpos:normalize()
 
-        local len = (sgpos - gpos):length()
-        local massRatio = chaffObject.mass / len
+            local len = (sgpos - gpos):length()
+            local massRatio = chaffObject.mass / len
 
-        if massRatio >= minDetectionMassRatio and radar_needRaycast(dir, halfHcos, halfVcos) then
-            if not raycast(sgpos, gpos, sbody) then
-                local hangle, vangle = radar_getAngles(dir)
+            if massRatio >= minDetectionMassRatio and radar_needRaycast(dir, halfHcos, halfVcos) then
+                if not raycast(sgpos, gpos, sbody) then
+                    local hangle, vangle = radar_getAngles(dir)
 
-                local hcoord = floor( hangle / hAngleStep + 0.5 )
-                local vcoord = floor( vangle / vAngleStep + 0.5 )
-                local pos = hcoord + vcoord * vResol
+                    local hcoord = floor( hangle / hAngleStep + 0.5 )
+                    local vcoord = floor( vangle / vAngleStep + 0.5 )
+                    local pos = hcoord + vcoord * vResol
 
-                local d = points[pos]
-                if d == nil then
-                    local radarObjectData = {
-                        x = hcoord,
-                        y = vcoord,
+                    local d = points[pos]
+                    if d == nil then
+                        local radarObjectData = {
+                            x = hcoord,
+                            y = vcoord,
 
-                        distance = len,
-                        force = massRatio / minDetectionMassRatio,
-                        id = id,
-                        type = "body"
-                    }
+                            distance = len,
+                            force = massRatio / minDetectionMassRatio,
+                            id = id,
+                            type = "body",
 
-                    if addParameterMass then
-                        radarObjectData.mass = massRatio
+                            rawObject = chaffObject,
+                            genNoise = passiveRadarTarget.genNoise or genNoise,
+                            error = passiveRadarTarget.error or error
+                        }
+
+                        if addParameterMass then
+                            radarObjectData.mass = massRatio
+                        end
+
+                        points[pos] = radarObjectData
+                    elseif d.distance > len then
+                        d.distance = len
+                        d.id = id
+                        d.force = massRatio / minDetectionMassRatio
+                        d.mass = massRatio
                     end
-
-                    points[pos] = radarObjectData
-                elseif d.distance > len then
-                    d.distance = len
-                    d.id = id
-                    d.force = massRatio / minDetectionMassRatio
-                    d.mass = massRatio
                 end
             end
         end
     end
 
+    if not self.scriptableObject.passive then
+        for pos, data in pairs(points) do
+            insert(sc.passiveRadarTargets, {
+                ctick = ctick,
+                self = self,
+                scriptableObject = self.scriptableObject,
+                pos = pos,
+                data = data,
+                genNoise = genNoise,
+                error = error
+            })
+        end
+    end
+    
     local result = {} -- [{ id, hangle, vangle, dist, force }]
     local pi2 = pi * 2
-    local error = (1 / hResol + 1 / vResol) / 2
 
     for k, v in pairs(points) do
-        local hangle = v.x * hAngleStep + angle + genNoise(hAngleStep)
+        local hangle = v.x * hAngleStep + angle + v.genNoise(hAngleStep)
         hangle = fmod(hangle + pi, pi2) - pi
 
-        local vangle = v.y * vAngleStep + genNoise(vAngleStep)
+        local vangle = v.y * vAngleStep + v.genNoise(vAngleStep)
         vangle = fmod(vangle + pi, pi2) - pi
         
         local distance = v.distance
-        distance = distance + genNoise(error * distance)
+        distance = distance + v.genNoise(v.error * distance)
 
         local force = v.force
-        force = force + genNoise(error * force)
+        force = force + v.genNoise(v.error * force)
 
         -- в данный момент масса в сыром виде возврашается только в unrestricted радаре, а шума он не содержит по определению
         -- но я все равно реализовал этот код на случай если параметер mass будет добавлен в какой либо радар содержащий шум
         local mass = v.mass
         if mass then
-            mass = mass + genNoise(error * mass)
+            mass = mass + v.genNoise(v.error * mass)
         end
 
         insert(result, {

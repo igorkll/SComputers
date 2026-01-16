@@ -132,6 +132,14 @@ function servicetool:server_onFixedUpdate()
         end
     end
 
+    local ctick = sm.game.getCurrentTick()
+    for i = #sc.passiveRadarTargets, 1, -1 do
+        local passiveRadarTarget = sc.passiveRadarTargets[i]
+        if ctick - passiveRadarTarget.ctick > sc.passiveRadarDetectTimeFrame then
+            table.remove(sc.passiveRadarTargets, i)
+        end
+    end
+
     --[[
     if sm.game.getCurrentTick() % 10 == 0 then
         for _, player in ipairs(sm.player.getAllPlayers()) do

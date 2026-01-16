@@ -92,7 +92,10 @@ local sc = {
     cl_chaff_objects = {},
 
     chaff_visible_size = 0.25,
-    chaff_real_size = 32
+    chaff_real_size = 32,
+
+    passiveRadarTargets = {},
+    passiveRadarDetectTimeFrame = 2
 }
 _G.sc = sc
 
