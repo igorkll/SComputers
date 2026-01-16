@@ -684,5 +684,11 @@
       "description" : "IT leaves behind a cloud of foil that slowly descends to the ground. The radar beam does not pass through it. The pieces of foil appear on the radar as separate parts of the aircraft, which confuses guided missiles. Single-use, but recharges when mounted on a lift.\n\nInstall it on the aircraft and activate it with a logical signal or via the API!",
       "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
       "title" : "Chaff"
+   },
+
+   "d26220eb-9311-44df-bbe1-263b0d8b1430" : {
+        "description" : "it works like a regular radar, but sees only those targets that are \"highlighted\" by a regular radar. It works with the power of the main radar. If the target was illuminated by several radars, the passive one will choose the most powerful one.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Passive Radar"
    }
 }

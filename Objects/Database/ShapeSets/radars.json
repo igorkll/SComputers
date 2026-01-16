@@ -121,23 +121,40 @@
          "sticky" : "-X+X-Z+Z-Y",
          "uuid" : "73df7328-ab7b-4654-9248-d0ea5e105927"
       },
-      {
-         "box" : {
-            "x" : 1,
-            "y" : 1,
-            "z" : 1
-         },
-         "color" : "333333",
-         "physicsMaterial" : "Mechanical",
-         "renderable" : "$CONTENT_DATA/Objects/Models/chaff2/renderable.rend",
-         "rotationSet" : "PropZ",
-         "scripted" : {
-            "classname" : "chaff",
-            "filename" : "$CONTENT_DATA/Scripts/chaff.lua"
-         },
-         "stackSize" : 10,
-         "sticky" : "-X+X-Z-Y+Y",
-         "uuid" : "2ce74e6b-188d-40c0-ad8a-0afc6925dc9f"
-      }
+        {
+            "box" : {
+                "x" : 1,
+                "y" : 1,
+                "z" : 1
+            },
+            "color" : "333333",
+            "physicsMaterial" : "Mechanical",
+            "renderable" : "$CONTENT_DATA/Objects/Models/chaff2/renderable.rend",
+            "rotationSet" : "PropZ",
+            "scripted" : {
+                "classname" : "chaff",
+                "filename" : "$CONTENT_DATA/Scripts/chaff.lua"
+            },
+            "stackSize" : 10,
+            "sticky" : "-X+X-Z-Y+Y",
+            "uuid" : "2ce74e6b-188d-40c0-ad8a-0afc6925dc9f"
+        },
+        {
+            "box" : {
+                "x" : 1,
+                "y" : 1,
+                "z" : 1
+            },
+            "color" : "6a6a6a",
+            "physicsMaterial" : "Metal",
+            "renderable" : "$CONTENT_DATA/Objects/Renderables/Radar1_sticky.rend",
+            "rotationSet" : "PropY",
+            "scripted" : {
+                "classname" : "PassiveRadar",
+                "filename" : "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21/Scripts/Radars/PassiveRadar.lua"
+            },
+            "stackSize" : 10,
+            "uuid" : "d26220eb-9311-44df-bbe1-263b0d8b1430"
+        }
    ]
 }
