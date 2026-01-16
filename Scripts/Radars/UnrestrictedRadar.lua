@@ -11,16 +11,16 @@ UnrestrictedRadar.componentType = "radar"
 
 
 function UnrestrictedRadar.server_onCreate(self)
-	self.unrestricted = true
-	self.radar = sc.radar.createRadar(self, 2048, 2048, math.pi / 6, math.pi / 6, 0)
-	sc.radar.server_onCreate(self.radar)
+    self.unrestricted = true
+    self.radar = sc.radar.createRadar(self, 2048, 2048, math.pi / 6, math.pi / 6, 0)
+    sc.radar.server_onCreate(self.radar)
 end
 
 function UnrestrictedRadar.server_onFixedUpdate(self)
-	sc.creativeCheck(self, true)
-	sc.radar.server_onTick(self.radar)
+    sc.creativeCheck(self, true)
+    sc.radar.server_onTick(self.radar)
 end
 
 function UnrestrictedRadar.server_onDestroy(self)
-	sc.radar.server_onDestroy(self.radar)
+    sc.radar.server_onDestroy(self.radar)
 end
