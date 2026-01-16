@@ -153,10 +153,11 @@ local zero = sm.vec3.zero()
 function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
     local hFov = self.hFov
     local vFov = self.vFov
-    local hResol = self.hResol
-    local vResol = self.vResol
     local angle = self.angle
     local vAngle = self.vAngle
+
+    local hResol = self.hResol
+    local vResol = self.vResol
     local minDetectionMassRatio = self.minDetectionMassRatio
     local error = (1 / hResol + 1 / vResol) / 2
 
@@ -168,9 +169,6 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
     local sbodyId = sbody:getId()
 
     local sgpos = shape:getWorldPosition()
-
-    local hAngleStep = hFov / hResol
-    local vAngleStep = vFov / vResol
 
     local halfHcos = math.cos(hFov / 2)
     local halfVcos = math.cos(vFov / 2)
@@ -206,6 +204,12 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
         local body = bodies[i]
         local passiveRadarTarget = getPassiveRadarTarget(self, body)
         if not self.scriptableObject.passive or passiveRadarTarget then
+            local hResol = passiveRadarTarget.hResol or hResol
+            local vResol = passiveRadarTarget.vResol or vResol
+            local hAngleStep = hFov / hResol
+            local vAngleStep = vFov / vResol
+            local minDetectionMassRatio = passiveRadarTarget.minDetectionMassRatio or minDetectionMassRatio
+
             local id = body:getId()
 
             if id ~= sbodyId then
@@ -250,7 +254,8 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
 
                                 -- rawObject не возврашается пользователю
                                 rawObject = body,
-                                genNoise = passiveRadarTarget.genNoise or genNoise
+                                genNoise = passiveRadarTarget.genNoise or genNoise,
+                                error = passiveRadarTarget.error or error
                             }
 
                             if addParameterMass then
@@ -282,6 +287,12 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
         local character = characters[i]
         local passiveRadarTarget = getPassiveRadarTarget(self, character)
         if not self.scriptableObject.passive or passiveRadarTarget then
+            local hResol = passiveRadarTarget.hResol or hResol
+            local vResol = passiveRadarTarget.vResol or vResol
+            local hAngleStep = hFov / hResol
+            local vAngleStep = vFov / vResol
+            local minDetectionMassRatio = passiveRadarTarget.minDetectionMassRatio or minDetectionMassRatio
+
             local id = character:getId()
 
             local gpos = character:getWorldPosition()
@@ -315,7 +326,8 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
                             type = "character",
 
                             rawObject = character,
-                            genNoise = passiveRadarTarget.genNoise or genNoise
+                            genNoise = passiveRadarTarget.genNoise or genNoise,
+                            error = passiveRadarTarget.error or error
                         }
 
                         if addParameterMass then
@@ -338,6 +350,12 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
         local chaffObject = sc.sv_chaff_objects[i]
         local passiveRadarTarget = getPassiveRadarTarget(self, chaffObject)
         if not self.scriptableObject.passive or passiveRadarTarget then
+            local hResol = passiveRadarTarget.hResol or hResol
+            local vResol = passiveRadarTarget.vResol or vResol
+            local hAngleStep = hFov / hResol
+            local vAngleStep = vFov / vResol
+            local minDetectionMassRatio = passiveRadarTarget.minDetectionMassRatio or minDetectionMassRatio
+
             local id = chaffObject.id
             local gpos = chaffObject.position
 
@@ -368,7 +386,9 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
 
                             rawObject = chaffObject,
                             genNoise = passiveRadarTarget.genNoise or genNoise,
-                            error = passiveRadarTarget.error or error
+                            error = passiveRadarTarget.error or error,
+                            hResol = hResol,
+                            vResol = vResol
                         }
 
                         if addParameterMass then
@@ -392,11 +412,12 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
             insert(sc.passiveRadarTargets, {
                 ctick = ctick,
                 self = self,
-                scriptableObject = self.scriptableObject,
-                pos = pos,
-                data = data,
+                rawObject = data.rawObject,
                 genNoise = genNoise,
-                error = error
+                error = error,
+                hResol = hResol,
+                vResol = vResol,
+                minDetectionMassRatio = minDetectionMassRatio
             })
         end
     end
@@ -405,6 +426,9 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
     local pi2 = pi * 2
 
     for k, v in pairs(points) do
+        local hAngleStep = hFov / v.hResol
+        local vAngleStep = vFov / v.vResol
+
         local hangle = v.x * hAngleStep + angle + v.genNoise(hAngleStep)
         hangle = fmod(hangle + pi, pi2) - pi
 
