@@ -138,7 +138,7 @@ local function getPassiveRadarTarget(self, rawObject)
     local maxLevelRadar = -math.huge
     for _, passiveRadarTarget in ipairs(sc.passiveRadarTargets) do
         if ctick - passiveRadarTarget.ctick <= sc.passiveRadarDetectTimeFrame and rawObjectCompare(passiveRadarTarget.rawObject, rawObject) then
-            local radarLevel = passiveRadarTarget.self.hResol
+            local radarLevel = passiveRadarTarget.self.hResol + (passiveRadarTarget.addParameterMass and 1 or 0)
             if radarLevel > maxLevelRadar then
                 highLevelPassiveRadarTarget = passiveRadarTarget
                 maxLevelRadar = radarLevel
@@ -260,7 +260,7 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
                                 vResol = vResol
                             }
 
-                            if addParameterMass then
+                            if addParameterMass or passiveRadarTarget.addParameterMass then
                                 radarObjectData.mass = massRatio
                             end
 
@@ -334,7 +334,7 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
                             vResol = vResol
                         }
 
-                        if addParameterMass then
+                        if addParameterMass or passiveRadarTarget.addParameterMass then
                             radarObjectData.mass = massRatio
                         end
 
@@ -395,7 +395,7 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
                             vResol = vResol
                         }
 
-                        if addParameterMass then
+                        if addParameterMass or passiveRadarTarget.addParameterMass then
                             radarObjectData.mass = massRatio
                         end
 
@@ -421,7 +421,8 @@ function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
                 error = error,
                 hResol = hResol,
                 vResol = vResol,
-                minDetectionMassRatio = minDetectionMassRatio
+                minDetectionMassRatio = minDetectionMassRatio,
+                addParameterMass = addParameterMass
             })
         end
     end
