@@ -135,7 +135,7 @@ function scomputers.isUnsafeFeatures(interactable)
     return false
 end
 
-function scomputers.addChaffObject(position, id, mass)
+function scomputers.addChaffObject(position, id, mass, timeLimit)
     local chaffObject = {
         position = sm.vec3.new(position.x, position.y, position.z),
         move = sm.vec3.new(
@@ -144,7 +144,8 @@ function scomputers.addChaffObject(position, id, mass)
             math.random(-350, -250) / 40 / 100
         ),
         id = id,
-        mass = mass
+        mass = mass,
+        timeLimit
     }
 
     if sm.isServerMode() then

@@ -62,12 +62,13 @@ function chaff:server_onFixedUpdate()
 
     if self.shotFlag then
         local body = self:sv_getBodyForChraff()
+        local timeLimit = math.random(sc.chaff_time_limit_min, sc.chaff_time_limit_max)
         if body then
-            scomputers.addChaffObject(self.shape.worldPosition, body.id, body.mass)
+            scomputers.addChaffObject(self.shape.worldPosition, body.id, body.mass, timeLimit)
         else
-            scomputers.addChaffObject(self.shape.worldPosition, math.random(1, 99999), (math.random() * (15000 - 50)) + 50)
+            scomputers.addChaffObject(self.shape.worldPosition, math.random(1, 99999), (math.random() * (15000 - 50)) + 50, timeLimit)
         end
-        self.network:sendToClients("cl_n_addChaffObject", self.shape.worldPosition)
+        self.network:sendToClients("cl_n_addChaffObject", {self.shape.worldPosition, timeLimit})
         
         self.shotFlag = nil
     end
@@ -110,6 +111,6 @@ function chaff:sv_shot()
     return true
 end
 
-function chaff:cl_n_addChaffObject(position)
-    scomputers.addChaffObject(position)
+function chaff:cl_n_addChaffObject(data)
+    scomputers.addChaffObject(data[1], nil, nil, data[2])
 end

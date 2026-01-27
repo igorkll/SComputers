@@ -92,7 +92,10 @@ local sc = {
     cl_chaff_objects = {},
 
     chaff_visible_size = 0.25,
-    chaff_real_size = 32,
+    --chaff_real_size = 32,
+    chaff_real_size = 2,
+    chaff_time_limit_min = math_floor(1.8 * 40),
+    chaff_time_limit_max = math_floor(2.2 * 40),
 
     passiveRadarTargets = {},
     passiveRadarDetectTimeFrame = 2

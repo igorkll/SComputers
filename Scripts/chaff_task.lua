@@ -9,12 +9,9 @@ local function doChaffObjects(chaff_objects, clientSide)
     for i = #chaff_objects, 1, -1 do
         local chaffObject = chaff_objects[i]
         
+        local destroyFlag = false
         if sm.physics.raycast(sm.vec3.new(0, 0, checkFromHeight), chaffObject.position + sm.vec3.new(0, 0, sc.chaff_visible_size + 4), nil, sm.physics.filter.terrainSurface) then
-            table.remove(chaff_objects, i)
-
-            if chaffObject.effect then
-                chaffObject.effect:destroy()
-            end
+            destroyFlag = true            
         elseif clientSide then
             if not chaffObject.effect then
                 chaffObject.radius = 0.1
@@ -45,6 +42,20 @@ local function doChaffObjects(chaff_objects, clientSide)
         end
 
         chaffObject.position = chaffObject.position + chaffObject.move
+        if chaffObject.timeLimit then
+            chaffObject.timeLimit = chaffObject.timeLimit - 1
+            if chaffObject.timeLimit <= 0 then
+                destroyFlag = true
+            end
+        end
+
+        if destroyFlag then
+            table.remove(chaff_objects, i)
+
+            if chaffObject.effect then
+                chaffObject.effect:destroy()
+            end
+        end
     end
 end
 
