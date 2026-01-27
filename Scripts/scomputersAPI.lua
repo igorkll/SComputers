@@ -145,7 +145,7 @@ function scomputers.addChaffObject(position, id, mass, timeLimit)
         ),
         id = id,
         mass = mass,
-        timeLimit
+        timeLimit = timeLimit
     }
 
     if sm.isServerMode() then

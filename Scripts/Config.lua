@@ -42,6 +42,7 @@ dofile("$CONTENT_DATA/Scripts/encryptVM/encryptVM.lua")
 local pairs = pairs
 local ipairs = ipairs
 local type = type
+local math_floor = math.floor
 
 local sm_color_new = sm.color.new
 local sm_vec3_new = sm.vec3.new
@@ -641,7 +642,6 @@ local sm_color_new = sm.color.new
 local tostring = tostring
 local math_max = math.max
 local math_min = math.min
-local math_floor = math.floor
 local string_format = string.format
 
 function numberToColorpart(number)

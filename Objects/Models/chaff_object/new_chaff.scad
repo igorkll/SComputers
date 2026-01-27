@@ -1,5 +1,5 @@
 count = 250;
-radius = 32;
+radius = 8;
 seed = 0;
 
 chaff_scale = 0.25;
