@@ -46,7 +46,7 @@ canvasAPI.multi_layer[tostring(canvasAPI.material.classic)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.plastic)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.smoothed)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.glowing)] = true
-canvasAPI.version = 64
+canvasAPI.version = 63
 
 canvasAPI.materialList = {
     [0] = canvasAPI.material.glass,
@@ -1780,9 +1780,9 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
         posX = posX + ((lSizeX - 1) * 0.5)
         posY = posY + ((lSizeY - 1) * 0.5)
+        _setPosition(effect, vec3_new(-offset.z - layerDistance_withoutBackplateCheck, ((sizeY / 2) - (posY + 0.5)) * -pixelSize.y, ((sizeX / 2) - (posX + 0.5)) * pixelSize.x))
         effect_setScale(effect, vec3_new((pixelSize.x * lSizeX) + scaleAddValue, (pixelSize.y * lSizeY) + scaleAddValue, pixelSize.z))
         effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[eindex], alpha))
-        _setPosition(effect, vec3_new(-offset.z - layerDistance_withoutBackplateCheck, ((sizeY / 2) - (posY + 0.5)) * -pixelSize.y, ((sizeX / 2) - (posX + 0.5)) * pixelSize.x))
     end
 
     local function _setEffectDataParams_defaultRotation(index)
@@ -1792,9 +1792,9 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
         posX = posX + ((lSizeX - 1) * 0.5)
         posY = posY + ((lSizeY - 1) * 0.5)
+        _setPosition(effect, rotation * (offset + vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck)))
         effect_setScale(effect, vec3_new((pixelSize.x * lSizeX) + scaleAddValue, (pixelSize.y * lSizeY) + scaleAddValue, pixelSize.z))
         effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[eindex], alpha))
-        _setPosition(effect, rotation * (offset + vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck)))
     end
 
     local function _setEffectDataParams_altRotation(index)
@@ -1804,9 +1804,9 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
         posX = posX + ((lSizeX - 1) * 0.5)
         posY = posY + ((lSizeY - 1) * 0.5)
+        _setPosition(effect, offset + (rotation * vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck)))
         effect_setScale(effect, vec3_new((pixelSize.x * lSizeX) + scaleAddValue, (pixelSize.y * lSizeY) + scaleAddValue, pixelSize.z))
         effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[eindex], alpha))
-        _setPosition(effect, offset + (rotation * vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck)))
     end
 
     local setEffectDataParams = _setEffectDataParams_defaultRotation
@@ -2386,7 +2386,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         local contentUpdated = false
 
         for index in pairs(changedList) do
-            --setEffectDataParams(index)
+            setEffectDataParams(index)
             contentUpdated = true
         end
 
