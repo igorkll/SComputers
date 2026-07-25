@@ -159,7 +159,7 @@ sc.networking = {}
 
 sc.disableFilesystemMenu = false
 sc.useOriginalSettings = false
-sc.enableByDefault = false
+sc.enableByDefault = true --the menu died with the release of the second chapter
 sc.noCommands = false
 sc.componentsBackend = sc.mt_hook({__mode = "v"}) --sc.componentsBackend[table] = self
 
