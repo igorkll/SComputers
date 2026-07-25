@@ -12,10 +12,12 @@ local function checkInstance(self)
 end
 
 local function loadBackground(self)
+    pcall(dofile, "$CONTENT_DATA/Scripts/Config.lua")
+
     if sc.background then return end
     sc.background = {}
 
-    dofile("$CONTENT_DATA/Scripts/chaff_task.lua")
+    pcall(dofile, "$CONTENT_DATA/Scripts/chaff_task.lua")
 
     for name, task in pairs(sc.background) do
         function task.sendToClients(...)
@@ -64,7 +66,6 @@ function servicetool:server_onCreate()
         return
     end
 
-    dofile("$CONTENT_DATA/Scripts/Config.lua")
     loadBackground(self)
     sc.init()
     sc.warningsCheck()
@@ -245,7 +246,6 @@ function servicetool:cl_n_onCreate(version)
     end
     self.clientToolInited = true
     
-    dofile("$CONTENT_DATA/Scripts/Config.lua")
     loadBackground(self)
 
     if sc.isSplashEnabled() then

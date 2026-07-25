@@ -1,12 +1,12 @@
 --_G.luavm = _G.luavm or {}
 _G.luavm = {}
-dofile './LuaVM/LBI.lua'
-dofile './LuaVM/LuaZ.lua'
-dofile './LuaVM/LuaX.lua'
-dofile './LuaVM/LuaP.lua'
-dofile './LuaVM/LuaK.lua'
-dofile './LuaVM/LuaY.lua'
-dofile './LuaVM/LuaU.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LBI.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaZ.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaX.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaP.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaK.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaY.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaU.lua'
 _G.luavm.luaX:init()
 
 function _G.luavm.custom_loadstring(LuaState, str, env)
