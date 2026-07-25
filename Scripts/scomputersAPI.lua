@@ -31,6 +31,12 @@ function scomputers.addClEnvHook(envhook)
 	table.insert(sc.cl_envhooks, envhook)
 end
 
+function scomputers.loadGlobalLib(name)
+    for _, folder in ipairs(sc.internal_libs_folders) do
+        pcall(dofile, folder .. "/" .. name .. ".lua")
+    end
+end
+
 function scomputers.require(self, name)
     if name:find("%.") or name:find("%/") or name:find("%\\") then
         error("the library name cannot contain the characters: \"/.\\\"", 2)
@@ -80,9 +86,7 @@ function scomputers.require(self, name)
     end
     ]]
 
-    for _, folder in ipairs(sc.internal_libs_folders) do
-        pcall(dofile, folder .. "/" .. name .. ".lua")
-    end
+    scomputers.loadGlobalLib(name)
     local libraryLoader = _G["sc_reglib_" .. name]
     if not libraryLoader then
         error("the \"" .. name .. "\" library was not found", 2)
@@ -177,6 +181,10 @@ end
 
 function scomputers.md5_hex(data)
     return md5.sumhexa(data, true)
+end
+
+for _, name in ipairs(sc.forceLoadLibs) do
+    scomputers.loadGlobalLib(name)
 end
 
 _G.scomputers = scomputers

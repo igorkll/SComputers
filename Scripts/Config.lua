@@ -1,6 +1,8 @@
 if __scConfigLoaded then return end
 __scConfigLoaded = true
 
+print("SComputers: Config.lua")
+
 dofile("$SURVIVAL_DATA/Scripts/game/survival_constants.lua")
 dofile("$SURVIVAL_DATA/Scripts/game/survival_items.lua")
 dofile("examples.lua")
@@ -102,6 +104,29 @@ local sc = {
     passiveRadarDetectTimeFrame = 2
 }
 _G.sc = sc
+
+sc.forceLoadLibs = {
+    "base64",
+    "colors",
+    "enlua",
+    "fonts",
+    "graphic",
+    "gui",
+    "image",
+    "json",
+    "midi",
+    "nbs",
+    "objs",
+    "process",
+    "ramfs",
+    "styles",
+    "syntax",
+    "timer",
+    "utils",
+    "vdisplay",
+    "vfs",
+    "xEngine"
+}
 
 sc.architectures = {}
 sc.envhooks = {}
@@ -1030,6 +1055,8 @@ end
 -------------------------------------------------------
 
 sc.moduuid = sm.json.open("$CONTENT_DATA/description.json").localId --you need to read the file for scmframework to work with betterAPI
+print("sc.moduuid", sc.moduuid)
+
 sc.origModPrefix = "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21"
 sc.modPrefix = "$CONTENT_" .. sc.moduuid
 sc.reg_lib_folder(sc.modPrefix .. "/Scripts/internal_libs")
