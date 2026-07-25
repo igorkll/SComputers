@@ -1,4 +1,8 @@
 --_G.luavm = _G.luavm or {}
+
+if _G.luavm then return end
+
+print("loading scrapVM")
 _G.luavm = {}
 dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LBI.lua'
 dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaZ.lua'
@@ -7,6 +11,7 @@ dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaP.lua'
 dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaK.lua'
 dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaY.lua'
 dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaU.lua'
+print("result: ", _G.luavm)
 _G.luavm.luaX:init()
 
 function _G.luavm.custom_loadstring(LuaState, str, env)
