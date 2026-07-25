@@ -2386,7 +2386,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         local contentUpdated = false
 
         for index in pairs(changedList) do
-            setEffectDataParams(index)
+            --setEffectDataParams(index)
             contentUpdated = true
         end
 
