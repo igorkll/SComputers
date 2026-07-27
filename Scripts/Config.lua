@@ -163,6 +163,8 @@ sc.enableByDefault = false --the menu died with the release of the second chapte
 sc.noCommands = false
 sc.componentsBackend = sc.mt_hook({__mode = "v"}) --sc.componentsBackend[table] = self
 
+sc.background = sc.background or {}
+
 
 function sc.shutdown()
 end

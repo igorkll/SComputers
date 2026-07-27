@@ -12,10 +12,10 @@ local function checkInstance(self)
 end
 
 local function loadBackground(self)
+    print("loadBackground. server: ", sm.isServerMode())
     pcall(dofile, "$CONTENT_DATA/Scripts/Config.lua")
 
-    if sc.background then return end
-    sc.background = {}
+    sc.background = sc.background or {}
 
     pcall(dofile, "$CONTENT_DATA/Scripts/chaff_task.lua")
 

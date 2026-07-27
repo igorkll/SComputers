@@ -1,3 +1,4 @@
+print("loading chaff background")
 sc.background.chaff = sc.background.chaff or {}
 
 local uuid = sm.uuid.new("24986ff2-3735-42d5-b3ba-f8c60c3b70bb")
