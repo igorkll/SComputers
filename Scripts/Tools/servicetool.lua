@@ -15,10 +15,6 @@ local function loadBackground(self)
     print("loadBackground. server: ", sm.isServerMode())
     pcall(dofile, "$CONTENT_DATA/Scripts/Config.lua")
 
-    sc.background = sc.background or {}
-
-    pcall(dofile, "$CONTENT_DATA/Scripts/chaff_task.lua")
-
     for name, task in pairs(sc.background) do
         function task.sendToClients(...)
             self.network:sendToClients("cl_bg_callback", {name = name, ...})
