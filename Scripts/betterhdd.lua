@@ -40,6 +40,8 @@ function betterhdd:server_onCreate()
         }
 
         betterDisksLoaded[self.storageData.key] = true
+    else
+        return
     end
 
     self.diskdata = {
@@ -67,7 +69,7 @@ function betterhdd:sv_dataRequest(_, caller)
 end
 
 function betterhdd:server_onFixedUpdate()
-    if self.diskdata.changedPath then
+    if self.diskdata and self.diskdata.changedPath then
         self.storage:save(self.storageData)
     end
 end
@@ -85,7 +87,9 @@ function betterhdd:sv_cloneBetterDisk(base)
 end
 
 function betterhdd:sv_n_clear()
-    better.filesystem.remove(self.diskdata.path)
+    if self.diskdata then
+        better.filesystem.remove(self.diskdata.path)
+    end
 end
 
 -----------------------------------------------------------
