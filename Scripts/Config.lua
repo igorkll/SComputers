@@ -1109,6 +1109,8 @@ dofile("$CONTENT_DATA/Scripts/ai.lua")
 
 dofile("$CONTENT_DATA/Scripts/scomputersAPI.lua")
 
+------------------------------------------------------- background tasks
+
 dofile("$CONTENT_DATA/Scripts/chaff_task.lua")
 
 -------------------------------------------------------
