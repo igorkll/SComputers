@@ -46,7 +46,7 @@ canvasAPI.multi_layer[tostring(canvasAPI.material.classic)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.plastic)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.smoothed)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.glowing)] = true
-canvasAPI.version = 64
+canvasAPI.version = 63
 
 canvasAPI.materialList = {
     [0] = canvasAPI.material.glass,
@@ -1692,32 +1692,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         _setPosition, _setRotation = effect_setPosition, effect_setRotation
     end
 
-    local applyPositions
-
-    do
-        local __setPosition = _setPosition
-
-        local buffer = {}
-        local bufferIndex = 1
-
-        _setPosition = function(effect, val)
-            buffer[bufferIndex] = effect
-            bufferIndex = bufferIndex + 1
-            buffer[bufferIndex] = val
-            bufferIndex = bufferIndex + 1
-        end
-
-        function applyPositions()
-            for i = 1, bufferIndex - 1, 2 do
-                local effect = buffer[bufferIndex]
-                if sm.exists(effect) then
-                    __setPosition(effect, buffer[bufferIndex + 1])
-                end
-            end
-            bufferIndex = 1
-        end
-    end
-
     material = material or canvasAPI.material.classic
     local autoScaleAddValue = false
     if not scaleAddValue then
@@ -2803,7 +2777,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         end
 
         updateLayersPos()
-        applyPositions()
     end
 
     function obj.setPixelSize(_pixelSize)
