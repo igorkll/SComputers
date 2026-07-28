@@ -229,6 +229,7 @@ function servicetool:cl_previewToChat()
     --sm.gui.chatMessage("#f03c02be sure to read the documentation#ffffff: https://scrapmechanictools.com/modapis/SComputers/Info")
     sm.gui.chatMessage("#ff3030>> be sure to read the documentation:\n#ffffffhttps://igorkll.github.io/SComputers")
     sm.gui.chatMessage("#309eff>> SComputers discord server:\n#ffffffhttps://discord.gg/uJrsmUjaMG")
+    sm.gui.chatMessage("#a530ff>> SComputers addons:\n#ffffffhttps://igorkll.github.io/SComputers/addons.html")
     if not better then
         sm.gui.chatMessage("#f2ea05>> to improve the performance of the displays, it is recommended to install this:\n#ffffffhttps://igorkll.github.io/betterAPI")
     end
