@@ -1,4 +1,4 @@
--- Textsign.lua --
+dofile( "$CONTENT_DATA/Scripts/Config.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/util.lua" )
 
 SmartSign = class( nil )
@@ -14,22 +14,21 @@ guiData.button1ColorDefault = guiData.buttons[1].Childs[1].TextColour
 function SmartSign.sv_publicApi()
     local api
     api = {
-        open = function ()
-            if isPathValid(self.sdata.path) then
-                if self.cache then
-                    return self.cache
-                end
+        setText = function (text)
+            self.sv.saved.text = tostring(text or "")
+            self.saveFlag = true
+        end,
+        getText = function()
+            return self.sv.saved.text
+        end,
 
-                local result = sm.json.open(self.sdata.path)
-                if self.resetLagCounter then
-                    sc.resetLagCounter()
-                    self.resetLagCounter = false
-                end
-                self.cache = result
-                return result
-            else
-                error("the wrong path is specified in the ROM block settings", 2)
-            end
+        setTheme = function (num)
+
+            self.sv.saved.selected = clamp( num or 1, 1, 8 )
+            self.saveFlag = true
+        end,
+        getTheme = function()
+            return self.sv.saved.selected
         end
     }
 
@@ -53,6 +52,13 @@ function SmartSign.server_onCreate( self )
 		self.storage:save( self.sv.saved )
 	end
 	self.network:setClientData( self.sv.saved )
+end
+
+function SmartSign:server_onFixedUpdate()
+    if self.saveFlag then
+        self.storage:save( self.sv.saved )
+        self.saveFlag = nil
+    end
 end
 
 function SmartSign.client_onCreate( self )
