@@ -45,7 +45,7 @@ function onTick()
     local textOffsetFloor = math.floor(textOffset)
     local text = text:sub(1 + textOffsetFloor, maxText + textOffsetFloor)
     while #text < maxText do
-        text = text .. "@"
+        text = text .. "\\"
     end
 
     smartsign.setText(text)
