@@ -31,7 +31,7 @@ function scomputers.addClEnvHook(envhook)
 	table.insert(sc.cl_envhooks, envhook)
 end
 
-function scomputers.loadGlobalLib(name)
+function scomputers.forceLoadLib(name)
     for _, folder in ipairs(sc.internal_libs_folders) do
         pcall(dofile, folder .. "/" .. name .. ".lua")
     end
@@ -86,7 +86,7 @@ function scomputers.require(self, name)
     end
     ]]
 
-    scomputers.loadGlobalLib(name)
+    scomputers.forceLoadLib(name)
     local libraryLoader = _G["sc_reglib_" .. name]
     if not libraryLoader then
         error("the \"" .. name .. "\" library was not found", 2)
@@ -184,7 +184,7 @@ function scomputers.md5_hex(data)
 end
 
 for _, name in ipairs(sc.forceLoadLibs) do
-    scomputers.loadGlobalLib(name)
+    scomputers.forceLoadLib(name)
 end
 
 _G.scomputers = scomputers
