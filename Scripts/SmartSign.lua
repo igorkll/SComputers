@@ -19,16 +19,16 @@ function SmartSign.sv_publicApi()
             self.saveFlag = true
         end,
         getText = function()
-            return self.sv.saved.text
+            return self.sv.saved.text or ""
         end,
 
         setTheme = function (num)
-
+            checkArg(1, num, "number")
             self.sv.saved.selected = clamp( num or 1, 1, 8 )
             self.saveFlag = true
         end,
         getTheme = function()
-            return self.sv.saved.selected
+            return self.sv.saved.selected or 1
         end
     }
 
