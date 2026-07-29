@@ -690,5 +690,23 @@
         "description" : "it works like a regular radar, but sees only those targets that are \"highlighted\" by a regular radar. It works with the power of the main radar. If the target was illuminated by several radars, the passive one will choose the most powerful one.",
       "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
       "title" : "Passive Radar"
+   },
+
+    "2c299f06-77be-4191-9377-01517fe2d112" : {
+        "description" : "DigitalSign from drilling thunder update, computer-controlled only",
+        "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+        "title" : "Smart Sign"
+   },
+       "311eea5f-dab1-49e5-927e-e24f33c95b1b" : {
+        "description" : "DigitalSign from drilling thunder update, computer-controlled only",
+        "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+        "title" : "Smart Sign"
+   },
+       "bc979264-1c28-4260-bcb6-7bd8640abdc0" : {
+        "description" : "DigitalSign from drilling thunder update, computer-controlled only",
+        "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+        "title" : "Smart Sign"
    }
+
+   
 }
