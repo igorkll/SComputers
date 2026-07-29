@@ -1,17 +1,23 @@
 dofile( "$CONTENT_DATA/Scripts/Config.lua" )
 dofile( "$SURVIVAL_DATA/Scripts/util.lua" )
 
-SmartSign = class( nil )
+SmartSign = class()
+SmartSign.maxParentCount = 1
+SmartSign.maxChildCount = 0
+SmartSign.connectionInput = sm.interactable.connectionType.composite
+SmartSign.connectionOutput = sm.interactable.connectionType.none
+SmartSign.colorNormal = sm.color.new(0x7F7F7Fff)
+SmartSign.colorHighlight = sm.color.new(0xFFFFFFff)
 SmartSign.componentType = "smartsign" --absences can cause problems
 
 local guiData = {}
-guiData.json = sm.json.open( "$GAME_DATA/Gui/JsonGuis/SmartSign.gui" )
+guiData.json = sm.json.open( "$GAME_DATA/Gui/JsonGuis/DigitalSign.gui" )
 guiData.textLimitBox = FindWidget( guiData.json, "TextLimit" )
 guiData.textBox = FindWidget( guiData.json, "EnterTextBox" )
 guiData.buttons = FindWidget( guiData.json, "ButtonGrid" ).Childs
 guiData.button1ColorDefault = guiData.buttons[1].Childs[1].TextColour
 
-function SmartSign.sv_publicApi()
+function SmartSign:sv_publicApi()
     local api
     api = {
         setText = function (text)
@@ -42,21 +48,16 @@ end
 
 function SmartSign.server_onCreate( self )
 	self.sv = {}
-	self.sv.saved = self.storage:load()
-	if self.sv.saved == nil then
-		if self.params then
-			self.sv.saved = { selected = clamp( self.params.selected or 1, 1, 8 ), text = self.params.text or "" }
-		else
-			self.sv.saved = { selected = 1, text = "" }
-		end
-		self.storage:save( self.sv.saved )
-	end
-	self.network:setClientData( self.sv.saved )
+	self.sv.saved = {}
+    self.sv.saved = { selected = 1, text = "" }
+    self.network:setClientData( self.sv.saved )
+
+    self:sv_publicApi()
 end
 
 function SmartSign:server_onFixedUpdate()
     if self.saveFlag then
-        self.storage:save( self.sv.saved )
+        self:sv_n_changeState( self.sv.saved )
         self.saveFlag = nil
     end
 end
@@ -228,7 +229,6 @@ end
 
 function SmartSign.sv_n_changeState(self, state )
 	self.sv.saved = state
-	self.storage:save( self.sv.saved )
 	self.network:setClientData( self.sv.saved )
 end
 

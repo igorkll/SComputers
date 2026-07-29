@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>SComputers - Api Reference</title>
+        <link rel="icon" href="favicon.ico">
+        <link rel="stylesheet" href="style.css">
+        <link href="highlight.css" rel="stylesheet">
+        <script src="highlight.js"></script>
+        <script>
+			hljs.highlightAll();
+		</script>
+    </head>
+    <body>
+        <p class="text">
+            a sign from scrap mechanic drilling thunder, only controlled from a computer<br/>
+            component name - smartsign
+        </p>
+        
+        <br/>
+        <p class="text">methods:</p>
+        <ul class="list">
+            <li><span>smartsign.setText(string)</span></li>
+            <li><span>smartsign.getText():string</span></li>
+            <li><span>smartsign.setTheme(num:number (1-8))</span></li>
+            <li><span>smartsign.getTheme():number</span></li>
+        </ul>
+
+        <br/>
+        <h2 class="text">example:</h2>
+        <pre>
+            <code class="language-lua" style="width: fit-content;">local smartsign = getComponent("smartsign")
+
+local text = "hello, world!"
+
+local currentTheme = 0
+local maxTheme = 8
+
+function onTick()
+    
+end
+
+function onStop()
+    smartsign.setTheme(1)
+    smartsign.setText("")
+end
+
+_enableCallbacks = true</code>
+        </pre>
+    
+        <script src="main.js"></script>
+    </body>
+</html>

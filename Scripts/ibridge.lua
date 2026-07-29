@@ -1,3 +1,5 @@
+dofile( "$CONTENT_DATA/Scripts/Config.lua" )
+
 ibridge = class()
 ibridge.maxParentCount = 1
 ibridge.maxChildCount = 0
