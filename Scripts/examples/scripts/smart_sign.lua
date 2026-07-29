@@ -1,4 +1,4 @@
---
+--https://igorkll.github.io/SComputers/smartsign.html
 local smartsign = getComponent("smartsign")
 
 local text = "hello, world! abcdef! TEEEESTTTTTTTTT!>!>!>!>!>!>>"
