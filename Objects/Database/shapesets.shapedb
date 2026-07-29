@@ -15,6 +15,7 @@
         "$CONTENT_DATA/Objects/Database/ShapeSets/tools.shapeset",
         "$CONTENT_DATA/Objects/Database/ShapeSets/util.shapeset",
         "$CONTENT_DATA/Objects/Database/ShapeSets/xEngine.shapeset",
-        "$CONTENT_DATA/Objects/Database/ShapeSets/z_dynamicParts.shapeset"
+        "$CONTENT_DATA/Objects/Database/ShapeSets/z_dynamicParts.shapeset",
+        "$CONTENT_DATA/Objects/Database/ShapeSets/smart_signs.shapeset"
 	]	
 }

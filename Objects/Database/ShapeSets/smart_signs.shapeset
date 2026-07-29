@@ -1,0 +1,214 @@
+{
+   "partList" : [
+      	{
+			"box" : 
+			{
+				"x" : 3,
+				"y" : 2,
+				"z" : 1
+			},
+			"color" : "df7f01",
+			"flammable" : false,
+			"name" : "obj_interactive_textsign_small",
+			"params" : 
+			[
+				{
+					"name" : "text",
+					"type" : "string"
+				},
+				{
+					"default" : 1.0,
+					"name" : "selected",
+					"type" : "float"
+				}
+			],
+			"physicsMaterial" : "Electronics",
+			"ratings" : 
+			{
+				"buoyancy" : 6,
+				"density" : 3,
+				"durability" : 3,
+				"friction" : 4
+			},
+			"renderable" : "$SURVIVAL_DATA/Objects/Renderable/interactive/obj_interactive_textsign_small.rend",
+			"restrictions" : 
+			{
+				"usable" : true
+			},
+			"rotationSet" : "PropYZ",
+			"scripted" : 
+			{
+				"classname" : "SmartSign",
+				"data" : 
+				{
+					"asg" : 
+					{
+						"a" : 0.0,
+						"g" : 0.9,
+						"s" : 0.0
+					},
+					"effectName" : "Textsign - Text",
+					"fontName" : "SM_IntlText",
+					"maxTextLength" : 6,
+					"maxTextWidth" : 88,
+					"offsetPosition" : 
+					{
+						"x" : -0.0,
+						"y" : 0.025,
+						"z" : 0.1517
+					},
+					"oversizeScale" : 0.625,
+					"scale" : 
+					{
+						"x" : 1.2,
+						"y" : 1.2,
+						"z" : 1.2
+					}
+				},
+				"filename" : "$CONTENT_DATA/Scripts/SmartSign.lua"
+			},
+			"stackSize" : 5,
+			"uuid" : "2c299f06-77be-4191-9377-01517fe2d112"
+		},
+		{
+			"box" : 
+			{
+				"x" : 5,
+				"y" : 2,
+				"z" : 1
+			},
+			"color" : "df7f01",
+			"flammable" : false,
+			"name" : "obj_interactive_textsign_large",
+			"params" : 
+			[
+				{
+					"name" : "text",
+					"type" : "string"
+				},
+				{
+					"default" : 1.0,
+					"name" : "selected",
+					"type" : "float"
+				}
+			],
+			"physicsMaterial" : "Electronics",
+			"ratings" : 
+			{
+				"buoyancy" : 6,
+				"density" : 3,
+				"durability" : 3,
+				"friction" : 4
+			},
+			"renderable" : "$SURVIVAL_DATA/Objects/Renderable/interactive/obj_interactive_textsign_large.rend",
+			"restrictions" : 
+			{
+				"usable" : true
+			},
+			"rotationSet" : "PropYZ",
+			"scripted" : 
+			{
+				"classname" : "SmartSign",
+				"data" : 
+				{
+					"asg" : 
+					{
+						"a" : 0.0,
+						"g" : 0.9,
+						"s" : 0.0
+					},
+					"effectName" : "Textsign - Text",
+					"fontName" : "SM_IntlText",
+					"maxTextLength" : 11,
+					"maxTextWidth" : 148,
+					"offsetPosition" : 
+					{
+						"x" : -0.0,
+						"y" : 0.025,
+						"z" : 0.1517
+					},
+					"oversizeScale" : 0.625,
+					"scale" : 
+					{
+						"x" : 1.2,
+						"y" : 1.2,
+						"z" : 1.2
+					}
+				},
+				"filename" : "$CONTENT_DATA/Scripts/SmartSign.lua"
+			},
+			"stackSize" : 5,
+			"uuid" : "311eea5f-dab1-49e5-927e-e24f33c95b1b"
+		},
+		{
+			"box" : 
+			{
+				"x" : 8,
+				"y" : 2,
+				"z" : 1
+			},
+			"color" : "df7f01",
+			"flammable" : false,
+			"name" : "obj_interactive_textsign_extralarge",
+			"params" : 
+			[
+				{
+					"name" : "text",
+					"type" : "string"
+				},
+				{
+					"default" : 1.0,
+					"name" : "selected",
+					"type" : "float"
+				}
+			],
+			"physicsMaterial" : "Electronics",
+			"ratings" : 
+			{
+				"buoyancy" : 6,
+				"density" : 3,
+				"durability" : 3,
+				"friction" : 4
+			},
+			"renderable" : "$SURVIVAL_DATA/Objects/Renderable/interactive/obj_interactive_textsign_extralarge.rend",
+			"restrictions" : 
+			{
+				"usable" : true
+			},
+			"rotationSet" : "PropYZ",
+			"scripted" : 
+			{
+				"classname" : "SmartSign",
+				"data" : 
+				{
+					"asg" : 
+					{
+						"a" : 0.0,
+						"g" : 0.9,
+						"s" : 0.0
+					},
+					"effectName" : "Textsign - Text",
+					"fontName" : "SM_IntlText",
+					"maxTextLength" : 18,
+					"maxTextWidth" : 256,
+					"offsetPosition" : 
+					{
+						"x" : -0.0,
+						"y" : 0.025,
+						"z" : 0.1517
+					},
+					"oversizeScale" : 0.625,
+					"scale" : 
+					{
+						"x" : 1.2,
+						"y" : 1.2,
+						"z" : 1.2
+					}
+				},
+				"filename" : "$CONTENT_DATA/Scripts/SmartSign.lua"
+			},
+			"stackSize" : 5,
+			"uuid" : "bc979264-1c28-4260-bcb6-7bd8640abdc0"
+		}
+   	]
+}
