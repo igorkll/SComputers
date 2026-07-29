@@ -34,13 +34,21 @@
 
 local text = "hello, world!"
 
-local currentTheme = 0
+local currentTheme = 1
 local maxTheme = 8
 
 local maxText = smartsign.getMaxTextLen()
+local textOffset = 0
 
 function onTick()
-    smartsign.setText(text:sub(1, maxText))
+    smartsign.setText(text:sub(1 + textOffset, maxText + textOffset))
+    smartsign.setTheme((currentTheme % maxTheme) + 1)
+
+    textOffset = textOffset + 1
+    if textOffset >= maxText then
+        textOffset = 0
+        currentTheme = currentTheme + 1
+    end
 end
 
 function onStop()
