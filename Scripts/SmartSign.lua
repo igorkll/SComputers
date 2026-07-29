@@ -35,6 +35,10 @@ function SmartSign:sv_publicApi()
         end,
         getTheme = function()
             return self.sv.saved.selected or 1
+        end,
+
+        getMaxTextLen = function()
+            return self.data.maxTextLength or 6
         end
     }
 

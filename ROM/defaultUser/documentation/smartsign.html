@@ -24,6 +24,7 @@
             <li><span>smartsign.getText():string</span></li>
             <li><span>smartsign.setTheme(num:number (1-8))</span></li>
             <li><span>smartsign.getTheme():number</span></li>
+            <li><span>smartsign.getMaxTextLen():number</span></li>
         </ul>
 
         <br/>
@@ -36,8 +37,10 @@ local text = "hello, world!"
 local currentTheme = 0
 local maxTheme = 8
 
+local maxText = smartsign.getMaxTextLen()
+
 function onTick()
-    
+    smartsign.setText(text:sub(1, maxText))
 end
 
 function onStop()
