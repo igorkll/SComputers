@@ -188,7 +188,7 @@ local function loadArchitecture(self, key)
     if self.data and self.data.architectureName then
         self[key] = sc.architectures[self.data.architectureName]
         if not self[key] and self.data.architecturePath then
-            dofile(self.data.architecturePath)
+            pcall(dofile, self.data.architecturePath)
             sc.architectures[self.data.architectureName] = sc.architectures[self.data.architectureName] or SCArchitecture
             self[key] = sc.architectures[self.data.architectureName]
             SCArchitecture = nil
