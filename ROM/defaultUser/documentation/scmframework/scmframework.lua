@@ -357,6 +357,382 @@ function base64.decode(data, needYield)
     end)
 end 
 end
+function scmframework_e2e2c93b25c35724b66e137a121800f7() --$CONTENT_DATA/Scripts/BetterFileSystem.lua
+local vfs = sm.scomputers.require({}, "vfs")
+local betterDisksDirectory = vfs.concat("/", "BetterDisks")
+
+local function safeConcat(basePath, path)
+    local char = path:sub(1, 1)
+    if char == "/" or char == "\\" then
+        path = path:sub(2, #path)
+    end
+
+    return vfs.safeConcat(basePath, path) or basePath
+end
+
+local function getPath(diskdata, path)
+    local char = path:sub(1, 1)
+    if char == "/" or char == "\\" then
+        return safeConcat(diskdata.path, path)
+    else
+        return safeConcat(safeConcat(diskdata.path, diskdata.storageData.path), path)
+    end
+end
+
+local function getLocalFullPath(diskdata, path)
+    local char = path:sub(1, 1)
+    if char == "/" or char == "\\" then
+        return path
+    else
+        return safeConcat(diskdata.storageData.path, path)
+    end
+end
+
+local function checkSize(api, diskdata, sizeDelta)
+    if api.getUsedSize() + sizeDelta > api.getMaxSize() then
+        error("Out of Memory!/No Memory.", 3)
+    end
+end
+
+local function calcFolderSize(api, diskdata, path)
+    local size = 0
+
+    for _, filename in ipairs(api.getFileList(path)) do
+        local localPath = vfs.concat(path, filename)
+        size = size + api.getFileSize(localPath) + #getLocalFullPath(diskdata, localPath)
+    end
+
+    for _, dirname in ipairs(api.getFolderList(path)) do
+        local localPath = vfs.concat(path, dirname)
+        size = size + calcFolderSize(api, diskdata, localPath)
+    end
+
+    local selfFolderSize = 0
+    if path ~= "/" then
+        selfFolderSize = #getLocalFullPath(diskdata, path)
+    end
+    return size + selfFolderSize
+end
+
+local fastsavePath = "/.fastsave"
+function createBetterFilesystemData(diskdata, readonly)
+    local function readonlyCheck()
+        if readonly then
+            error("this filesystem is read-only", 3)
+        end
+    end
+
+    local api
+    api = {
+        createFile = function (path)
+            checkArg(1, path, "string")
+            readonlyCheck()
+            diskdata.changed = true
+            initBetterDisk(diskdata)
+            if api.hasFile(path) then
+                error("File already exists", 2)
+            end
+            checkSize(api, diskdata, #getLocalFullPath(diskdata, path))
+            return better.filesystem.writeFile(getPath(diskdata, path), "")
+        end,
+        readFile = function (path)
+            checkArg(1, path, "string")
+            checkSize(api, diskdata, 0)
+            return better.filesystem.readFile(getPath(diskdata, path))
+        end,
+        writeFile = function (path, data)
+            checkArg(1, path, "string")
+            checkArg(2, data, "string")
+            readonlyCheck()
+            diskdata.changed = true
+            initBetterDisk(diskdata)
+            if not api.hasFile(path) then
+                error("File doesn't exist", 2)
+            end
+            checkSize(api, diskdata, #data - api.getFileSize(path))
+            better.filesystem.writeFile(getPath(diskdata, path), data)
+        end,
+        deleteFile = function (path)
+            checkArg(1, path, "string")
+            readonlyCheck()
+            diskdata.changed = true
+            better.filesystem.remove(getPath(diskdata, path))
+        end,
+        hasFile = function (path)
+            checkArg(1, path, "string")
+            local betterFsPath = getPath(diskdata, path)
+            return better.filesystem.exists(betterFsPath) and not better.filesystem.isDirectory(betterFsPath)
+        end,
+        getFileSize = function (path)
+            checkArg(1, path, "string")
+            return better.filesystem.size(getPath(diskdata, path))
+        end,
+
+        createFolder = function (path)
+            checkArg(1, path, "string")
+            readonlyCheck()
+            diskdata.changed = true
+            initBetterDisk(diskdata)
+            if api.hasFolder(path) then
+                error("Folder already exists", 2)
+            end
+            checkSize(api, diskdata, #getLocalFullPath(diskdata, path))
+            better.filesystem.makeDirectory(getPath(diskdata, path))
+        end,
+        deleteFolder = function (path)
+            checkArg(1, path, "string")
+            readonlyCheck()
+            diskdata.changed = true
+            better.filesystem.remove(getPath(diskdata, path))
+        end,
+        getFolderSize = function (path)
+            checkArg(1, path, "string")
+            return calcFolderSize(api, diskdata, path)
+        end,
+        hasFolder = function (path)
+            checkArg(1, path, "string")
+            return better.filesystem.isDirectory(getPath(diskdata, path))
+        end,
+
+        getUsedSize = function ()
+            initBetterDisk(diskdata)
+            return calcFolderSize(api, diskdata, "/")
+        end,
+        getMaxSize = function ()
+            return diskdata.size
+        end,
+        getFileList = function (path)
+            checkArg(1, path, "string")
+            local betterFsPath = getPath(diskdata, path)
+            local list = {}
+            for _, localPath in ipairs(better.filesystem.list(betterFsPath)) do
+                if not better.filesystem.isDirectory(vfs.concat(betterFsPath, localPath)) then
+                    table.insert(list, localPath)
+                end
+                sc.yield()
+            end
+            return list
+        end,
+        getFolderList = function (path)
+            checkArg(1, path, "string")
+            local betterFsPath = getPath(diskdata, path)
+            local list = {}
+            for _, localPath in ipairs(better.filesystem.list(betterFsPath)) do
+                if better.filesystem.isDirectory(vfs.concat(betterFsPath, localPath)) then
+                    table.insert(list, localPath)
+                end
+                sc.yield()
+            end
+            return list
+        end,
+        openFolder = function (path)
+            checkArg(1, path, "string")
+            local path1 = diskdata.storageData.path
+            local path2 = vfs.concat(diskdata.storageData.path, path)
+            if #path2 > 1024 then
+                error("what the hell are you doing?", 2)
+            end
+            diskdata.storageData.path = path2
+            if path1 ~= diskdata.storageData.path then
+                diskdata.changedPath = true
+            end
+        end,
+        getCurrentPath = function ()
+            return diskdata.storageData.path
+        end,
+        clear = function ()
+            readonlyCheck()
+            diskdata.changed = true
+            better.filesystem.remove(getPath(diskdata, "/"))
+        end,
+
+        isReadOnly = function()
+            return not not readonly
+        end,
+
+
+        --API for quick saving of settings (see the "simple disk using" example)
+        setData = function (data)
+            checkArg(1, data, "string")
+            readonlyCheck()
+            if not api.hasFile(fastsavePath) then
+                api.createFile(fastsavePath)
+            end
+            api.writeFile(fastsavePath, data)
+            diskdata.changed = true
+        end,
+        getData = function ()
+            if api.hasFile(fastsavePath) then
+                return api.readFile(fastsavePath)
+            else
+                return ""
+            end
+        end,
+        setTable = function(tbl)
+            checkArg(1, tbl, "table")
+            readonlyCheck()
+            local data = json.encode(tbl)
+            if not api.hasFile(fastsavePath) then
+                api.createFile(fastsavePath)
+            end
+            api.writeFile(fastsavePath, data)
+            diskdata.changed = true
+        end,
+        getTable = function()
+            local data
+            if api.hasFile(fastsavePath) then
+                data = api.readFile(fastsavePath)
+            else
+                return {}
+            end
+
+            local ok, tbl = pcall(json.decode, data)
+            if ok and type(tbl) == "table" then
+                return tbl
+            end
+            return {}
+        end
+    }
+    return api
+end
+end
+function scmframework_a2fb876b8d1efd33a83b44759a1bec63() --$CONTENT_DATA/Scripts/betterhdd.lua
+dofile("$CONTENT_DATA/Scripts/Config.lua")
+dofile("$CONTENT_DATA/Scripts/BetterFileSystem.lua")
+local vfs = sm.scomputers.require({}, "vfs")
+local betterDisksDirectory = vfs.concat("/", "BetterDisks")
+
+betterhdd = class(nil)
+betterhdd.maxParentCount = 1
+betterhdd.maxChildCount = 0
+betterhdd.connectionInput = sm.interactable.connectionType.composite
+betterhdd.colorNormal = sm.color.new(0xbf1996ff)
+betterhdd.colorHighlight = sm.color.new(0xec1db9ff)
+betterhdd.componentType = "disk"
+betterhdd.minBetterApi = 59
+
+betterDisksLoaded = betterDisksLoaded or {}
+
+function initBetterDisk(diskdata)
+    better.filesystem.makeDirectory(betterDisksDirectory)
+    better.filesystem.makeDirectory(vfs.concat(betterDisksDirectory, diskdata.storageData.key))
+end
+
+function betterhdd:server_onCreate()
+    self.storageData = self.storage:load() or {path = "/"}
+    if better and better.version >= betterhdd.minBetterApi and better.isAvailable("filesystem") then
+        self.loaded = true
+
+        if not self.storageData.key then
+            self.storageData.key = tostring(sm.uuid.new())
+            self.storage:save(self.storageData)
+        elseif betterDisksLoaded[self.storageData.key] then
+            local oldKey = self.storageData.key
+            self.storageData.key = tostring(sm.uuid.new())
+            print("two better disks with the same uuid exist simultaneously, automatic cloning", oldKey, ">", self.storageData.key)
+            self:sv_cloneBetterDisk(oldKey)
+            self.storage:save(self.storageData)
+        end
+
+        self.loadedData = {
+            path = vfs.concat(betterDisksDirectory, self.storageData.key)
+        }
+
+        betterDisksLoaded[self.storageData.key] = true
+    else
+        return
+    end
+
+    self.diskdata = {
+        storageData = self.storageData,
+        path = self.loadedData.path,
+        size = self.data.size
+    }
+
+    self.interactable.publicData = {
+        sc_component = {
+            type = betterhdd.componentType,
+            api = self.loaded and createBetterFilesystemData(self.diskdata) or {}
+        }
+    }
+
+    if self.loaded then
+        self.network:sendToClients("cl_n_onLoad", self.loadedData)
+    end
+end
+
+function betterhdd:sv_dataRequest(_, caller)
+    if self.loaded then
+        self.network:sendToClient(caller, "cl_n_onLoad", self.loadedData)
+    end
+end
+
+function betterhdd:server_onFixedUpdate()
+    if self.diskdata and self.diskdata.changedPath then
+        self.storage:save(self.storageData)
+    end
+end
+
+function betterhdd:server_onDestroy()
+    if self.loaded and self.storageData.key then
+        betterDisksLoaded[self.storageData.key] = nil
+    end
+end
+
+function betterhdd:sv_cloneBetterDisk(base)
+    local baseDirectory = vfs.concat(betterDisksDirectory, base)
+    local newDirectory = vfs.concat(betterDisksDirectory, self.storageData.key)
+    better.filesystem.copy(baseDirectory, newDirectory)
+end
+
+function betterhdd:sv_n_clear()
+    if self.diskdata then
+        better.filesystem.remove(self.diskdata.path)
+    end
+end
+
+-----------------------------------------------------------
+
+function betterhdd:client_onCreate()
+    self.gui = sm.gui.createGuiFromLayout("$CONTENT_DATA/Gui/Layouts/betterdisk.layout")
+    self.gui:setButtonCallback("clear", "cl_g_clear")
+    self.gui:setButtonCallback("open", "cl_g_open")
+
+    self.network:sendToServer("sv_dataRequest")
+end
+
+function betterhdd:client_onInteract(_, state)
+    if state and self.cl_loadedData then
+        self.gui:open()
+    end
+end
+
+function betterhdd:client_canInteract()
+    if self.cl_loadedData then
+        return true
+    end
+    
+    sm.gui.setInteractionText("", "#ff0000the host must have betterAPI installed to use this disk (minimal: " .. betterhdd.minBetterApi .. ")", "")
+    return false
+end
+
+function betterhdd:cl_g_clear()
+    self.network:sendToServer("sv_n_clear")
+end
+
+function betterhdd:cl_g_open()
+    if self.diskdata then
+        initBetterDisk(self.diskdata)
+        better.filesystem.show(self.cl_loadedData.path)
+    else
+        sm.gui.displayAlertText("#ff0000only the host can open the file directory")
+    end
+end
+
+function betterhdd:cl_n_onLoad(loadedData)
+    self.cl_loadedData = loadedData
+end
+end
 function scmframework_839c7dcd5ee05ef416dba0414175892a() --$CONTENT_DATA/Scripts/cameraControl.lua
 dofile("$CONTENT_DATA/Scripts/Config.lua")
 cameraControl = class()
@@ -35318,7 +35694,7 @@ end
 
 _G.canvasAPI = canvasAPI
 end
-function scmframework_a4eb02eddaaff8f194ca31ccff3f0dbf() --$CONTENT_DATA/Scripts/canvasAPI/canvas.lua
+function scmframework_d46df07caaf4048c4cfee3bd28172b35() --$CONTENT_DATA/Scripts/canvasAPI/backup/canvas_withComments.lua
 print("> canvas.lua")
 dofile("$CONTENT_DATA/Scripts/canvasAPI/luajit.lua")
 dofile("$CONTENT_DATA/Scripts/canvasAPI/fonts/load.lua")
@@ -35357,7 +35733,8 @@ local canvasAPI = {
         classic = sm.uuid.new("8328a29d-35e0-471b-8bfe-06952e9d916d"),
         plastic = sm.uuid.new("82d2da58-6597-4ffa-9b53-1af3b707fa7a"),
         smoothed = sm.uuid.new("a23a4ea2-96da-4bb2-a723-af8c27de2511"),
-        glowing = sm.uuid.new("b46ae32a-9037-4360-9f98-3bef1cd4f366")
+        glowing = sm.uuid.new("b46ae32a-9037-4360-9f98-3bef1cd4f366"),
+        glass2 = sm.uuid.new("53f43c79-f8e3-4c70-b746-f8c35634fab8")
     },
     multi_layer = {}
 }
@@ -35366,14 +35743,15 @@ canvasAPI.multi_layer[tostring(canvasAPI.material.classic)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.plastic)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.smoothed)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.glowing)] = true
-canvasAPI.version = 58
+canvasAPI.version = 62
 
 canvasAPI.materialList = {
     [0] = canvasAPI.material.glass,
     canvasAPI.material.classic,
     canvasAPI.material.plastic,
     canvasAPI.material.smoothed,
-    canvasAPI.material.glowing
+    canvasAPI.material.glowing,
+    canvasAPI.material.glass2
 }
 
 canvasAPI.materialListWithoutGlass = {
@@ -35465,9 +35843,11 @@ local function profillerPrint(name, execTime)
     end
 end
 
+--[[
 local function profiller(name, startTime)
     profillerPrint(name, os_clock() - startTime)
 end
+]]
 
 --[[
 local sm_effect_createEffect = sm.effect.withoutHook_createEffect or sm.effect.createEffect
@@ -36989,7 +37369,7 @@ if better and better.isAvailable() and better.canvas and better.version >= 40 th
 end
 
 --low level display api
-function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotation, material, scaleAddValue, altFromEuler, autoLayerDistance)
+function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotation, material, scaleAddValue, altFromEuler, autoLayerDistance, constParameters)
     local hiddenOffset = vec3_new(1000000, 1000000, 1000000)
     local defaultSizeX, defaultSizeY = sizeX, sizeY
     local pixelScaleX, pixelScaleY = 1, 1
@@ -37043,8 +37423,14 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
     updateAdditionalLayer()
 
     local layerDistance
+    local layerDistance_withoutBackplateCheck
     local function updateLayerDistance(distance)
         layerDistance = math.max(0.001, autoLayerDistance and distance or 0)
+        if backplate then
+            layerDistance_withoutBackplateCheck = layerDistance
+        else
+            layerDistance_withoutBackplateCheck = 0
+        end
     end
     updateLayerDistance()
 
@@ -37071,7 +37457,9 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         rotation_z = 0,
 
         scale_x = 1,
-        scale_y = 1
+        scale_y = 1,
+
+        altRotation = false
     }
 
     local function getEIndex(index)
@@ -37082,22 +37470,48 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         return index / effectDataLen
     end
 
-    local function setEffectDataParams(index)
+    local function _setEffectDataParams_constParameters(index)
         local effect = nodeEffects[index]
         local eindex = getEIndex(index)
         local posX, posY, lSizeX, lSizeY = effectDatas[eindex+1], effectDatas[eindex+2], effectDatas[eindex+3], effectDatas[eindex+4]
 
         posX = posX + ((lSizeX - 1) * 0.5)
         posY = posY + ((lSizeY - 1) * 0.5)
-        _setPosition(effect, rotation * (offset + vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, backplate and (debugMode and 0.05 or layerDistance) or 0)))
-
-        local localScaleAddValue = debugMode and -(pixelSize.x / 2) or scaleAddValue
-        local vec = pixelSize * 1
-        vec.x = (pixelSize.x * lSizeX) + localScaleAddValue
-        vec.y = (pixelSize.y * lSizeY) + localScaleAddValue
-        effect_setScale(effect, vec)
-
+        _setPosition(effect, vec3_new(-offset.z - layerDistance_withoutBackplateCheck, ((sizeY / 2) - (posY + 0.5)) * -pixelSize.y, ((sizeX / 2) - (posX + 0.5)) * pixelSize.x))
+        effect_setScale(effect, vec3_new((pixelSize.x * lSizeX) + scaleAddValue, (pixelSize.y * lSizeY) + scaleAddValue, pixelSize.z))
         effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[eindex], alpha))
+    end
+
+    local function _setEffectDataParams_defaultRotation(index)
+        local effect = nodeEffects[index]
+        local eindex = getEIndex(index)
+        local posX, posY, lSizeX, lSizeY = effectDatas[eindex+1], effectDatas[eindex+2], effectDatas[eindex+3], effectDatas[eindex+4]
+
+        posX = posX + ((lSizeX - 1) * 0.5)
+        posY = posY + ((lSizeY - 1) * 0.5)
+        _setPosition(effect, rotation * (offset + vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck)))
+        effect_setScale(effect, vec3_new((pixelSize.x * lSizeX) + scaleAddValue, (pixelSize.y * lSizeY) + scaleAddValue, pixelSize.z))
+        effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[eindex], alpha))
+    end
+
+    local function _setEffectDataParams_altRotation(index)
+        local effect = nodeEffects[index]
+        local eindex = getEIndex(index)
+        local posX, posY, lSizeX, lSizeY = effectDatas[eindex+1], effectDatas[eindex+2], effectDatas[eindex+3], effectDatas[eindex+4]
+
+        posX = posX + ((lSizeX - 1) * 0.5)
+        posY = posY + ((lSizeY - 1) * 0.5)
+        _setPosition(effect, offset + (rotation * vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck)))
+        effect_setScale(effect, vec3_new((pixelSize.x * lSizeX) + scaleAddValue, (pixelSize.y * lSizeY) + scaleAddValue, pixelSize.z))
+        effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[eindex], alpha))
+    end
+
+    local setEffectDataParams = _setEffectDataParams_defaultRotation
+    local disableRotation = false
+
+    if constParameters then
+        setEffectDataParams = _setEffectDataParams_constParameters
+        disableRotation = true
     end
 
     local function createEffect()
@@ -37258,18 +37672,17 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
     ]]
 
     --local maxVal = math_sqrt((255 ^ 2) + (255 ^ 2) + (255 ^ 2))
-    local function colorEquals_smart(color1, color2)
+
+    local function hexToRGB256(color)
+        return math_floor(color / 256 / 256), math_floor(color / 256) % 256, color % 256
+    end
+
+    local function colorEquals(color1, color2)
         if color1 == color2 then return true end
         local rVal, gVal, bVal = hexToRGB256(color1)
         local rVal2, gVal2, bVal2 = hexToRGB256(color2)
         --return (math_sqrt(((rVal - rVal2) ^ 2) + ((gVal - gVal2) ^ 2) + ((bVal - bVal2) ^ 2)) / maxVal) <= optimizationValue
         return ((math_abs(rVal - rVal2) + math_abs(gVal - gVal2) + math_abs(bVal - bVal2)) / 1024) <= optimizationValue
-    end
-
-    local colorEquals = colorEquals_smart
-
-    local function colorEquals_raw(color1, color2)
-        return color1 == color2
     end
 
     local function getFillZone(eindex)
@@ -37280,7 +37693,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
     local sumAttachTime = 0
     local sumAttachFillTime = 0
     local function tryLongAttach(changedList, hideList, index, px, py, color, sizeX, sizeY)
-        local startTime = os_clock()
+        --local startTime = os_clock()
 
         --[[
         local origIndex = effects[index]
@@ -37415,7 +37828,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             fillVal = index
         end
 
-        sumAttachTime = sumAttachTime + (os_clock() - startTime)
+        --sumAttachTime = sumAttachTime + (os_clock() - startTime)
 
         if fillVal then
             changedList[fillVal] = true
@@ -37436,7 +37849,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             end
             ]]
 
-            startTime = os_clock()
+            --startTime = os_clock()
 
             --fillOptional = false
             --if not fillOptional or not origEffect then
@@ -37476,7 +37889,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                 end
             end
 
-            sumAttachFillTime = sumAttachFillTime + (os_clock() - startTime)
+            --sumAttachFillTime = sumAttachFillTime + (os_clock() - startTime)
 
             --fillVal = tryAttach(changedList, changedColorList, index, px, py, color) or fillVal
         end
@@ -37485,7 +37898,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
     end
 
     local function tryAttach(changedList, hideList, index, px, py, color, sizeX, sizeY)
-        local startTime = os_clock()
+        --local startTime = os_clock()
 
         --[[
         local origIndex = effects[index]
@@ -37539,13 +37952,13 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             fillVal = leftParent
         end
 
-        sumAttachTime = sumAttachTime + (os_clock() - startTime)
+        --sumAttachTime = sumAttachTime + (os_clock() - startTime)
 
         if fillVal then
             changedList[fillVal] = true
             --changedColorList[fillVal] = true
 
-            startTime = os_clock()
+            --startTime = os_clock()
             local ix, iy = fillX1, fillY1
             for _ = 1, ((fillX2 - fillX1) + 1) * ((fillY2 - fillY1) + 1) do
                 effects[effectIndexAtPos(ix, iy)] = fillVal
@@ -37555,16 +37968,50 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                     iy = iy + 1
                 end
             end
-            sumAttachFillTime = sumAttachFillTime + (os_clock() - startTime)
+            --sumAttachFillTime = sumAttachFillTime + (os_clock() - startTime)
         end
 
         return fillVal
     end
 
     local sumFillTime = 0
-    local function fillBlock(x, y, sx, sy, changedList, hideList, color, iterate, effect)
+    local function fillBlock(x, y, sx, sy, changedList, hideList, color, effect)
         if sx <= 0 or sy <= 0 then
-            return
+            return false
+        end
+
+        local newRIndex = effectIndexAtPos(x, y)
+        nodeEffects[newRIndex] = effect or createEffectUnhide(hideList)
+        changedList[newRIndex] = true
+        --changedColorList[newRIndex] = true
+
+        local newEIndex = getEIndex(newRIndex)
+        effectDatas[newEIndex] = color
+        effectDatas[newEIndex+1] = x
+        effectDatas[newEIndex+2] = y
+        effectDatas[newEIndex+3] = sx
+        effectDatas[newEIndex+4] = sy
+        
+        --local startTime = os_clock()
+        local ix, iy = x, y
+        local six = ix
+        local mix = six + sx
+        for _ = 1, sx * sy do
+            effects[effectIndexAtPos(ix, iy)] = newRIndex
+            ix = ix + 1
+            if ix >= mix then
+                ix = six
+                iy = iy + 1
+            end
+        end
+        --sumFillTime = sumFillTime + (os_clock() - startTime)
+
+        return true
+    end
+
+    local function fillBlockWithoutIteracte(x, y, sx, sy, changedList, hideList, color, effect)
+        if sx <= 0 or sy <= 0 then
+            return false
         end
 
         local newRIndex = effectIndexAtPos(x, y)
@@ -37579,30 +38026,12 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         effectDatas[newEIndex+3] = sx
         effectDatas[newEIndex+4] = sy
 
-        if not iterate then
-            return true
-        end
-        
-        local startTime = os_clock()
-        local ix, iy = x, y
-        local six = ix
-        local mix = six + sx
-        for _ = 1, sx * sy do
-            effects[effectIndexAtPos(ix, iy)] = newRIndex
-            ix = ix + 1
-            if ix >= mix then
-                ix = six
-                iy = iy + 1
-            end
-        end
-        sumFillTime = sumFillTime + (os_clock() - startTime)
-
         return true
     end
 
     local sumExtractTime = 0
     local function extractPixel(changedList, hideList, index, px, py, sizeX, sizeY)
-        local startTime = os_clock()
+        --local startTime = os_clock()
 
         local rindex = effects[index]
         local eindex = getEIndex(rindex)
@@ -37618,10 +38047,11 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
         local color = effectDatas[eindex]
         --local block1, block2, block3, block4 = false, false, false, false
-        if fillBlock(rpx, rpy, lx, rsy, changedList, hideList, color, false, effect) then --[[block1 = true]] effect = nil end
-        if fillBlock(rpx + lx + sizeX, rpy, rsx - lx - sizeX, rsy, changedList, hideList, color, true, effect) then --[[block2 = true]] effect = nil end
-        if fillBlock(rpx + lx, rpy, sizeX, ly, changedList, hideList, color, true, effect) then --[[block3 = true]] effect = nil end
-        if fillBlock(rpx + lx, rpy + ly + sizeY, sizeX, rsy - ly - sizeY, changedList, hideList, color, true, effect) then --[[block4 = true]] effect = nil end
+        if fillBlockWithoutIteracte(rpx, rpy, lx, rsy, changedList, hideList, color, effect) then --[[block1 = true]] effect = nil end
+        if fillBlock(rpx + lx + sizeX, rpy, rsx - lx - sizeX, rsy, changedList, hideList, color, effect) then --[[block2 = true]] effect = nil end
+        if fillBlock(rpx + lx, rpy, sizeX, ly, changedList, hideList, color, effect) then --[[block3 = true]] effect = nil end
+        if fillBlock(rpx + lx, rpy + ly + sizeY, sizeX, rsy - ly - sizeY, changedList, hideList, color, effect) then --[[block4 = true]] effect = nil end
+        --fillBlock(rpx + lx, rpy + ly + sizeY, sizeX, rsy - ly - sizeY, changedList, hideList, color, true, effect)
 
         local ix, iy, endX = px, py, px + (sizeX - 1)
         for _ = 1, sizeX * sizeY do
@@ -37637,7 +38067,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             hideEffectLater(effect, hideList)
         end
 
-        sumExtractTime = sumExtractTime + (os_clock() - startTime)
+        --sumExtractTime = sumExtractTime + (os_clock() - startTime)
 
         --if block1 then tryAttach(changedList, changedColorList, effectIndexAtPos(rpx, rpy), rpx, rpy, color) end
         --if block2 then tryAttach(changedList, changedColorList, effectIndexAtPos(block2X, rpy), block2X, rpy, color) end
@@ -37896,7 +38326,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
         local oldChanges
         if clearBackplate then
-            local startTime = os_clock()
+            --local startTime = os_clock()
 
             oldChanges = {}
             for index in pairs(changes) do
@@ -37911,7 +38341,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                 end
             end
 
-            profiller("clear-loop", startTime)
+            --profiller("clear-loop", startTime)
         end
 
         --[[
@@ -38019,7 +38449,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
         --local localEffectsBlacklist = {}
 
-        local startTime = os_clock()
+        --local startTime = os_clock()
         for i2 = 1, changesCount do
             local index = changesIndex[i2]
             local color = newBuffer[index] or base
@@ -38048,8 +38478,9 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                         local px = math_floor(index / sizeY)
                         local py = index % sizeY
                         --local bSizeX, bSizeY = getBlockSize(rindex, index, px, py, color)
-                        --extractPixel(changedList, changedColorList, hideList, index, px, py, bSizeX, bSizeY)
+                        --extractPixel(changedList, hideList, index, px, py, bSizeX, bSizeY)
                         extractPixel(changedList, hideList, index, px, py, getChangesBlockSize(rindex, index, changes, px, py, color))
+                        --extractPixel(changedList, hideList, index, px, py, 1, 1)
 
                         --[[
                         local bSizeX, bSizeY = getBlockSize(rindex, index, px, py, color)
@@ -38091,10 +38522,10 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
             end
             realBuffer[index] = color
         end
-        profiller("extract-loop", startTime)
+        --profiller("extract-loop", startTime)
 
         --local blockSizeCache = {}
-        local startTime = os_clock()
+        --local startTime = os_clock()
         for i2 = 1, changesCount do
             local index = changesIndex[i2]
             local color = newBuffer[index] or base
@@ -38154,7 +38585,7 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
                 end
             end
         end
-        profiller("add-loop", startTime)
+        --profiller("add-loop", startTime)
 
         --[[
         local localEffectsBlacklist = {}
@@ -38241,12 +38672,12 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
         local contentUpdated = false
 
-        startTime = os_clock()
+        --startTime = os_clock()
         for index in pairs(changedList) do
             setEffectDataParams(index)
             contentUpdated = true
         end
-        profiller("apply-params", startTime)
+        --profiller("apply-params", startTime)
 
         --[[
         startTime = os_clock()
@@ -38272,16 +38703,16 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         profiller("apply-colors", startTime)
         ]]
 
-        startTime = os_clock()
+        --startTime = os_clock()
         for effect in pairs(hideList) do
             _setPosition(effect, hiddenOffset)
         end
-        profiller("later-hide", startTime)
+        --profiller("later-hide", startTime)
 
-        profillerPrint("fill-sum", sumFillTime)
-        profillerPrint("extract-sum", sumExtractTime)
-        profillerPrint("attach-sum", sumAttachTime)
-        profillerPrint("attach-fill-sum", sumAttachFillTime)
+        --profillerPrint("fill-sum", sumFillTime)
+        --profillerPrint("extract-sum", sumExtractTime)
+        --profillerPrint("attach-sum", sumAttachTime)
+        --profillerPrint("attach-fill-sum", sumAttachFillTime)
         --profillerPrint("isFullChange-sum", sumIsFullChangeTime)
         --sumIsFullChangeTime = 0
         sumFillTime = 0
@@ -38565,11 +38996,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
     function obj.setCanvasOptimizationLevel(value)
         optimizationLevel = value
-        if value == 0 then
-            colorEquals = colorEquals_raw
-        else
-            colorEquals = colorEquals_smart
-        end
         optimizationValue = optimizationLevelToValue(optimizationLevel)
     end
 
@@ -38849,6 +39275,14 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         obj.setCanvasOptimizationLevel(dataTunnel.optimizationLevel)
         drawer.pushDataTunnelParams(dataTunnel)
 
+        if not disableRotation then
+            if dataTunnel.altRotation then
+                setEffectDataParams = _setEffectDataParams_altRotation
+            else
+                setEffectDataParams = _setEffectDataParams_defaultRotation
+            end
+        end
+
         local hardwareParamsChanged = false
         if dataTunnel.res_x ~= sizeX or dataTunnel.res_y ~= sizeY then
             raw_setResolution(dataTunnel.res_x, dataTunnel.res_y)
@@ -39027,18 +39461,12 @@ function canvasAPI.createScriptableApi(width, height, dataTunnel, flushCallback,
     local optimizationValue = optimizationLevelToValue(16)
 
     --local maxVal = math_sqrt((255 ^ 2) + (255 ^ 2) + (255 ^ 2))
-    local function colorEquals_smart(color1, color2)
+    local function colorEquals(color1, color2)
         if color1 == color2 then return true end
         local rVal, gVal, bVal = hexToRGB256(color1)
         local rVal2, gVal2, bVal2 = hexToRGB256(color2)
         --return (math_sqrt(((rVal - rVal2) ^ 2) + ((gVal - gVal2) ^ 2) + ((bVal - bVal2) ^ 2)) / maxVal) <= optimizationValue
         return ((math_abs(rVal - rVal2) + math_abs(gVal - gVal2) + math_abs(bVal - bVal2)) / 1024) <= optimizationValue
-    end
-
-    local colorEquals = colorEquals_smart
-
-    local function colorEquals_raw(color1, color2)
-        return color1 == color2
     end
 
     ----------------
@@ -39058,7 +39486,7 @@ function canvasAPI.createScriptableApi(width, height, dataTunnel, flushCallback,
         ]]
         get = function (x, y)
             if not drawer or x < 0 or x >= width or y < 0 or y >= height then return 0 end
-            return drawer.getNewBuffer(x + (y * rwidth))
+            return drawer.getNewBuffer(y + (x * rheight))
         end,
 
         -- not implemented (implement it yourself if necessary)
@@ -39076,12 +39504,6 @@ function canvasAPI.createScriptableApi(width, height, dataTunnel, flushCallback,
             if value > 255 then value = 255 end
             if dataTunnel.optimizationLevel ~= value then
                 optimizationValue = optimizationLevelToValue(value)
-                if value == 0 then
-                    colorEquals = colorEquals_raw
-                else
-                    colorEquals = colorEquals_smart
-                end
-
                 dataTunnel.optimizationLevel = value
                 dataTunnel.dataUpdated = true
             end
@@ -40062,6 +40484,7 @@ function canvasAPI.createScriptableApi(width, height, dataTunnel, flushCallback,
     dataTunnel.offset_x, dataTunnel.offset_y, dataTunnel.offset_z = 0, 0, 0
     dataTunnel.rotation_x, dataTunnel.rotation_y, dataTunnel.rotation_z = 0, 0, 0
     dataTunnel.scale_x, dataTunnel.scale_y = 1, 1
+    dataTunnel.altRotation = false
     if allowHoloAPI then
         local maxOffset = 5
         local maxScale = 5
@@ -40092,18 +40515,20 @@ function canvasAPI.createScriptableApi(width, height, dataTunnel, flushCallback,
             return dataTunnel.offset_x, dataTunnel.offset_y, dataTunnel.offset_z
         end
 
-        function api.setHoloRotation(x, y, z)
+        function api.setHoloRotation(x, y, z, altRotation)
             checkArg(1, x, "number")
             checkArg(2, y, "number")
             checkArg(3, z, "number")
+            checkArg(4, altRotation, "boolean", "nil")
             if x ~= dataTunnel.rotation_x or y ~= dataTunnel.rotation_y or z ~= dataTunnel.rotation_z then
                 dataTunnel.rotation_x, dataTunnel.rotation_y, dataTunnel.rotation_z = x, y, z
+                dataTunnel.altRotation = not not altRotation
                 dataTunnel.dataUpdated = true
             end
         end
 
         function api.getHoloRotation()
-            return dataTunnel.rotation_x, dataTunnel.rotation_y, dataTunnel.rotation_z
+            return dataTunnel.rotation_x, dataTunnel.rotation_y, dataTunnel.rotation_z, dataTunnel.altRotation
         end
 
         function api.setHoloScale(x, y)
@@ -40279,6 +40704,4397 @@ function canvasAPI.minimizeDataTunnel(dataTunnel)
         rotation_x = dataTunnel.rotation_x,
         rotation_y = dataTunnel.rotation_y,
         rotation_z = dataTunnel.rotation_z,
+        altRotation = dataTunnel.altRotation,
+
+        scale_x = dataTunnel.scale_x,
+        scale_y = dataTunnel.scale_y,
+
+        res_x = dataTunnel.res_x,
+        res_y = dataTunnel.res_y
+    }
+end
+
+-------- additional
+canvasAPI.stackChecksum = stackChecksum
+canvasAPI.formatColor = formatColor
+canvasAPI.formatColorToNumber = formatColorToNumber
+canvasAPI.formatColorToSmallNumber = formatColorToSmallNumber
+canvasAPI.checkFont = checkFont
+canvasAPI.simpleRemathRect = simpleRemathRect
+canvasAPI.remathRect = remathRect
+canvasAPI.hexToRGB = hexToRGB
+canvasAPI.hexToRGB256 = hexToRGB256
+canvasAPI.posCheck = posCheck
+canvasAPI.mathDist = mathDist
+canvasAPI.needPushStack = needPushStack
+canvasAPI.font = font
+canvasAPI.tableClone = tableClone
+canvasAPI.canvasService = canvasService
+canvasAPI.userCalls = userCalls
+canvasAPI.dataSizes = dataSizes
+canvasAPI.color_new_fromSmallNumber = color_new_fromSmallNumber
+canvasAPI.getEffectName = getEffectName
+canvasAPI.fonts = fonts
+canvasAPI.utf8 = utf8
+
+function canvasAPI.pushData(stack, ...)
+    for i, v in ipairs({...}) do
+        table.insert(stack, v)
+    end
+end
+
+_G.canvasAPI = canvasAPI
+end
+function scmframework_a4eb02eddaaff8f194ca31ccff3f0dbf() --$CONTENT_DATA/Scripts/canvasAPI/canvas.lua
+print("> canvas.lua")
+dofile("$CONTENT_DATA/Scripts/canvasAPI/luajit.lua")
+dofile("$CONTENT_DATA/Scripts/canvasAPI/fonts/load.lua")
+dofile("$CONTENT_DATA/Scripts/canvasAPI/utf8.lua")
+dofile("$CONTENT_DATA/Scripts/canvasAPI/canvasService.lua")
+
+local debugMode = false
+local profileMode = false
+
+local canvasAPI = {
+    draw = {
+        clear = 0,
+        set   = 1,
+        fill  = 2,
+        rect  = 3,
+        text  = 4,
+        line  = 5,
+        circle  = 6,
+        circleF = 7,
+        circleE = 8,
+        circleVE = 9,
+        poly = 10,
+        polyF = 11,
+
+        copyNX = 12,
+        copyPX = 13,
+        copyNY = 14,
+        copyPY = 15,
+        setI = 16,
+
+        ellipse = 17,
+        ellipseF = 18
+    },
+    material = {
+        glass = sm.uuid.new("a683f897-5b8a-4c96-9c46-7b9fbc76d186"),
+        classic = sm.uuid.new("8328a29d-35e0-471b-8bfe-06952e9d916d"),
+        plastic = sm.uuid.new("82d2da58-6597-4ffa-9b53-1af3b707fa7a"),
+        smoothed = sm.uuid.new("a23a4ea2-96da-4bb2-a723-af8c27de2511"),
+        glowing = sm.uuid.new("b46ae32a-9037-4360-9f98-3bef1cd4f366"),
+        glass2 = sm.uuid.new("53f43c79-f8e3-4c70-b746-f8c35634fab8")
+    },
+    multi_layer = {}
+}
+
+canvasAPI.multi_layer[tostring(canvasAPI.material.classic)] = true
+canvasAPI.multi_layer[tostring(canvasAPI.material.plastic)] = true
+canvasAPI.multi_layer[tostring(canvasAPI.material.smoothed)] = true
+canvasAPI.multi_layer[tostring(canvasAPI.material.glowing)] = true
+canvasAPI.version = 63
+
+canvasAPI.materialList = {
+    [0] = canvasAPI.material.glass,
+    canvasAPI.material.classic,
+    canvasAPI.material.plastic,
+    canvasAPI.material.smoothed,
+    canvasAPI.material.glowing,
+    canvasAPI.material.glass2
+}
+
+canvasAPI.materialListWithoutGlass = {
+    [0] = true,
+    canvasAPI.material.classic,
+    canvasAPI.material.plastic,
+    canvasAPI.material.smoothed,
+    canvasAPI.material.glowing
+}
+
+local MAX_DRAW_TIME = 2 --protecting the world from crashing using the display
+local FONT_SIZE_LIMIT = 256
+local DEFAULT_ALPHA_VALUE = 255
+local MAX_CLICKS = 16
+canvasAPI.DEFAULT_ALPHA_VALUE = DEFAULT_ALPHA_VALUE
+
+local font = font
+local defaultFont = font.default
+local fonts = font.fonts
+local fontsOptimized = font.fontsOptimized
+local spaceCharCode = string.byte(" ")
+
+local huge = math.huge
+local string_len = string.len
+local bit = bit or bit32
+local bit_rshift = bit.rshift
+local bit_lshift = bit.lshift
+local utf8 = utf8
+local string = string
+local table_sort = table.sort
+local type = type
+local math_ceil = math.ceil
+local math_max = math.max
+local string_format = string.format
+local table_insert = table.insert
+local table_remove = table.remove
+local math_floor = math.floor
+local vec3_new = sm.vec3.new
+local color_new = sm.color.new
+local quat_fromEuler = sm.quat.fromEuler
+local ipairs = ipairs
+local pairs = pairs
+local string_byte = string.byte
+local defaultError = font.optimized.error
+local tostring = tostring
+local math_abs = math.abs
+local math_min = math.min
+local string_sub = string.sub
+local table_concat = table.concat
+local tonumber = tonumber
+local utf8_len = utf8.len
+local utf8_sub = utf8.sub
+local sm_localPlayer_getPlayer = sm.localPlayer.getPlayer
+local os_clock = os.clock
+local math_sqrt = math.sqrt
+local quat_new = sm.quat.new
+local game_getCurrentTick = sm.game.getCurrentTick
+
+local black = color_new(0, 0, 0)
+local white = color_new(1, 1, 1)
+local blackNumber = 0x000000ff
+local whiteNumber = 0xffffffff
+local blackSmallNumber = 0x000000
+local whiteSmallNumber = 0xffffff
+
+local getEffectName
+do
+    local currentEffect = 1
+    local effectsNames = {}
+
+    for i = 0, 255 do
+        table_insert(effectsNames, "ShapeRenderable" .. tostring(i))
+    end
+
+    function getEffectName()
+        local name = effectsNames[currentEffect]
+        currentEffect = currentEffect + 1
+        if currentEffect > #effectsNames then
+            currentEffect = 1
+        end
+        return name
+    end
+end
+
+local function profillerPrint(name, execTime)
+    local t = execTime * 1000
+    if profileMode and t > 0 then
+        print("profiller", name, t)
+    end
+end
+
+--[[
+local function profiller(name, startTime)
+    profillerPrint(name, os_clock() - startTime)
+end
+]]
+
+--[[
+local sm_effect_createEffect = sm.effect.withoutHook_createEffect or sm.effect.createEffect
+local emptyEffect = sm_effect_createEffect(getEffectName())
+local withoutHookEmptyEffect = emptyEffect
+local whook = "withoutHook_"
+if better and better.version >= 45 and better.isAvailable() then
+    local mt = getmetatable(emptyEffect)
+    local newMt = {}
+    for k, v in pairs(mt) do
+        newMt[k] = v
+    end
+    for k, v in pairs(mt) do
+        if k:sub(1, #whook) == whook then
+            newMt[k:sub(#whook + 1, #k)] = v
+        end
+    end
+    withoutHookEmptyEffect = setmetatable({}, newMt)
+end
+local effect_setParameter = withoutHookEmptyEffect.setParameter
+local effect_stop = withoutHookEmptyEffect.stop
+local effect_destroy = withoutHookEmptyEffect.destroy
+local effect_start = withoutHookEmptyEffect.start
+local effect_isDone = withoutHookEmptyEffect.isDone
+local effect_isPlaying = withoutHookEmptyEffect.isPlaying
+local effect_setScale = withoutHookEmptyEffect.setScale
+local effect_setOffsetPosition = withoutHookEmptyEffect.setOffsetPosition
+local effect_setOffsetRotation = withoutHookEmptyEffect.setOffsetRotation
+effect_destroy(emptyEffect)
+]]
+
+local sm_effect_createEffect = sm.effect.createEffect
+local emptyEffect = sm_effect_createEffect(getEffectName())
+local effect_setParameter = emptyEffect.setParameter
+local effect_stop = emptyEffect.stop
+local effect_destroy = emptyEffect.destroy
+local effect_start = emptyEffect.start
+local effect_isDone = emptyEffect.isDone
+local effect_isPlaying = emptyEffect.isPlaying
+local effect_setScale = emptyEffect.setScale
+local effect_setOffsetPosition = emptyEffect.setOffsetPosition
+local effect_setOffsetRotation = emptyEffect.setOffsetRotation
+local effect_setPosition = emptyEffect.setPosition
+local effect_setRotation = emptyEffect.setRotation
+effect_destroy(emptyEffect)
+
+local function reverse_ipairs(t)
+    local i = #t + 1
+    return function()
+        i = i - 1
+        if i > 0 then
+            return i, t[i]
+        end
+    end
+end
+
+local function round(number)
+    return math_floor(number + 0.5)
+end
+
+local function checkFont(lfont)
+    if type(lfont) ~= "table" then
+        error("the font should be a table", 3)
+    end
+
+    if lfont.mono or lfont.mono == nil then
+        if type(lfont.chars) ~= "table" or (type(lfont.width) ~= "number") or (type(lfont.height) ~= "number") then
+            error("invalid basic char data", 3)
+        end
+        
+        if lfont.width > FONT_SIZE_LIMIT then
+            error("the font width should not exceed " .. FONT_SIZE_LIMIT, 3)
+        elseif lfont.height > FONT_SIZE_LIMIT then
+            error("the font height should not exceed " .. FONT_SIZE_LIMIT, 3)
+        end
+
+        for char, data in pairs(lfont.chars) do
+            if type(char) ~= "string" or type(data) ~= "table" or #data ~= lfont.height then
+                error("font failed integrity check", 3)
+            end
+            for _, line in ipairs(data) do
+                if type(line) ~= "string" then
+                    error("the char string has the wrong type", 3)
+                elseif #line ~= lfont.width then
+                    print(char, #line, data)
+                    error("the char string has the wrong lenght", 3)
+                end
+            end
+        end
+    else
+        if type(lfont.chars) ~= "table" then
+            error("font failed integrity check", 3)
+        end
+
+        local oFont = font.optimizeFont(lfont)
+        lfont.spaceSize = oFont.spaceSize
+        lfont.width = oFont.width
+        lfont.height = oFont.height
+
+        for char, data in pairs(lfont.chars) do
+            if type(char) ~= "string" or type(data) ~= "table" or #data > FONT_SIZE_LIMIT then
+                error("the font height should not exceed " .. FONT_SIZE_LIMIT, 3)
+            end
+            for _, line in ipairs(data) do
+                if type(line) ~= "string" or #line > FONT_SIZE_LIMIT then
+                    error("the font width should not exceed " .. FONT_SIZE_LIMIT, 3)
+                end
+            end
+        end
+    end
+end
+
+local function doQuat(x, y, z, w)
+    local sin = math.sin(w / 2)
+    return quat_new(sin * x, sin * y, sin * z, math.cos(w / 2))
+end
+
+local function custom_fromEulerYEnd(x, y, z) --custom implementation
+    return doQuat(1, 0, 0, x) * doQuat(0, 0, 1, z) * doQuat(0, 1, 0, y)
+end
+
+local function tableClone(tbl)
+    local newtbl = {}
+    for k, v in pairs(tbl) do
+        newtbl[k] = v
+    end
+    return newtbl
+end
+
+local function stackChecksum(stack)
+    local num = -#stack
+    local t, v
+    for i = 1, #stack do
+        v = stack[i]
+        t = type(v)
+        num = num - i
+        if t == "number" then
+            num = num + ((v * i) + v + i + (v / i))
+        elseif t == "Color" then
+            num = num + ((i * (v.r / i) * -4) + v.g)
+            num = num - ((i * (v.g + i) * 5) + v.b)
+            num = num + ((i * (v.b - i) * 8) + v.r)
+        elseif t == "string" then
+            for i3 = 1, #v do
+                num = num + (i * (-i3 - (string_byte(v, i3) * i3)))
+            end
+        end
+    end
+    return num
+end
+
+local function checkArg(n, have, ...)
+    have = type(have)
+    local tbl = {...}
+    for _, t in ipairs(tbl) do
+        if have == t then
+            return
+        end
+    end
+    error(string_format("bad argument #%d (%s expected, got %s)", n, table_concat(tbl, " or "), have), 3)
+end
+
+local function simpleRemathRect(x, y, w, h, maxX, maxY)
+    local x2, y2 = x + (w - 1), y + (h - 1)
+    if x < 0 then
+        x = 0
+    elseif x > maxX then
+        --x = maxX
+        return
+    end
+    if y < 0 then
+        y = 0
+    elseif y > maxY then
+        --y = maxY
+        return
+    end
+    if x2 < 0 then
+        --x2 = 0
+        return
+    elseif x2 > maxX then
+        x2 = maxX
+    end
+    if y2 < 0 then
+        --y2 = 0
+        return
+    elseif y2 > maxY then
+        y2 = maxY
+    end
+    return x, y, x2, y2, w, h
+end
+
+local function remathRect(offset, stack, maxX, maxY)
+    return simpleRemathRect(stack[offset], stack[offset+1], stack[offset+2], stack[offset+3], maxX, maxY)
+end
+
+local function posCheck(width, height, x, y)
+    return x >= 0 and y >= 0 and x < width and y < height
+end
+
+local hashChar = string.byte("#")
+local bit = bit or bit32
+local band = bit.band
+local rshift = bit.rshift
+local function hexToRGB(color)
+    return math_floor(color / 256 / 256) / 255, (math_floor(color / 256) % 256) / 255, (color % 256) / 255
+end
+
+local function hexToRGB256(color)
+    return math_floor(color / 256 / 256), math_floor(color / 256) % 256, color % 256
+end
+
+local function optimizationLevelToValue(level)
+    return (level / 255) * 0.25
+end
+
+local function formatColor(color, default)
+    local t = type(color)
+    if t == "Color" then
+        return color
+    elseif t == "string" then
+        return color_new(color)
+    elseif t == "number" then
+        return color_new(hexToRGB(color))
+    end
+
+    return default
+end
+
+local redMul = 256 * 256 * 256
+local greenMul = 256 * 256
+local blueMul = 256
+local function formatColorToNumber(color, default)
+    local t = type(color)
+    if t == "Color" then
+        return (math_floor(color.r * 255) * redMul) + (math_floor(color.g * 255) * greenMul) + (math_floor(color.b * 255) * blueMul) + math_floor(color.a * 255)
+    elseif t == "string" then
+        local val
+        if string_byte(color) == hashChar then
+            val = tonumber(string_sub(color, 2, -1), 16) or 0
+        else
+            val = tonumber(color, 16) or 0
+        end
+        if #color > 7 then
+            return val
+        end
+        return (val * 256) + 255
+    elseif t == "number" then
+        return (color * 256) + 255
+    end
+
+    return default or 0
+end
+
+local function formatColorToSmallNumber(color, default)
+    local t = type(color)
+    if t == "Color" then
+        return (math_floor(color.r * 255) * greenMul) + (math_floor(color.g * 255) * blueMul) + math_floor(color.b * 255)
+    elseif t == "string" then
+        local val
+        if string_byte(color) == hashChar then
+            val = tonumber(string_sub(color, 2, -1), 16) or 0
+        else
+            val = tonumber(color, 16) or 0
+        end
+        if #color > 7 then
+            return math_floor(val / 256)
+        end
+        return val
+    elseif t == "number" then
+        return color
+    end
+
+    return default or 0
+end
+
+local function color_new_fromSmallNumber(number, alpha)
+    return color_new((number * 256) + (alpha or 255))
+end
+
+local function mathDist(pos1, pos2)
+    return math.sqrt(((pos1.x - pos2.x) ^ 2) + ((pos1.y - pos2.y) ^ 2) + ((pos1.z - pos2.z) ^ 2))
+end
+
+local function needPushStack(canvas, dataTunnel) --returns true if the rendering stack should be applied
+    return dataTunnel.display_forceFlush or not ((dataTunnel.skipAtNotSight and not canvas.isRendering()))
+end
+
+local resetViewportCodeID = -23124
+local dataSizes = {
+    [resetViewportCodeID] = 1,
+    [-1] = 5,
+    [0] = 2,
+    4,
+    6,
+    7,
+    9, --text
+    7, --line
+    5,
+    5,
+    5,
+    6,
+
+    4, --drawPoly
+    4, --fillPoly
+
+    2,
+    2,
+    2,
+    2,
+    3,
+
+    7,
+    7
+}
+
+local userCalls = {}
+
+canvasAPI.yield = function() end
+
+function canvasAPI.createDrawer(sizeX, sizeY, callback, callbackBefore, directArg, direct_clear, direct_fill, direct_set, updatedList)
+    local obj = {}
+    local oldStackSum
+    local rSizeX, rSizeY = sizeX, sizeY
+    local maxX, maxY = sizeX - 1, sizeY - 1
+    local newBuffer, newBufferBase = {}, 0
+    local realBuffer = {}
+    local maxBuffer = maxX + (maxY * sizeX)
+    local currentFont = font.optimized
+    local fontWidth, fontHeight = defaultFont.width, defaultFont.height
+    local rotation = 0
+    local utf8Support = false
+    local updated = false
+    local clearOnly = false
+    local clearBackplate = false
+    local maxLineSize = sizeX + sizeY
+    local bigSide = math_max(sizeX, sizeY)
+    local drawerData = {}
+    local _oldBufferBase
+    local changes = {}
+    local _changes = {}
+    local changesIndex, changesCount = {}, 0
+
+    local viewportEnable = false
+    local viewport_x, viewport_y, viewport_sx, viewport_sy
+
+    local function bufferRangeUpdate() end
+
+    local function setDot(px, py, col)
+        if viewportEnable and (px < viewport_x or py < viewport_y or px >= (viewport_x + viewport_sx) or py >= (viewport_y + viewport_sy)) then
+            return
+        end
+
+        --[[
+        if rotation == 0 then
+            index = px + (py * rSizeX)
+        elseif rotation == 1 then
+            index = (rSizeX - py - 1) + (px * rSizeX)
+        elseif rotation == 2 then
+            index = (rSizeX - px - 1) + ((rSizeY - py - 1) * rSizeX)
+        else
+            index = py + ((rSizeY - px - 1) * rSizeX)
+        end
+        ]]
+
+        local index
+        if rotation == 0 then
+            index = py + (px * rSizeY)
+        elseif rotation == 1 then
+            index = px + ((rSizeX - py - 1) * rSizeY)
+        elseif rotation == 2 then
+            index = (rSizeY - py - 1) + ((rSizeX - px - 1) * rSizeY)
+        else
+            index = (rSizeY - px - 1) + (py * rSizeY)
+        end
+
+        if direct_set then
+            newBuffer[index] = col
+            direct_set(directArg, math_floor(index / rSizeY), index % rSizeY, col)
+            return true
+        elseif newBuffer[index] ~= col then
+            if updatedList and not changes[index] then
+                changes[index] = true
+                changesCount = changesCount + 1
+                changesIndex[changesCount] = index
+            end
+
+            newBuffer[index] = col
+            return true
+        end
+    end
+
+    local function check(px, py)
+        return px >= 0 and py >= 0 and px < sizeX and py < sizeY
+    end
+
+    local function checkSetDot(px, py, col)
+        if check(px, py) then
+            setDot(px, py, col)
+            return true
+        end
+        return false
+    end
+
+    function obj.drawerReset()
+    end
+
+    function obj.drawer_setRotation(_rotation)
+        rotation = _rotation
+        if rotation == 1 or rotation == 3 then
+            sizeX = rSizeY
+            sizeY = rSizeX
+        else
+            sizeX = rSizeX
+            sizeY = rSizeY
+        end
+        maxX, maxY = sizeX - 1, sizeY - 1
+    end
+
+    function obj.drawer_setUtf8Support(state)
+        utf8Support = not not state
+    end
+
+    function obj.drawer_setFont(customFont)
+        if customFont then
+            currentFont = customFont
+            fontWidth, fontHeight = customFont.width, customFont.height
+        else
+            currentFont = font.optimized
+            fontWidth, fontHeight = defaultFont.width, defaultFont.height
+        end
+    end
+
+    function obj.setDrawerResolution(_sizeX, _sizeY)
+        rSizeX, rSizeY = _sizeX, _sizeY
+        obj.drawer_setRotation(rotation)
+        newBuffer, newBufferBase = {}, 0
+        realBuffer = {}
+        maxBuffer = maxX + (maxY * sizeX)
+        maxLineSize = sizeX + sizeY
+        bigSide = math_max(sizeX, sizeY)
+        changes = {}
+        _changes = {}
+        changesIndex, changesCount = {}, 0
+        oldStackSum = nil
+    end
+
+    local old_rotation
+    local old_utf8support
+    local old_customFont
+    function obj.pushDataTunnelParams(params)
+        if params.rotation ~= old_rotation then
+            obj.drawer_setRotation(params.rotation)
+            old_rotation = params.rotation
+        end
+        if params.utf8support ~= old_utf8support then
+            obj.drawer_setUtf8Support(params.utf8support)
+            old_utf8support = params.utf8support
+        end
+        if params.customFont ~= old_customFont then
+            obj.drawer_setFont(params.customFont)
+            old_customFont = params.customFont
+        end
+    end
+
+    ------------------------------------------
+    
+    local function rasterize_fill(x, y, sx, sy, col)
+        local x, y, x2, y2, w, h = simpleRemathRect(x, y, sx, sy, maxX, maxY)
+        if not x then return end
+
+        if direct_fill then
+            direct_fill(directArg, x, y, w, h, col)
+        end
+
+        local ix, iy = x, y
+        for _ = 1, ((x2 - x) + 1) * ((y2 - y) + 1) do
+            setDot(ix, iy, col)
+            iy = iy + 1
+            if iy > y2 then
+                iy = y
+                ix = ix + 1
+            end
+        end
+
+        --[[
+        local ix, iy = x, y
+        for _ = 1, ((x2 - x) + 1) * ((y2 - y) + 1) do
+            setDot(ix, iy, col)
+            ix = ix + 1
+            if ix > x2 then
+                ix = x
+                iy = iy + 1
+            end
+        end
+        ]]
+
+        --[[
+        local ix, iy = x2, y2
+        for _ = 1, ((x2 - x) + 1) * ((y2 - y) + 1) do
+            setDot(ix, iy, col)
+            iy = iy - 1
+            if iy < y then
+                iy = y2
+                ix = ix - 1
+            end
+        end
+        ]]
+
+        --[[
+        local ix, iy = x2, y
+        for _ = 1, ((x2 - x) + 1) * ((y2 - y) + 1) do
+            setDot(ix, iy, col)
+            iy = iy + 1
+            if iy > y2 then
+                iy = y
+                ix = ix - 1
+            end
+        end
+        ]]
+    end
+
+    local function rasterize_rect(x, y, sx, sy, col, lineWidth)
+        local x, y, x2, y2, w, h = simpleRemathRect(x, y, sx, sy, maxX, maxY)
+        if not x then return end
+        if lineWidth == 1 then
+            for ix = x, x2 do
+                setDot(ix, y, col)
+                setDot(ix, y2, col)
+            end
+
+            for iy = y + 1, y2 - 1 do
+                setDot(x, iy, col)
+                setDot(x2, iy, col)
+            end
+        else
+            local _y, _y2, _x, _x2
+            for ioff = 0, math_min(lineWidth, math_max(w, h) / 2) - 1 do
+                _y = y + ioff
+                _y2 = y2 - ioff
+                for ix = x + ioff, x2 - ioff do
+                    setDot(ix, _y, col)
+                    setDot(ix, _y2, col)
+                end
+
+                _x = x + ioff
+                _x2 = x2 - ioff
+                for iy = y + 1 + ioff, y2 - (1 + ioff) do
+                    setDot(_x, iy, col)
+                    setDot(_x2, iy, col)
+                end
+            end
+        end
+    end
+
+    local function rasterize_circleF(px, py, r, col)
+        local chr = r*r
+        local sx, sy, tempInt, tempBool
+
+        if r < bigSide and px >= 0 and py >= 0 and px < sizeX and py < sizeY then --now only a quarter of the circle is rendered
+            for iy = 0, r do
+                sy = iy + 0.5
+                tempBool = false
+                for ix = r, 0, -1 do
+                    sx = ix + 0.5
+                    if tempBool or (sx * sx) + (sy * sy) <= chr then
+                        tempBool = true
+                        checkSetDot(px + ix, py + iy, col)
+                        checkSetDot(px - ix - 1, py + iy, col)
+                        checkSetDot(px + ix, py - iy - 1, col)
+                        checkSetDot(px - ix - 1, py - iy - 1, col)
+                    end
+                end
+            end
+        else
+            for ix = math_max(-r, -px), math_min(r, (sizeX - px) - 1) do --if the starting point is not within the screen or the circle is too large, then will have to check every pixel
+                sx = ix + 0.5
+                for iy = math_max(-r, -py), math_min(r, (sizeY - py) - 1) do
+                    sy = iy + 0.5
+                    if (sx * sx) + (sy * sy) <= chr then
+                        setDot(px + ix, py + iy, col)
+                    end
+                end
+            end
+        end
+    end
+
+    local function rasterize_line(px, py, px2, py2, col, width, linesInfo)
+        if px2 < px or py2 < py then
+            local _px, _py = px, py
+            px, py = px2, py2
+            px2, py2 = _px, _py
+        end
+        local dx = math_abs(px2 - px)
+        local dy = math_abs(py2 - py)
+        local sx = (px < px2) and 1 or -1
+        local sy = (py < py2) and 1 or -1
+        local err = dx - dy
+        if width == -1 or width == 0 or width == 1 then
+            local drawAllowed = false
+            for _ = 1, maxLineSize do
+                if check(px, py) then
+                    setDot(px, py, col)
+                    drawAllowed = true
+                elseif drawAllowed then
+                    break
+                end
+                if px == px2 and py == py2 then
+                    break
+                end
+                local e2 = bit_lshift(err, 1)
+                if e2 > -dy then
+                    err = err - dy
+                    px = px + sx
+                end
+                if e2 < dx then
+                    err = err + dx
+                    py = py + sy
+                end
+            end
+        elseif width < 0 then
+            width = math_ceil((-width) / 2)
+            if width < 1 then
+                width = 1
+            end
+            for _ = 1, maxLineSize do
+                rasterize_circleF(px, py, width, col)
+                if px == px2 and py == py2 then
+                    break
+                end
+                local e2 = bit_lshift(err, 1)
+                if e2 > -dy then
+                    err = err - dy
+                    px = px + sx
+                end
+                if e2 < dx then
+                    err = err + dx
+                    py = py + sy
+                end
+            end
+        else
+            local offsetFill = math_floor(width / 2)
+            for _ = 1, maxLineSize do
+                rasterize_fill(px - offsetFill, py - offsetFill, width, width, col)
+                if px == px2 and py == py2 then
+                    break
+                end
+                local e2 = bit_lshift(err, 1)
+                if e2 > -dy then
+                    err = err - dy
+                    px = px + sx
+                end
+                if e2 < dx then
+                    err = err + dx
+                    py = py + sy
+                end
+            end
+        end
+    end
+
+    local function rasterize_hline(x, y, len, color)
+        rasterize_fill(x, y, len, 1, color)
+    end
+
+    local function rasterize_vline(x, y, len, color)
+        rasterize_fill(x, y, 1, len, color)
+    end
+
+    local function rasterize_filledRoundedCorners(centerX, centerY, radius, upper, delta, color)
+        local f = 1 - radius
+        local ddF_x = 1
+        local ddF_y = -radius - radius
+        local y = 0
+        local lineLength
+
+        while y < radius do
+            if f >= 0 then
+                lineLength = y + y + delta
+
+                if lineLength > 0 then
+                    rasterize_hline(centerX - y, upper and (centerY - radius) or (centerY + radius), lineLength, color)
+                end
+
+                radius = radius - 1
+                ddF_y = ddF_y + 2
+                f = f + ddF_y
+            end
+
+            y = y + 1
+            ddF_x = ddF_x + 2
+            f = f + ddF_x
+            lineLength = radius + radius + delta
+
+            if lineLength > 0 then
+                rasterize_hline(centerX - radius, upper and (centerY - y) or (centerY + y), lineLength, color)
+            end
+        end
+    end
+
+    local function rasterize_roundedCorners(centerX, centerY, radius, corner, color)
+        local f = 1 - radius
+        local ddF_x = 1
+        local ddF_y = -2 * radius
+        local xe = 0
+        local xs = 0
+        local len = 0
+
+        while true do
+            while f < 0 do
+                xe = xe + 1
+                f = f + ddF_x
+                ddF_x = ddF_x + 2
+            end
+            f = f + ddF_y
+            ddF_y = ddF_y + 2
+
+            if xe - xs == 1 then
+                if bit.band(corner, 0x1) ~= 0 then -- left top
+                    checkSetDot(centerX - xe, centerY - radius, color)
+                    checkSetDot(centerX - radius, centerY - xe, color)
+                end
+
+                if bit.band(corner, 0x2) ~= 0 then -- right top
+                    checkSetDot(centerX + radius, centerY - xe, color)
+                    checkSetDot(centerX + xs + 1, centerY - radius, color)
+                end
+
+                if bit.band(corner, 0x4) ~= 0 then -- right bottom
+                    checkSetDot(centerX + xs + 1, centerY + radius, color)
+                    checkSetDot(centerX + radius, centerY + xs + 1, color)
+                end
+
+                if bit.band(corner, 0x8) ~= 0 then -- left bottom
+                    checkSetDot(centerX - radius, centerY + xs + 1, color)
+                    checkSetDot(centerX - xe, centerY + radius, color)
+                end
+            else
+                len = xe - xs
+                xs = xs + 1
+
+                if bit.band(corner, 0x1) ~= 0 then -- left top
+                    rasterize_hline(centerX - xe, centerY - radius, len, color)
+                    rasterize_vline(centerX - radius, centerY - xe, len, color)
+                end
+
+                if bit.band(corner, 0x2) ~= 0 then -- right top
+                    rasterize_vline(centerX + radius, centerY - xe, len, color)
+                    rasterize_hline(centerX + xs, centerY - radius, len, color)
+                end
+
+                if bit.band(corner, 0x4) ~= 0 then -- right bottom
+                    rasterize_hline(centerX + xs, centerY + radius, len, color)
+                    rasterize_vline(centerX + radius, centerY + xs, len, color)
+                end
+
+                if bit.band(corner, 0x8) ~= 0 then -- left bottom
+                    rasterize_vline(centerX - radius, centerY + xs, len, color)
+                    rasterize_hline(centerX - xe, centerY + radius, len, color)
+                end
+            end
+            xs = xe
+
+            if xe >= radius then break end
+            radius = radius - 1
+        end
+    end
+
+    ------------------------------------------
+
+    local function render_fill(stack, offset)
+        rasterize_fill(stack[offset], stack[offset+1], stack[offset+2], stack[offset+3], stack[offset+4])
+    end
+
+    local function render_drawEllipse(stack, offset)
+        local x, y, x2, y2, w, h = remathRect(offset, stack, maxX, maxY)
+        if not x then return end
+        local cornerRadius = stack[offset+4]
+        local col = stack[offset+5]
+
+        local maxCornerRadius = math.min(w / 2, h / 2)
+        if cornerRadius > maxCornerRadius then cornerRadius = maxCornerRadius end
+
+        if cornerRadius <= 0 then
+            rasterize_rect(x, y, w, h, col, 1)
+            return
+        end
+
+        rasterize_hline(
+            x + cornerRadius, y,
+            w - cornerRadius - cornerRadius,
+            col
+        )
+
+        rasterize_hline(
+            x + cornerRadius, y + h - 1,
+            w - cornerRadius - cornerRadius,
+            col
+        )
+
+        rasterize_vline(
+            x , y + cornerRadius,
+            h - cornerRadius - cornerRadius,
+            col
+        )
+
+        rasterize_vline(
+            x + w - 1, y + cornerRadius,
+            h - cornerRadius - cornerRadius,
+            col
+        )
+
+        rasterize_roundedCorners(
+            x + cornerRadius, y + cornerRadius,
+            cornerRadius,
+            1,
+            col
+        )
+
+        rasterize_roundedCorners(
+            x + w - cornerRadius - 1, y + cornerRadius,
+            cornerRadius,
+            2,
+            col
+        )
+
+        rasterize_roundedCorners(
+            x + w - cornerRadius - 1, y + h - cornerRadius - 1,
+            cornerRadius,
+            4,
+            col
+        )
+
+        rasterize_roundedCorners(
+            x + cornerRadius, y + h - cornerRadius - 1,
+            cornerRadius,
+            8,
+            col
+        )
+    end
+
+    local function render_fillEllipse(stack, offset)
+        local x, y, x2, y2, w, h = remathRect(offset, stack, maxX, maxY)
+        if not x then return end
+        local cornerRadius = stack[offset+4]
+        local col = stack[offset+5]
+
+        local maxCornerRadius = math.min(w / 2, h / 2)
+        if cornerRadius > maxCornerRadius then cornerRadius = maxCornerRadius end
+
+        if cornerRadius <= 0 then
+            rasterize_fill(x, y, w, h, col, 1)
+            return
+        end
+
+        rasterize_fill(
+            x,
+            y + cornerRadius,
+            w,
+            h - cornerRadius - cornerRadius,
+            col
+        )
+
+        rasterize_filledRoundedCorners(
+            x + cornerRadius,
+            y + cornerRadius,
+            cornerRadius,
+            true,
+            w - cornerRadius - cornerRadius,
+            col
+        )
+
+        rasterize_filledRoundedCorners(
+            x + cornerRadius,
+            y + h - cornerRadius - 1,
+            cornerRadius,
+            false,
+            w - cornerRadius - cornerRadius,
+            col
+        )
+    end
+
+    local function render_rect(stack, offset)
+        rasterize_rect(stack[offset], stack[offset+1], stack[offset+2], stack[offset+3], stack[offset+4], stack[offset+5])
+    end
+
+    local function render_text(stack, offset)
+        local tx, ty = stack[offset], stack[offset+1]
+        local text = stack[offset+2]
+        local col = stack[offset+3]
+        local scaleX = stack[offset+4]
+        local scaleY = stack[offset+5]
+        local spacing = stack[offset+6]
+        local fontIndex = stack[offset+7]
+
+        local localFont = currentFont
+        local localFontWidth = fontWidth
+        if fontIndex > 0 and fontsOptimized[fontIndex] then
+            localFont = fontsOptimized[fontIndex]
+            localFontWidth = localFont.width
+        end
+
+        local len, sep
+        if utf8Support then
+            len, sep = utf8_len, utf8_sub
+        else
+            len, sep = string_len, string_byte
+        end
+        local scaledFontWidth = math_ceil(localFontWidth * scaleX)
+        if localFont.mono then
+            for i = len(text), 1, -1 do
+                local char = sep(text, i, i)
+                if char ~= " " and char ~= spaceCharCode then
+                    local chrdata = localFont[char] or localFont.error or defaultError
+                    local charOffset = (i - 1) * (scaledFontWidth + spacing)
+                    for i2 = 1, #chrdata, 2 do
+                        local px, py = chrdata[i2], chrdata[i2 + 1]
+                        local lposX, lposY = round(px * scaleX), round(py * scaleY)
+                        for ix = math_min(sizeX, round((px + 1) * scaleX) - lposX - 1), 0, -1 do
+                            local setPosX = tx + ix + lposX + charOffset
+                            for iy = math_min(sizeY, round((py + 1) * scaleY) - lposY - 1), 0, -1 do
+                                checkSetDot(setPosX, ty + iy + lposY, col)
+                            end
+                        end
+                    end
+                end
+            end
+        else
+            local charOffset = 0
+            local startDrawTime = os_clock()
+            for i = 1, len(text) do
+                local char = sep(text, i, i)
+                if char ~= " " and char ~= spaceCharCode then
+                    local chrdata = localFont[char] or localFont.error or defaultError
+                    local charPos = tx + charOffset
+                    if not chrdata[0] or charPos + round(chrdata[0] * scaleX) > 0 then
+                        if charPos > maxX then
+                            goto endDraw
+                        end
+                        for i2 = 1, #chrdata, 2 do
+                            local px, py = chrdata[i2], chrdata[i2 + 1]
+                            local lposX, lposY = round(px * scaleX), round(py * scaleY)
+                            for ix = 0, math_min(sizeX, round((px + 1) * scaleX) - lposX - 1) do
+                                local setPosX = tx + ix + lposX + charOffset
+                                for iy = 0, math_min(sizeY, round((py + 1) * scaleY) - lposY - 1) do
+                                    checkSetDot(setPosX, ty + iy + lposY, col)
+                                end
+                            end
+                        end
+                    end
+                    charOffset = charOffset + (chrdata[0] and math_ceil(chrdata[0] * scaleX) or 0) + spacing
+                else
+                    charOffset = charOffset + (math_ceil(localFont.spaceSize * scaleX) or localFontWidth) + spacing
+                end
+                if os_clock() - startDrawTime > MAX_DRAW_TIME then
+                    goto endDraw
+                end
+            end
+        end
+        ::endDraw::
+    end
+
+    local function render_line(stack, offset)
+        rasterize_line(stack[offset], stack[offset+1], stack[offset+2], stack[offset+3], stack[offset+4], stack[offset+5])
+    end
+
+    local function render_circle(stack, offset) --Michener’s Algorithm
+        local px = stack[offset]
+        local py = stack[offset+1]
+        local e2 = stack[offset+2]
+        local col = stack[offset+3]
+        local dx = 0
+        local dy = e2
+        local chr = 3 - 2 * e2
+
+        while dx <= dy do
+            checkSetDot(px + dx, py + dy, col)
+            checkSetDot(px + dy, py + dx, col)
+            checkSetDot(px - dy, py + dx, col)
+            checkSetDot(px - dx, py + dy, col)
+            checkSetDot(px + dy, py - dx, col)
+            checkSetDot(px + dx, py - dy, col)
+            checkSetDot(px - dy, py - dx, col)
+            checkSetDot(px - dx, py - dy, col)
+
+            if chr < 0 then
+                chr = chr + 4 * dx + 6
+            else
+                chr = chr + 4 * (dx - dy) + 10
+                dy = dy - 1
+            end
+            dx = dx + 1
+        end
+    end
+
+    local function render_circleE(stack, offset)
+        local px = stack[offset]
+        local py = stack[offset+1]
+        local e2 = stack[offset+2]
+        local col = stack[offset+3]
+        local dx = 0
+        local dy = e2
+        local chr = 3 - 2 * e2
+
+        while dx <= dy do
+            checkSetDot(px + dx - 1, py + dy - 1, col)
+            checkSetDot(px + dy - 1, py + dx, col)
+            checkSetDot(px - dy, py + dx, col)
+            checkSetDot(px - dx, py + dy - 1, col)
+            checkSetDot(px + dy - 1, py - dx, col)
+            checkSetDot(px + dx - 1, py - dy, col)
+            checkSetDot(px - dy, py - dx, col)
+            checkSetDot(px - dx, py - dy, col)
+
+            if chr < 0 then
+                chr = chr + 4 * dx + 6
+            else
+                chr = chr + 4 * (dx - dy) + 10
+                dy = dy - 1
+            end
+            dx = dx + 1
+        end
+    end
+
+    local function render_circleF(stack, offset)
+        rasterize_circleF(stack[offset], stack[offset+1], stack[offset+2], stack[offset+3])
+    end
+
+    local function render_circleVE(stack, offset) --drawCircleVeryEvenly
+        local px = stack[offset]
+        local py = stack[offset+1]
+        local e2 = stack[offset+2]
+        local chr = e2*e2
+        local col = stack[offset+3]
+        local sx, sy, tempInt, tempBool
+
+        e2 = math_min(e2, bigSide)
+        for iy = 0, e2 do
+            sy = iy + 0.5
+            tempInt = stack[offset+4]
+            for ix = e2, 0, -1 do
+                sx = ix + 0.5
+                if (sx * sx) + (sy * sy) <= chr then
+                    checkSetDot(px + ix, py + iy, col)
+                    checkSetDot(px - ix - 1, py + iy, col)
+                    checkSetDot(px + ix, py - iy - 1, col)
+                    checkSetDot(px - ix - 1, py - iy - 1, col)
+
+                    tempInt = tempInt - 1
+                    if tempInt == 0 then
+                        break
+                    end
+                end
+            end
+        end
+        for ix = 0, e2 do
+            sx = ix + 0.5
+            tempInt = stack[offset+4]
+            for iy = e2, 0, -1 do
+                sy = iy + 0.5
+                if (sx * sx) + (sy * sy) <= chr then
+                    checkSetDot(px + ix, py + iy, col)
+                    checkSetDot(px - ix - 1, py + iy, col)
+                    checkSetDot(px + ix, py - iy - 1, col)
+                    checkSetDot(px - ix - 1, py - iy - 1, col)
+
+                    tempInt = tempInt - 1
+                    if tempInt == 0 then
+                        break
+                    end
+                end
+            end
+        end
+    end
+
+    local function render_drawPoly(stack, offset, getFillInfo)
+        local col = stack[offset]
+        local points = stack[offset+1]
+        local width = stack[offset+2]
+
+        local startDrawTime = os_clock()
+        local _px = stack[offset+3]
+        local _py = stack[offset+4]
+        local px, py
+        local pointsPos
+        if getFillInfo then
+            pointsPos = {}
+
+            local _setDot = setDot
+            setDot = function(px, py, col)
+                if not pointsPos[py] then
+                    pointsPos[py] = {px, px}
+                else
+                    local data = pointsPos[py]
+                    if px < data[1] then data[1] = px end
+                    if px > data[2] then data[2] = px end
+                end
+            end
+            
+            for i = 3, points, 2 do
+                px = stack[offset+2+i]
+                py = stack[offset+3+i]
+                rasterize_line(_px, _py, px, py, col, width)
+                _px = px
+                _py = py
+                if os_clock() - startDrawTime > MAX_DRAW_TIME then
+                    goto endDraw
+                end
+            end
+            rasterize_line(_px, _py, stack[offset+3], stack[offset+4], col, width)
+
+            setDot = _setDot
+        else
+            for i = 3, points, 2 do
+                px = stack[offset+2+i]
+                py = stack[offset+3+i]
+                rasterize_line(_px, _py, px, py, col, width)
+                _px = px
+                _py = py
+                if os_clock() - startDrawTime > MAX_DRAW_TIME then
+                    goto endDraw
+                end
+            end
+            rasterize_line(_px, _py, stack[offset+3], stack[offset+4], col, width)
+        end
+        
+        ::endDraw::
+        return points, pointsPos
+    end
+
+    local function render_fillPoly(stack, offset)
+        local col = stack[offset]
+        local points = stack[offset+1]
+        local width = stack[offset+2]
+
+        local gpoints = points
+        for ii = 0, points / 2, 2 do
+            local i = ii * 2
+            local _, pointsPos = render_drawPoly({col, math_min(6, gpoints), width, stack[offset+3+i], stack[offset+4+i], stack[offset+5+i], stack[offset+6+i], stack[offset+7+i], stack[offset+8+i]}, 1, true)
+            local startDrawTime = os_clock()
+            for posY, v in pairs(pointsPos) do
+                for i = v[1], v[2] do
+                    setDot(i, posY, col)
+                end
+
+                if os_clock() - startDrawTime > MAX_DRAW_TIME then
+                    goto endDraw
+                end
+            end
+            gpoints = gpoints - 4
+            if gpoints <= 0 then
+                break
+            end
+        end
+
+        ::endDraw::
+        return points
+    end
+
+    local lastPixelX, lastPixelY, lastPixelColor
+    function obj.pushStack(stack)
+        local offset = 2
+        local actionNum
+        local addValue = 0
+        local startDrawTime = os_clock()
+        local idx
+        while stack[offset] do
+            actionNum = stack[offset-1]
+            clearOnly = actionNum == 0
+            addValue = 0
+
+            if actionNum == 0 then
+                newBufferBase = stack[offset]
+                newBuffer = {}
+                if direct_clear then
+                    direct_clear(directArg, newBufferBase, changes)
+                end
+                updated = true
+                clearBackplate = true
+                if callback and newBufferBase ~= _oldBufferBase then
+                    obj.fullRefresh()
+                    _oldBufferBase = newBufferBase
+                end
+            elseif actionNum == resetViewportCodeID then
+                viewportEnable = false
+            elseif actionNum == -1 then
+                viewportEnable = true
+                viewport_x = stack[offset]
+                viewport_y = stack[offset+1]
+                viewport_sx = stack[offset+2]
+                viewport_sy = stack[offset+3]
+            elseif actionNum == 1 then
+                setDot(stack[offset], stack[offset+1], stack[offset+2])
+                updated = true
+            elseif actionNum == 2 then
+                render_fill(stack, offset)
+                updated = true
+            elseif actionNum == 3 then
+                render_rect(stack, offset)
+                updated = true
+            elseif actionNum == 4 then
+                render_text(stack, offset)
+                updated = true
+            elseif actionNum == 5 then
+                render_line(stack, offset)
+                updated = true
+            elseif actionNum == 6 then
+                render_circle(stack, offset)
+                updated = true
+            elseif actionNum == 8 then
+                render_circleE(stack, offset)
+                updated = true
+            elseif actionNum == 7 then
+                render_circleF(stack, offset)
+                updated = true
+            elseif actionNum == 9 then
+                render_circleVE(stack, offset)
+                updated = true
+            elseif actionNum == 10 then
+                addValue = render_drawPoly(stack, offset)
+                updated = true
+            elseif actionNum == 11 then
+                addValue = render_fillPoly(stack, offset)
+                updated = true
+            elseif actionNum == 12 then
+                for _ = 1, stack[offset] do
+                    lastPixelX = lastPixelX + 1
+                    setDot(lastPixelX, lastPixelY, lastPixelColor)
+                end
+                updated = true
+            elseif actionNum == 13 then
+                for _ = 1, stack[offset] do
+                    lastPixelX = lastPixelX - 1
+                    setDot(lastPixelX, lastPixelY, lastPixelColor)
+                end
+                updated = true
+            elseif actionNum == 14 then
+                for _ = 1, stack[offset] do
+                    lastPixelY = lastPixelY + 1
+                    setDot(lastPixelX, lastPixelY, lastPixelColor)
+                end
+                updated = true
+            elseif actionNum == 15 then
+                for _ = 1, stack[offset] do
+                    lastPixelY = lastPixelY - 1
+                    setDot(lastPixelX, lastPixelY, lastPixelColor)
+                end
+                updated = true
+            elseif actionNum == 16 then
+                idx = stack[offset]
+                lastPixelX, lastPixelY, lastPixelColor = idx % rSizeX, math_floor(idx / rSizeX), stack[offset+1]
+                setDot(lastPixelX, lastPixelY, lastPixelColor)
+                updated = true
+            elseif actionNum == 17 then
+                render_drawEllipse(stack, offset)
+                updated = true
+            elseif actionNum == 18 then
+                render_fillEllipse(stack, offset)
+                updated = true
+            elseif userCalls[actionNum] then
+                if userCalls[actionNum](newBuffer, rotation, rSizeX, rSizeY, sizeX, sizeY, stack, offset, drawerData, bufferRangeUpdate, setDot, checkSetDot, rasterize_fill) then
+                    updated = true
+                end
+            end
+
+            if os_clock() - startDrawTime > MAX_DRAW_TIME then
+                goto endDraw
+            end
+
+            offset = offset + dataSizes[actionNum] + addValue
+        end
+
+        ::endDraw::
+    end
+
+    function obj.flush(force)
+        if not obj.wait and (updated or force) then
+            if callbackBefore then
+                callbackBefore(newBufferBase, clearOnly, maxBuffer, force, newBuffer, realBuffer, nil, nil, changes, changesIndex, changesCount, _changes, clearBackplate)
+            end
+
+            if callback then
+                --[[
+                local color, px, py
+                for i = bufferChangedFrom, bufferChangedTo do
+                    color = newBuffer[i] or newBufferBase
+                    if color ~= realBuffer[i] or force then
+                        px = math_floor(i / rSizeY)
+                        py = i % rSizeY
+                        callback(px, py, color, newBufferBase)
+                        realBuffer[i] = color
+                    end
+                end
+                ]]
+
+                local oldChanges
+                if clearBackplate then
+                    oldChanges = {}
+                    for index in pairs(changes) do
+                        oldChanges[index] = true
+                    end
+
+                    for index in pairs(_changes) do
+                        if not changes[index] then
+                            changesCount = changesCount + 1
+                            changesIndex[changesCount] = index
+                            changes[index] = true
+                        end
+                    end
+                end
+        
+                for i2 = 1, changesCount do
+                    local index = changesIndex[i2]
+                    --if changes[index] then
+                        callback(math_floor(index / sizeY), index % sizeY, newBuffer[index] or newBufferBase, newBufferBase)
+                        _changes[index] = true
+                    --end
+                end
+
+                if clearBackplate then
+                    obj.setOldChanges(oldChanges)
+                end
+            end
+
+            updated = false
+            clearBackplate = false
+            if updatedList then
+                changes = {}
+                changesIndex = {}
+                changesCount = 0
+            end
+        end
+    end
+
+    function obj.setWait(state)
+        obj.wait = state
+        if not state then
+            obj.flush()
+        end
+    end
+
+    function obj.getNewBuffer(i)
+        return newBuffer[i] or newBufferBase
+    end
+
+    function obj.getRealBuffer(i)
+        return realBuffer[i]
+    end
+
+    function obj.getChanges()
+        return changes
+    end
+
+    function obj.fullRefresh()
+        changesCount = 0
+        changesIndex = {}
+        for i = 0, (sizeX * sizeY) - 1 do
+            changes[i] = true
+            changesCount = changesCount + 1
+            changesIndex[changesCount] = i
+        end
+    end
+
+    --[[
+    function obj.flushOldChanges()
+        _changes = changes
+    end
+    ]]
+
+    function obj.setOldChanges(oldChanges)
+        _changes = oldChanges
+    end
+
+    function obj.clearChangesBuffer()
+        _changes = {}
+        changes = {}
+    end
+
+    return obj
+end
+
+if better and better.isAvailable() and better.canvas and better.version >= 40 then
+    local better_canvas_clear = better.canvas.clear
+    local better_canvas_fill = better.canvas.fill
+    local better_canvas_set = better.canvas.set
+
+    function canvasAPI.createBetterCanvas(parent, sizeX, sizeY, pixelSize, offset, rotation)
+        local obj = {sizeX = sizeX, sizeY = sizeY}
+        local maxX, maxY = sizeX - 1, sizeY - 1
+        local maxEffectArrayBuffer = maxX + (maxY * sizeX)
+        local dist
+        local needOptimize = false
+        local showState = false
+        local disable = false
+        local flushedDefault = false
+
+        local betterCanvas = better.canvas.create(sizeX, sizeY)
+
+        local drawer = canvasAPI.createDrawer(sizeX, sizeY, nil, nil, betterCanvas, better_canvas_clear, better_canvas_fill, better_canvas_set)
+        drawer.setWait(true)
+
+        local defaultPosition = vec3_new(0, 0, 0)
+        local function getSelfPos()
+            local pt = type(parent)
+            if pt == "Interactable" then
+                return parent.shape.worldPosition
+            elseif pt == "Character" then
+                return parent.worldPosition
+            end
+            return defaultPosition
+        end
+
+        function obj.isRendering()
+            return showState
+        end
+
+        function obj.disable(state)
+            disable = state
+        end
+
+        function obj.setRenderDistance(_dist)
+            dist = _dist
+        end
+
+        function obj.update()
+            local newShowState = true
+            local selfPosition
+            if disable then
+                newShowState = false
+            elseif dist then
+                if not pcall(function()
+                    selfPosition = getSelfPos()
+                    newShowState = mathDist(selfPosition, sm_localPlayer_getPlayer().character.worldPosition) <= dist
+                end) then
+                    selfPosition = selfPosition or vec3_new(0, 0, 0)
+                    newShowState = false
+                end
+            end
+
+            if newShowState ~= showState then
+                showState = newShowState
+                if newShowState then
+                    drawer.setWait(false)
+                    if not flushedDefault then
+                        drawer.flush(true)
+                        flushedDefault = true
+                    end
+                else
+                    drawer.setWait(true)
+                    better.canvas.stopUpdate(betterCanvas)
+                end
+            end
+
+            if newShowState then
+                better.canvas.update_3d(betterCanvas, selfPosition + (rotation * offset), -sm.quat.getRight(rotation), -sm.quat.getUp(rotation), (pixelSize.x * sizeX) / 2, (pixelSize.y * sizeY) / 2)
+            end
+        end
+
+        function obj.setPixelSize(_pixelSize)
+            pixelSize = _pixelSize or vec3_new(0.25 / 4, 0.25 / 4, 0.05 / 4)
+            if type(pixelSize) == "number" then
+                if pixelSize < 0 then
+                    pixelSize = math_abs(pixelSize)
+                    local vec = vec3_new(pixelSize, pixelSize, 0)
+                    vec.z = 0.00025
+                    obj.setPixelSize(vec)
+                else
+                    local vec = vec3_new(0.0072, 0.0072, 0) * pixelSize
+                    vec.z = 0.00025
+                    obj.setPixelSize(vec)
+                end
+            end
+        end
+
+        function obj.setOffset(_offset)
+            offset = _offset
+        end
+
+        function obj.setCanvasRotation(_rotation)
+            rotation = _rotation
+        end
+
+        function obj.destroy()
+            better.canvas.destroy(betterCanvas)
+        end
+
+        ---------------------------------------
+
+        obj.setPixelSize(pixelSize)
+        obj.setCanvasRotation(rotation or quat_fromEuler(vec3_new(0, 0, 0)))
+        obj.setOffset(offset or vec3_new(0, 0, 0))
+
+        --[[
+        local c = 0xff0000
+        local seffect = createEffect(5, 5, 16, 16, c)
+        local idx = 5 + (5 * sizeX)
+        for i = 0, 16 - 1 do
+            effects[idx + i] = {
+                seffect,
+                c,
+                i,
+                16,
+                idx,
+                5,
+                5,
+                1, --8. sizeY
+                0 --9. indexY
+            }
+        end
+        ]]
+
+        ---------------------------------------
+
+        obj.drawer = drawer
+        for k, v in pairs(drawer) do
+            obj[k] = v
+        end
+
+        return obj
+    end
+end
+
+--low level display api
+function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotation, material, scaleAddValue, altFromEuler, autoLayerDistance, constParameters)
+    local hiddenOffset = vec3_new(1000000, 1000000, 1000000)
+    local defaultSizeX, defaultSizeY = sizeX, sizeY
+    local pixelScaleX, pixelScaleY = 1, 1
+    local obj = {sizeX = sizeX, sizeY = sizeY}
+    local maxX, maxY = sizeX - 1, sizeY - 1
+    local maxEffectArrayBuffer = maxX + (maxY * sizeX)
+    local dist
+    local needOptimize = false
+    local skipOptimize = false
+    local showState = false
+    local disable = false
+
+    local _setPosition, _setRotation
+    if parent then
+        _setPosition, _setRotation = effect_setOffsetPosition, effect_setOffsetRotation
+    else
+        _setPosition, _setRotation = effect_setPosition, effect_setRotation
+    end
+
+    material = material or canvasAPI.material.classic
+    local autoScaleAddValue = false
+    if not scaleAddValue then
+        autoScaleAddValue = true
+    end
+
+    local flushedDefault = false
+    local oldBackplateColor
+    local backplate
+    if canvasAPI.multi_layer[tostring(material)] then
+        oldBackplateColor = 0
+        backplate = sm_effect_createEffect(getEffectName(), parent)
+        effect_setParameter(backplate, "uuid", material)
+        effect_setParameter(backplate, "color", black)
+    end
+
+    local additionalLayer
+    local function updateAdditionalLayer()
+        if material == canvasAPI.material.smoothed then
+            if not additionalLayer then
+                additionalLayer = sm_effect_createEffect(getEffectName(), parent)
+                effect_setParameter(additionalLayer, "uuid", canvasAPI.material.glass)
+                effect_setParameter(additionalLayer, "color", black)
+                effect_start(additionalLayer)
+                return true
+            end
+        elseif additionalLayer then
+            effect_destroy(additionalLayer)
+            additionalLayer = nil
+        end
+    end
+    updateAdditionalLayer()
+
+    local layerDistance
+    local layerDistance_withoutBackplateCheck
+    local function updateLayerDistance(distance)
+        layerDistance = math.max(0.001, autoLayerDistance and distance or 0)
+        if backplate then
+            layerDistance_withoutBackplateCheck = layerDistance
+        else
+            layerDistance_withoutBackplateCheck = 0
+        end
+    end
+    updateLayerDistance()
+
+    local effects = {}
+    local nodeEffects = {}
+    local effectDatas = {}
+    local effectDataLen = 5
+
+    local bufferedEffectsUpdateTime = {}
+    local bufferedEffects = {}
+    local bufferedEffectsIndex = 0
+    local lastDrawTickTime
+    local optimizationLevel = 16
+    local optimizationValue = optimizationLevelToValue(optimizationLevel)
+    local alpha = DEFAULT_ALPHA_VALUE
+
+    local oldHardwareParams = {
+        offset_x = 0,
+        offset_y = 0,
+        offset_z = 0,
+        
+        rotation_x = 0,
+        rotation_y = 0,
+        rotation_z = 0,
+
+        scale_x = 1,
+        scale_y = 1,
+
+        altRotation = false
+    }
+
+    local function getEIndex(index)
+        return index * effectDataLen
+    end
+
+    local function fromEIndex(index)
+        return index / effectDataLen
+    end
+
+    local function _setEffectDataParams_constParameters(index)
+        local effect = nodeEffects[index]
+        local eindex = getEIndex(index)
+        local posX, posY, lSizeX, lSizeY = effectDatas[eindex+1], effectDatas[eindex+2], effectDatas[eindex+3], effectDatas[eindex+4]
+
+        posX = posX + ((lSizeX - 1) * 0.5)
+        posY = posY + ((lSizeY - 1) * 0.5)
+        
+        effect_setScale(effect, vec3_new((pixelSize.x * lSizeX) + scaleAddValue, (pixelSize.y * lSizeY) + scaleAddValue, pixelSize.z))
+        effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[eindex], alpha))
+        _setPosition(effect, vec3_new(-offset.z - layerDistance_withoutBackplateCheck, ((sizeY / 2) - (posY + 0.5)) * -pixelSize.y, ((sizeX / 2) - (posX + 0.5)) * pixelSize.x))
+    end
+
+    local function _setEffectDataParams_defaultRotation(index)
+        local effect = nodeEffects[index]
+        local eindex = getEIndex(index)
+        local posX, posY, lSizeX, lSizeY = effectDatas[eindex+1], effectDatas[eindex+2], effectDatas[eindex+3], effectDatas[eindex+4]
+
+        posX = posX + ((lSizeX - 1) * 0.5)
+        posY = posY + ((lSizeY - 1) * 0.5)
+        
+        effect_setScale(effect, vec3_new((pixelSize.x * lSizeX) + scaleAddValue, (pixelSize.y * lSizeY) + scaleAddValue, pixelSize.z))
+        effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[eindex], alpha))
+        _setPosition(effect, rotation * (offset + vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck)))
+    end
+
+    local function _setEffectDataParams_altRotation(index)
+        local effect = nodeEffects[index]
+        local eindex = getEIndex(index)
+        local posX, posY, lSizeX, lSizeY = effectDatas[eindex+1], effectDatas[eindex+2], effectDatas[eindex+3], effectDatas[eindex+4]
+
+        posX = posX + ((lSizeX - 1) * 0.5)
+        posY = posY + ((lSizeY - 1) * 0.5)
+        
+        effect_setScale(effect, vec3_new((pixelSize.x * lSizeX) + scaleAddValue, (pixelSize.y * lSizeY) + scaleAddValue, pixelSize.z))
+        effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[eindex], alpha))
+        _setPosition(effect, offset + (rotation * vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck)))
+    end
+
+    local setEffectDataParams = _setEffectDataParams_defaultRotation
+    local disableRotation = false
+
+    if constParameters then
+        setEffectDataParams = _setEffectDataParams_constParameters
+        disableRotation = true
+    end
+
+    local function createEffect()
+        local effect
+        if bufferedEffectsIndex > 0 then
+            effect = bufferedEffects[bufferedEffectsIndex]
+            bufferedEffectsIndex = bufferedEffectsIndex - 1
+            if not effect_isPlaying(effect) then
+                effect_start(effect)
+            end
+        else
+            effect = sm_effect_createEffect(getEffectName(), parent)
+            effect_setParameter(effect, "uuid", material)
+            if showState then
+                effect_start(effect)
+            end
+            _setRotation(effect, rotation)
+        end
+        return effect
+    end
+
+    local function createEffectUnhide(hideList)
+        local effect
+        if bufferedEffectsIndex > 0 then
+            effect = bufferedEffects[bufferedEffectsIndex]
+            hideList[effect] = nil
+            bufferedEffectsIndex = bufferedEffectsIndex - 1
+            if not effect_isPlaying(effect) then
+                effect_start(effect)
+            end
+        else
+            effect = sm_effect_createEffect(getEffectName(), parent)
+            effect_setParameter(effect, "uuid", material)
+            if showState then
+                effect_start(effect)
+            end
+            _setRotation(effect, rotation)
+        end
+        return effect
+    end
+
+    local function clearBufferedEffects()
+        for i = 1, bufferedEffectsIndex do
+            effect_destroy(bufferedEffects[i])
+        end
+        bufferedEffectsUpdateTime = {}
+        bufferedEffects = {}
+        bufferedEffectsIndex = 0
+    end
+
+    local lastNewBuffer, lastBase
+
+    local lastPopularColor
+    local function mathPopularColor()
+        local colorUsesTable = {}
+        local colorUses = 0
+        local oldColorUses = 0
+        local colorSum = 0
+        for index in pairs(nodeEffects) do
+            local eindex = getEIndex(index)
+            local color = effectDatas[eindex]
+            local colorSize = effectDatas[eindex+3] * effectDatas[eindex+4]
+            colorUsesTable[color] = (colorUsesTable[color] or 0) + colorSize
+            colorSum = colorSum + colorSize
+            colorUses = colorUsesTable[color]
+            if colorUses > oldColorUses then
+                oldColorUses = colorUses
+                lastPopularColor = color
+            end
+        end
+
+        if oldBackplateColor then
+            local colorSize = (sizeX * sizeY) - colorSum
+            colorUsesTable[oldBackplateColor] = (colorUsesTable[oldBackplateColor] or 0) + colorSize
+            colorUses = colorUsesTable[oldBackplateColor]
+            if colorUses > oldColorUses then
+                oldColorUses = colorUses
+                lastPopularColor = oldBackplateColor
+            end
+        end
+    end
+
+    local function effectIndexAtPos(px, py)
+        return py + (px * sizeY)
+    end
+
+    local function getRootEIndexAtPos(px, py)
+        if py < 0 or py >= sizeY then return end
+        local index = effects[effectIndexAtPos(px, py)]
+        return index and getEIndex(index), index
+    end
+
+    local function clearEffectFromBuffer(index)
+        local eindex = getEIndex(index)
+        local six, ix, iy = effectDatas[eindex+1], effectDatas[eindex+1], effectDatas[eindex+2]
+        local sizeX, sizeY = effectDatas[eindex+3], effectDatas[eindex+4]
+        nodeEffects[index] = nil
+        for _ = 1, sizeX * sizeY do
+            effects[effectIndexAtPos(ix, iy)] = nil
+            ix = ix + 1
+            if ix >= six + sizeX then
+                ix = six
+                iy = iy + 1
+            end
+        end
+    end
+
+    local function hideEffect(effect)
+        bufferedEffectsIndex = bufferedEffectsIndex + 1
+        bufferedEffects[bufferedEffectsIndex] = effect
+        bufferedEffectsUpdateTime[bufferedEffectsIndex] = game_getCurrentTick()
+        _setPosition(effect, hiddenOffset)
+    end
+
+    local function hideEffectData(index)
+        hideEffect(nodeEffects[index])
+        clearEffectFromBuffer(index)
+    end
+
+    local function hideEffectLater(effect, hideList)
+        bufferedEffectsIndex = bufferedEffectsIndex + 1
+        bufferedEffects[bufferedEffectsIndex] = effect
+        bufferedEffectsUpdateTime[bufferedEffectsIndex] = game_getCurrentTick()
+        hideList[effect] = true
+    end
+
+    local function hideEffectDataLater(index, hideList)
+        hideEffectLater(nodeEffects[index], hideList)
+        clearEffectFromBuffer(index)
+    end    
+
+    local function delAllEffects()
+        for _, effect in pairs(nodeEffects) do
+            effect_destroy(effect)
+        end
+        effects = {}
+        nodeEffects = {}
+    end
+
+    local function hexToRGB256(color)
+        return math_floor(color / 256 / 256), math_floor(color / 256) % 256, color % 256
+    end
+
+    local function colorEquals(color1, color2)
+        if color1 == color2 then return true end
+        local rVal, gVal, bVal = hexToRGB256(color1)
+        local rVal2, gVal2, bVal2 = hexToRGB256(color2)
+        return ((math_abs(rVal - rVal2) + math_abs(gVal - gVal2) + math_abs(bVal - bVal2)) / 1024) <= optimizationValue
+    end
+
+    local function getFillZone(eindex)
+        local fillX1, fillY1 = effectDatas[eindex+1], effectDatas[eindex+2]
+        return fillX1, fillY1, fillX1 + (effectDatas[eindex+3] - 1), fillY1 + (effectDatas[eindex+4] - 1)
+    end
+
+    local function tryLongAttach(changedList, hideList, index, px, py, color, sizeX, sizeY)
+        local upParentE, upParent = getRootEIndexAtPos(px, py - 1)
+        local downParentE, downParent = getRootEIndexAtPos(px, py + sizeY)
+        local upAvailable = upParentE and nodeEffects[upParent] and effectDatas[upParentE+1] == px and effectDatas[upParentE+3] == sizeX and colorEquals(effectDatas[upParentE], color)
+        local downAvailable = downParentE and nodeEffects[downParent] and effectDatas[downParentE+1] == px and effectDatas[downParentE+3] == sizeX and colorEquals(effectDatas[downParentE], color)
+
+        local fillX1, fillY1, fillX2, fillY2 = 0, 0, 0, 0
+        local newEIndex = 0
+        local fillVal = -1
+
+        if upAvailable and downAvailable then
+            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1) + effectDatas[downParentE+4]
+
+            effectDatas[upParentE+4] = effectDatas[upParentE+4] + sizeY + effectDatas[downParentE+4]
+
+            hideEffectLater(nodeEffects[downParent], hideList)
+            changedList[downParent] = nil
+            nodeEffects[downParent] = nil
+            
+            newEIndex = upParentE
+            fillVal = upParent
+        elseif upAvailable then
+            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
+
+            effectDatas[upParentE+4] = effectDatas[upParentE+4] + sizeY
+            newEIndex = upParentE
+            fillVal = upParent
+        elseif downAvailable then
+            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1) + effectDatas[downParentE+4]
+
+            changedList[downParent] = nil
+
+            nodeEffects[index] = nodeEffects[downParent]
+            nodeEffects[downParent] = nil
+
+            local eindex = getEIndex(index)
+            effectDatas[eindex] = effectDatas[downParentE]
+            effectDatas[eindex+1] = effectDatas[downParentE+1]
+            effectDatas[eindex+2] = py
+            effectDatas[eindex+3] = effectDatas[downParentE+3]
+            effectDatas[eindex+4] = effectDatas[downParentE+4] + sizeY
+            
+            newEIndex = eindex
+            fillVal = index
+        end
+
+        if fillVal >= 0 then
+            index, px, py = fillVal, effectDatas[newEIndex+1], effectDatas[newEIndex+2]
+            sizeX, sizeY = effectDatas[newEIndex+3], effectDatas[newEIndex+4]
+        end
+
+        local leftParentE, leftParent = getRootEIndexAtPos(px - 1, py)
+        local rightParentE, rightParent = getRootEIndexAtPos(px + sizeX, py)
+        local leftAvailable = leftParentE and nodeEffects[leftParent] and effectDatas[leftParentE+2] == py and effectDatas[leftParentE+4] == sizeY and colorEquals(effectDatas[leftParentE], color)
+        local rightAvailable = rightParentE and nodeEffects[rightParent] and effectDatas[rightParentE+2] == py and effectDatas[rightParentE+4] == sizeY and colorEquals(effectDatas[rightParentE], color)
+
+        if nodeEffects[index] and (leftAvailable or rightAvailable) then
+            hideEffectLater(nodeEffects[index], hideList)
+            changedList[index] = nil
+            nodeEffects[index] = nil
+        end
+
+        if leftAvailable and rightAvailable then
+            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1) + effectDatas[rightParentE+3], py + (sizeY - 1)
+
+            effectDatas[leftParentE+3] = effectDatas[leftParentE+3] + sizeX + effectDatas[rightParentE+3]
+
+            hideEffectLater(nodeEffects[rightParent], hideList)
+            changedList[rightParent] = nil
+            nodeEffects[rightParent] = nil
+            
+            fillVal = leftParent
+        elseif leftAvailable then
+            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
+
+            effectDatas[leftParentE+3] = effectDatas[leftParentE+3] + sizeX
+            fillVal = leftParent
+        elseif rightAvailable then
+            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1) + effectDatas[rightParentE+3], py + (sizeY - 1)
+
+            changedList[rightParent] = nil
+
+            nodeEffects[index] = nodeEffects[rightParent]
+            nodeEffects[rightParent] = nil
+
+            local eindex = getEIndex(index)
+            effectDatas[eindex] = effectDatas[rightParentE]
+            effectDatas[eindex+1] = px
+            effectDatas[eindex+2] = effectDatas[rightParentE+2]
+            effectDatas[eindex+3] = sizeX + effectDatas[rightParentE+3]
+            effectDatas[eindex+4] = effectDatas[rightParentE+4]
+            
+            fillVal = index
+        end
+
+        if fillVal >= 0 then
+            changedList[fillVal] = true
+
+            local ix, iy = fillX1, fillY1
+            for _ = 1, ((fillX2 - fillX1) + 1) * ((fillY2 - fillY1) + 1) do
+                effects[effectIndexAtPos(ix, iy)] = fillVal
+                ix = ix + 1
+                if ix > fillX2 then
+                    ix = fillX1
+                    iy = iy + 1
+                end
+            end
+
+            return false
+        end
+
+        return true
+    end
+
+    local function tryAttach(changedList, hideList, index, px, py, color, sizeX, sizeY)
+        local upParentE, upParent = getRootEIndexAtPos(px, py - 1)
+        local upAvailable = upParentE and nodeEffects[upParent] and effectDatas[upParentE+1] == px and effectDatas[upParentE+3] == sizeX and colorEquals(effectDatas[upParentE], color)
+
+        local fillX1, fillY1, fillX2, fillY2
+        local newIndex, newEIndex, fillVal
+        if upAvailable then
+            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
+
+            effectDatas[upParentE+4] = effectDatas[upParentE+4] + sizeY
+            newIndex, newEIndex = upParent, upParentE
+            fillVal = upParent
+
+            index, px, py = newIndex, effectDatas[newEIndex+1], effectDatas[newEIndex+2]
+            sizeX, sizeY = effectDatas[newEIndex+3], effectDatas[newEIndex+4]
+        end
+
+        local leftParentE, leftParent = getRootEIndexAtPos(px - 1, py)
+        local leftAvailable = leftParentE and nodeEffects[leftParent] and effectDatas[leftParentE+2] == py and effectDatas[leftParentE+4] == sizeY and colorEquals(effectDatas[leftParentE], color)
+        if leftAvailable then
+            if nodeEffects[index] then
+                hideEffectLater(nodeEffects[index], hideList)
+                changedList[index] = nil
+                nodeEffects[index] = nil
+            end
+
+            fillX1, fillY1, fillX2, fillY2 = px, py, px + (sizeX - 1), py + (sizeY - 1)
+            effectDatas[leftParentE+3] = effectDatas[leftParentE+3] + sizeX
+            fillVal = leftParent
+        end
+
+        if fillVal then
+            changedList[fillVal] = true
+            local ix, iy = fillX1, fillY1
+            for _ = 1, ((fillX2 - fillX1) + 1) * ((fillY2 - fillY1) + 1) do
+                effects[effectIndexAtPos(ix, iy)] = fillVal
+                ix = ix + 1
+                if ix > fillX2 then
+                    ix = fillX1
+                    iy = iy + 1
+                end
+            end
+        end
+
+        return fillVal
+    end
+
+    local function fillBlock(x, y, sx, sy, changedList, hideList, color, effect)
+        if sx <= 0 or sy <= 0 then
+            return false
+        end
+
+        local newRIndex = effectIndexAtPos(x, y)
+        nodeEffects[newRIndex] = effect or createEffectUnhide(hideList)
+        changedList[newRIndex] = true
+
+        local newEIndex = getEIndex(newRIndex)
+        effectDatas[newEIndex] = color
+        effectDatas[newEIndex+1] = x
+        effectDatas[newEIndex+2] = y
+        effectDatas[newEIndex+3] = sx
+        effectDatas[newEIndex+4] = sy
+        
+        local ix, iy = x, y
+        local six = ix
+        local mix = six + sx
+        for _ = 1, sx * sy do
+            effects[effectIndexAtPos(ix, iy)] = newRIndex
+            ix = ix + 1
+            if ix >= mix then
+                ix = six
+                iy = iy + 1
+            end
+        end
+
+        return true
+    end
+
+    local function fillBlockWithoutIteracte(x, y, sx, sy, changedList, hideList, color, effect)
+        if sx <= 0 or sy <= 0 then
+            return false
+        end
+
+        local newRIndex = effectIndexAtPos(x, y)
+        nodeEffects[newRIndex] = effect or createEffectUnhide(hideList)
+        changedList[newRIndex] = true
+
+        local newEIndex = getEIndex(newRIndex)
+        effectDatas[newEIndex] = color
+        effectDatas[newEIndex+1] = x
+        effectDatas[newEIndex+2] = y
+        effectDatas[newEIndex+3] = sx
+        effectDatas[newEIndex+4] = sy
+
+        return true
+    end
+
+    local function extractPixel(changedList, hideList, index, px, py, sizeX, sizeY)
+        local rindex = effects[index]
+        local eindex = getEIndex(rindex)
+        local rpx, rpy = effectDatas[eindex+1], effectDatas[eindex+2]
+        local rsx, rsy = effectDatas[eindex+3], effectDatas[eindex+4]
+        local lx = px - rpx
+        local ly = py - rpy
+
+        changedList[rindex] = nil
+
+        local effect = nodeEffects[rindex]
+        nodeEffects[rindex] = nil
+        local color = effectDatas[eindex]
+        if fillBlockWithoutIteracte(rpx, rpy, lx, rsy, changedList, hideList, color, effect) then effect = nil end
+        if fillBlock(rpx + lx + sizeX, rpy, rsx - lx - sizeX, rsy, changedList, hideList, color, effect) then effect = nil end
+        if fillBlock(rpx + lx, rpy, sizeX, ly, changedList, hideList, color, effect) then effect = nil end
+        if fillBlock(rpx + lx, rpy + ly + sizeY, sizeX, rsy - ly - sizeY, changedList, hideList, color, effect) then effect = nil end
+        if effect then
+            hideEffectLater(effect, hideList)
+        end
+
+        local ix, iy, endX = px, py, px + (sizeX - 1)
+        for _ = 1, sizeX * sizeY do
+            effects[effectIndexAtPos(ix, iy)] = nil
+            ix = ix + 1
+            if ix > endX then
+                ix = px
+                iy = iy + 1
+            end
+        end
+    end
+
+    local function fillEffectsLinks(index, px, py, sizeX, sizeY)
+        local ix, iy, endX = px, py, px + (sizeX - 1)
+        for _ = 1, sizeX * sizeY do
+            effects[effectIndexAtPos(ix, iy)] = index
+            ix = ix + 1
+            if ix > endX then
+                ix = px
+                iy = iy + 1
+            end
+        end
+    end
+
+    local function getBlockSize(index, px, py, color)
+        local sizeX = 1
+
+        for i = 1, maxX - px do
+            local lindex = effectIndexAtPos(px+i, py)
+            if effects[lindex] or (lastNewBuffer[lindex] or lastBase) ~= color then
+                break
+            end
+            sizeX = sizeX + 1
+        end
+
+        local ix, iy, endX = 0, 1, sizeX - 1
+        for _ = 1, sizeX * (maxY - py) do
+            local lindex = effectIndexAtPos(px+ix, py+iy)
+            if effects[lindex] or (lastNewBuffer[lindex] or lastBase) ~= color then
+                break
+            end
+            
+            ix = ix + 1
+            if ix > endX then
+                ix = 0
+                iy = iy + 1
+            end
+        end
+
+        return sizeX, iy
+    end
+
+    local function getBlockSizeOptimization(index, px, py, color)
+        local sizeX = 1
+
+        for i = 1, maxX - px do
+            local lindex = effectIndexAtPos(px+i, py)
+            if effects[lindex] or not lastNewBuffer[lindex] or not colorEquals(lastNewBuffer[lindex], color) then
+                break
+            end
+            sizeX = sizeX + 1
+        end
+
+        local ix, iy, endX = 0, 1, sizeX - 1
+        for _ = 1, sizeX * (maxY - py) do
+            local lindex = effectIndexAtPos(px+ix, py+iy)
+            if effects[lindex] or not lastNewBuffer[lindex] or not colorEquals(lastNewBuffer[lindex], color) then
+                break
+            end
+            
+            ix = ix + 1
+            if ix > endX then
+                ix = 0
+                iy = iy + 1
+            end
+        end
+
+        return sizeX, iy
+    end
+
+    local function getChangesBlockSize(rindex, index, changes, px, py, color)
+        local sizeX = 1
+
+        for i = 1, maxX - px do
+            local lindex = effectIndexAtPos(px+i, py)
+            if rindex ~= effects[lindex] or not changes[lindex] or (lastNewBuffer[lindex] or lastBase) ~= color then
+                break
+            end
+            sizeX = sizeX + 1
+        end
+
+        local ix, iy, endX = 0, 1, sizeX - 1
+        for _ = 1, sizeX * (maxY - py) do
+            local lindex = effectIndexAtPos(px+ix, py+iy)
+            if rindex ~= effects[lindex] or not changes[lindex] or (lastNewBuffer[lindex] or lastBase) ~= color then
+                break
+            end
+            
+            ix = ix + 1
+            if ix > endX then
+                ix = 0
+                iy = iy + 1
+            end
+        end
+
+        return sizeX, iy
+    end
+
+    local _oldVirtualBackplateColor
+    local drawer
+    local lastDrawWithClear = true
+    drawer = canvasAPI.createDrawer(sizeX, sizeY, nil, function (base, clearOnly, maxBuffer, force, newBuffer, realBuffer, _, _, changes, changesIndex, changesCount, _changes, clearBackplate)
+        lastNewBuffer, lastBase = newBuffer, base
+        lastDrawWithClear = clearBackplate
+
+        if clearOnly and backplate then
+            clearBufferedEffects()
+            drawer.clearChangesBuffer()
+            delAllEffects()
+            return
+        end
+
+        local changedList = {}
+        local hideList = {}
+
+        local oldChanges
+        if clearBackplate then
+            oldChanges = {}
+            for index in pairs(changes) do
+                oldChanges[index] = true
+            end
+            drawer.setOldChanges(oldChanges)
+
+            for index in pairs(_changes) do
+                if not changes[index] then
+                    changesCount = changesCount + 1
+                    changesIndex[changesCount] = index
+                    changes[index] = true
+                end
+            end
+        end
+
+        for i2 = 1, changesCount do
+            local index = changesIndex[i2]
+            local color = newBuffer[index] or base
+            local rindex = effects[index]
+            if rindex and realBuffer[index] ~= color then
+                local px = math_floor(index / sizeY)
+                local py = index % sizeY
+                extractPixel(changedList, hideList, index, px, py, getChangesBlockSize(rindex, index, changes, px, py, color))
+            end
+            realBuffer[index] = color
+        end
+
+        for i2 = 1, changesCount do
+            local index = changesIndex[i2]
+            local color = newBuffer[index] or base
+            if color ~= oldBackplateColor then
+                _changes[index] = true
+
+                if not effects[index] then
+                    local px = math_floor(index / sizeY)
+                    local py = index % sizeY
+
+                    local bSizeX, bSizeY = getBlockSize(index, px, py, color)
+                    if tryLongAttach(changedList, hideList, index, px, py, color, bSizeX, bSizeY) then
+                        nodeEffects[index] = createEffectUnhide(hideList)
+
+                        local eindex = getEIndex(index)
+                        effectDatas[eindex] = color
+                        effectDatas[eindex+1] = px
+                        effectDatas[eindex+2] = py
+                        effectDatas[eindex+3] = bSizeX
+                        effectDatas[eindex+4] = bSizeY
+                        fillEffectsLinks(index, px, py, bSizeX, bSizeY)
+                        
+                        changedList[index] = true
+                    end
+                end
+            end
+        end
+
+        local contentUpdated = false
+
+        for index in pairs(changedList) do
+            setEffectDataParams(index)
+            contentUpdated = true
+        end
+
+        for effect in pairs(hideList) do
+            _setPosition(effect, hiddenOffset)
+        end
+
+        if clearOnly then
+            clearBufferedEffects()
+            return
+        end
+
+        if contentUpdated then
+            lastDrawTickTime = game_getCurrentTick()
+            needOptimize = true
+        end
+    end, nil, function (_, color, changes)
+        if backplate then
+            oldBackplateColor = color
+            effect_setParameter(backplate, "color", color_new_fromSmallNumber(color, alpha))
+        elseif color ~= _oldVirtualBackplateColor then
+            drawer.fullRefresh()
+            _oldVirtualBackplateColor = color
+        end
+    end, nil, nil, true)
+
+    if not backplate then
+        drawer.fullRefresh()
+    end
+
+    local canvasWait
+    local wait_dataTunnel
+    local function _setWait(wait)
+        canvasWait = wait
+        drawer.setWait(wait)
+        if not wait and wait_dataTunnel then
+            obj.realPushDataTunnelParams(wait_dataTunnel)
+            wait_dataTunnel = nil
+        end
+    end
+
+    _setWait(true)
+
+    local function recreateCanvas()
+        if not lastNewBuffer then
+            return
+        end
+
+        if backplate and not lastDrawWithClear then
+            mathPopularColor()
+            if lastPopularColor ~= oldBackplateColor then
+                effect_setParameter(backplate, "color", color_new_fromSmallNumber(lastPopularColor, alpha))
+                oldBackplateColor = lastPopularColor
+                drawer.fullRefresh()
+            end
+        end
+        
+        local hideList = {}
+        for i, effect in pairs(nodeEffects) do
+            hideEffectLater(effect, hideList)
+        end
+        effects = {}
+        nodeEffects = {}
+        effectDatas = {}
+
+        local changedList = {}
+
+        local index = 0
+        while index <= maxEffectArrayBuffer do
+            local px = math_floor(index / sizeY)
+            local py = index % sizeY
+            local color = lastNewBuffer[index] or lastBase
+            if effects[index] then
+                index = index + effectDatas[getEIndex(effects[index])+4]
+            elseif color ~= oldBackplateColor then
+                local eindex = getEIndex(index)
+
+                local newRootIndex = tryAttach(changedList, hideList, index, px, py, color, 1, 1)
+                if newRootIndex then
+                    local newRootEIndex = getEIndex(newRootIndex)
+                    index = effectIndexAtPos(px, effectDatas[newRootEIndex+2] + effectDatas[newRootEIndex+4])
+                else
+                    local effect = createEffectUnhide(hideList)
+
+                    nodeEffects[index] = effect
+                    effects[index] = index
+
+                    effectDatas[eindex] = color
+                    effectDatas[eindex+1] = px
+                    effectDatas[eindex+2] = py
+                    effectDatas[eindex+3] = 1
+                    effectDatas[eindex+4] = 1
+                    
+                    changedList[index] = true
+                    index = index + 1
+                end
+            else
+                index = index + 1
+            end
+        end
+
+        for index in pairs(changedList) do
+            setEffectDataParams(index)
+        end
+
+        for effect in pairs(hideList) do
+            _setPosition(effect, hiddenOffset)
+        end
+    end
+
+    local _s_pixelSize, _s_offset, _s_rotation
+    function obj.setCanvasMaterial(_material)
+        material = _material
+        local newBackplateExists = not not canvasAPI.multi_layer[tostring(material)]
+        local oldBackplateExists = not not backplate
+
+        if newBackplateExists ~= oldBackplateExists then
+            _oldVirtualBackplateColor = nil
+        end
+
+        local updateParameters = false
+        if newBackplateExists then
+            if not oldBackplateExists then
+                updateParameters = true
+                oldBackplateColor = 0
+                backplate = sm_effect_createEffect(getEffectName(), parent)
+                effect_setParameter(backplate, "color", black)
+                effect_setParameter(backplate, "uuid", material)
+                if showState then
+                    effect_start(backplate)
+                end
+            else
+                effect_stop(backplate)
+                effect_setParameter(backplate, "uuid", material)
+                effect_start(backplate)
+            end
+        elseif oldBackplateExists then
+            effect_destroy(backplate)
+            oldBackplateColor = nil
+            backplate = nil
+            recreateCanvas()
+        end
+
+        for _, effect in pairs(nodeEffects) do
+            effect_stop(effect)
+            effect_setParameter(effect, "uuid", material)
+            effect_start(effect)
+        end
+
+        for i = 1, bufferedEffectsIndex do
+            local effect = bufferedEffects[i]
+            effect_stop(effect)
+            effect_setParameter(effect, "uuid", material)
+            effect_start(effect)
+        end
+
+        local layerCreated = updateAdditionalLayer()
+
+        if updateParameters or layerCreated then
+            obj.setPixelSize(_s_pixelSize)
+            obj.setOffset(_s_offset, true)
+            obj.setCanvasRotation(_s_rotation)
+        end
+    end
+
+    local function switchHardware()
+        obj.setPixelSize(_s_pixelSize)
+        obj.setOffset(_s_offset, true)
+        obj.setCanvasRotation(_s_rotation)
+    end
+
+    local defaultPosition = vec3_new(0, 0, 0)
+    local function getSelfPos()
+        local pt = type(parent)
+        if pt == "Interactable" then
+            return parent.shape.worldPosition
+        elseif pt == "Character" then
+            return parent.worldPosition
+        end
+        return defaultPosition
+    end
+
+    local function updateLayersPos()
+        if backplate then
+            _setPosition(backplate, rotation * offset)
+        end
+        if additionalLayer then
+            _setPosition(additionalLayer, rotation * (offset + vec3_new(0, 0, 0.0015)))
+        end
+    end
+
+    local longOptimizeCounter = 0
+    local lastOptimizeTime = game_getCurrentTick()
+    local function optimize()
+        --[[
+        if bufferedEffectsIndex > 4096 then
+            for i = 1, bufferedEffectsIndex - 4096 do
+                effect_stop(bufferedEffects[i])
+                stoppedCount = stoppedCount + 1
+            end
+
+            --[[
+            if bufferedEffectsIndex > 3000 then
+                if debugMode then
+                    print("destroy buffered effects")
+                end
+
+                for i = 3001, bufferedEffectsIndex do
+                    effect_destroy(bufferedEffects[i])
+                    bufferedEffects[i] = nil
+                end
+                bufferedEffectsIndex = 3000
+            end
+            ] ]
+        end
+        ]]
+
+        if longOptimizeCounter >= 3 then
+            skipOptimize = true
+            if debugMode then
+                print("skip optimize")
+            end
+            return
+        end
+
+        local startTime = os_clock()
+        recreateCanvas()
+
+        local optimizeTime = os_clock() - startTime
+        if optimizeTime > ((1 / 1000) * 50) then
+            if debugMode then
+                print("long optimize time", optimizeTime)
+            end
+            longOptimizeCounter = longOptimizeCounter + 1
+        end
+
+        lastOptimizeTime = game_getCurrentTick()
+    end
+
+    function obj.setAlpha(_alpha)
+        alpha = _alpha
+        for rindex, effect in pairs(nodeEffects) do
+            effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[getEIndex(rindex)], alpha))
+        end
+    end
+
+    function obj.setCanvasOptimizationLevel(value)
+        optimizationLevel = value
+        optimizationValue = optimizationLevelToValue(optimizationLevel)
+    end
+
+    function obj.isRendering()
+        return showState
+    end
+
+    function obj.disable(state)
+        disable = state
+    end
+
+    function obj.setRenderDistance(_dist)
+        dist = _dist
+    end
+
+    local reoptimizeTime = 20
+    local reoptimizeDynamicTime = 40
+    local canvasSize = sizeX * sizeY
+    if canvasSize >= (512 * 512) then
+        reoptimizeTime = 40
+        reoptimizeDynamicTime = 80
+    elseif canvasSize >= (256 * 256) then
+        reoptimizeTime = 40
+        reoptimizeDynamicTime = 60
+    end
+
+    local oldOptimizeTime
+    local newShowState = true
+    function obj.update()
+        if disable then
+            newShowState = false
+        elseif dist then
+            if not pcall(function()
+                local currentDist = mathDist(getSelfPos(), sm_localPlayer_getPlayer().character.worldPosition)
+                if currentDist <= dist then
+                    newShowState = true
+                elseif currentDist >= dist + 2 then
+                    newShowState = false
+                end
+            end) then
+                newShowState = false
+            end
+        end
+
+        --recreateCanvas()
+
+        if newShowState ~= showState then
+            showState = newShowState
+            if newShowState then
+                obj.setWait(false)
+                if not backplate and not flushedDefault then
+                    drawer.flush(true)
+                    flushedDefault = true
+                end
+                for _, effect in pairs(nodeEffects) do
+                    if not effect_isPlaying(effect) then
+                        effect_start(effect)
+                    end
+                end
+                if backplate then
+                    effect_start(backplate)
+                end
+                if additionalLayer then
+                    effect_start(additionalLayer)
+                end
+            else
+                for _, effect in pairs(nodeEffects) do
+                    effect_stop(effect)
+                end
+                for i = 1, bufferedEffectsIndex do
+                    effect_stop(bufferedEffects[i])
+                end
+                if backplate then
+                    effect_stop(backplate)
+                end
+                if additionalLayer then
+                    effect_stop(additionalLayer)
+                end
+                obj.setWait(true)
+            end
+        end
+
+        local ctick = game_getCurrentTick()
+        local optimizePeer = reoptimizeTime
+        if lastDrawTickTime then
+            if ctick - lastDrawTickTime < 20 then
+                optimizePeer = reoptimizeDynamicTime
+            end
+
+            if longOptimizeCounter > 0 and (ctick - lastDrawTickTime > 40 * 5 or ctick - lastOptimizeTime > 40 * 10) then
+                if debugMode then
+                    print("reset longOptimizeCounter", longOptimizeCounter)
+                end
+                longOptimizeCounter = 0
+                if skipOptimize then
+                    optimize()
+                    longOptimizeCounter = 0
+                    skipOptimize = false
+                end
+            end
+        end
+
+        if ctick % 20 == 0 then
+            local stoppedCount = 0
+            local destroyedCount = 0
+
+            if bufferedEffectsIndex > 6000 then
+                for i = 6001, bufferedEffectsIndex do
+                    effect_destroy(bufferedEffects[i])
+                    bufferedEffects[i] = nil
+                    destroyedCount = destroyedCount + 1
+                end
+                bufferedEffectsIndex = 6000
+            end
+
+            for i = 1, bufferedEffectsIndex - 1024 do
+                local otick = bufferedEffectsUpdateTime[i]
+                if otick ~= true and ctick - otick > 160 then
+                    bufferedEffectsUpdateTime[i] = true
+                    effect_stop(bufferedEffects[i])
+                    stoppedCount = stoppedCount + 1
+                end
+            end
+
+            if debugMode then
+                if destroyedCount > 0 then
+                    print("destroying buffered effects", destroyedCount)
+                end
+                print("stoping buffered effects", stoppedCount .. " / " .. bufferedEffectsIndex)
+            end
+        end
+
+        if newShowState and needOptimize and optimizePeer and (not oldOptimizeTime or ctick - oldOptimizeTime >= optimizePeer) then
+            needOptimize = false
+            oldOptimizeTime = ctick
+            optimize()
+        end
+
+        updateLayersPos()
+    end
+
+    function obj.setPixelSize(_pixelSize)
+        pixelSize = _pixelSize or vec3_new(0.25 / 4, 0.25 / 4, 0.05 / 4)
+        if type(pixelSize) == "Vec3" then
+            _s_pixelSize = vec3_new(pixelSize.x, pixelSize.y, pixelSize.z)
+        else
+            _s_pixelSize = pixelSize
+        end
+        if type(pixelSize) == "number" then
+            if pixelSize < 0 then
+                pixelSize = math_abs(pixelSize)
+                local vec = vec3_new(pixelSize, pixelSize, 0)
+                vec.z = 0.00025
+                obj.setPixelSize(vec)
+                return
+            else
+                local vec = vec3_new(0.0072, 0.0072, 0) * pixelSize
+                vec.z = 0.00025
+                obj.setPixelSize(vec)
+                return
+            end
+        end
+        pixelSize.x = pixelSize.x * oldHardwareParams.scale_x * pixelScaleX
+        pixelSize.y = pixelSize.y * oldHardwareParams.scale_y * pixelScaleY
+        --pixelSize.x = pixelSize.x + 0.00025
+        --pixelSize.y = pixelSize.y + 0.00025
+        if backplate then
+            effect_setScale(backplate, vec3_new(pixelSize.x * sizeX, pixelSize.y * sizeY, pixelSize.z))
+        end
+        updateLayerDistance(math.max(pixelSize.x * sizeX, pixelSize.y * sizeY) / 1000)
+        if additionalLayer then
+            effect_setScale(additionalLayer, vec3_new(pixelSize.x * sizeX * 1.005, pixelSize.y * sizeY * 1.005, math.min(2, layerDistance + ((pixelSize.x * sizeX) / 3 / 128))))
+        end
+        if autoScaleAddValue then
+            scaleAddValue = math_min((pixelSize.x + pixelSize.y) / 50, 0.0002)
+        end
+    end
+
+    function obj.setOffset(_offset, noUpdateParameters)
+        offset = vec3_new(_offset.x, _offset.y, _offset.z)
+        _s_offset = vec3_new(_offset.x, _offset.y, _offset.z)
+        offset.x = offset.x + oldHardwareParams.offset_x
+        offset.y = offset.y + oldHardwareParams.offset_y
+        offset.z = offset.z + oldHardwareParams.offset_z
+        updateLayersPos()
+        if not noUpdateParameters then
+            for index in pairs(nodeEffects) do
+                setEffectDataParams(index)
+            end
+        end
+    end
+
+    function obj.setCanvasRotation(_rotation)
+        _s_rotation = _rotation
+        if type(_rotation) == "Quat" then
+        elseif altFromEuler then
+            _rotation = custom_fromEulerYEnd(math.rad(_rotation.x) + oldHardwareParams.rotation_x, math.rad(_rotation.y) + oldHardwareParams.rotation_y, math.rad(_rotation.z) + oldHardwareParams.rotation_z)
+        else
+            _rotation = quat_fromEuler(vec3_new(_rotation.x + math.deg(oldHardwareParams.rotation_x), _rotation.y + math.deg(oldHardwareParams.rotation_y), _rotation.z + math.deg(oldHardwareParams.rotation_z)))
+        end
+        rotation = _rotation
+        if backplate then
+            _setRotation(backplate, rotation)
+        end
+        if additionalLayer then
+            _setRotation(additionalLayer, rotation)
+        end
+        for index, effect in pairs(nodeEffects) do
+            _setRotation(effect, rotation)
+            setEffectDataParams(index)
+        end
+        for _, effect in pairs(bufferedEffects) do
+            _setRotation(effect, rotation)
+        end
+    end
+
+    function obj.destroy()
+        for _, effect in pairs(nodeEffects) do
+            effect_destroy(effect)
+        end
+        if backplate then
+            effect_destroy(backplate)
+        end
+        if additionalLayer then
+            effect_destroy(additionalLayer)
+        end
+    end
+
+    local function raw_setResolution(_sizeX, _sizeY)
+        drawer.setDrawerResolution(_sizeX, _sizeY)
+
+        for _, effect in pairs(nodeEffects) do
+            hideEffect(effect)
+        end
+        effects = {}
+        nodeEffects = {}
+        effectDatas = {}
+        
+        sizeX = _sizeX
+        sizeY = _sizeY
+        obj.sizeX = sizeX
+        obj.sizeY = sizeY
+        maxX, maxY = sizeX - 1, sizeY - 1
+        maxEffectArrayBuffer = maxX + (maxY * sizeX)
+        pixelScaleX, pixelScaleY = defaultSizeX / sizeX, defaultSizeY / sizeY
+    end
+
+    function obj.setCanvasResolution(_sizeX, _sizeY)
+        raw_setResolution(_sizeX, _sizeY)
+        switchHardware()
+    end
+
+    ---------------------------------------
+
+    obj.setPixelSize(pixelSize)
+    obj.setCanvasRotation(rotation or vec3_new(0, 0, 0))
+    obj.setOffset(offset or vec3_new(0, 0, 0))
+
+    ---------------------------------------
+
+    obj.drawer = drawer
+    for k, v in pairs(drawer) do
+        obj[k] = v
+    end
+    obj.setWait = _setWait
+
+    function obj.pushDataTunnelParams(dataTunnel)
+        if canvasWait then
+            wait_dataTunnel = dataTunnel
+        else
+            wait_dataTunnel = nil
+            obj.realPushDataTunnelParams(dataTunnel)
+        end
+    end
+
+    function obj.realPushDataTunnelParams(dataTunnel)
+        obj.setCanvasOptimizationLevel(dataTunnel.optimizationLevel)
+        drawer.pushDataTunnelParams(dataTunnel)
+
+        if not disableRotation then
+            if dataTunnel.altRotation then
+                setEffectDataParams = _setEffectDataParams_altRotation
+            else
+                setEffectDataParams = _setEffectDataParams_defaultRotation
+            end
+        end
+
+        local hardwareParamsChanged = false
+        if dataTunnel.res_x ~= sizeX or dataTunnel.res_y ~= sizeY then
+            raw_setResolution(dataTunnel.res_x, dataTunnel.res_y)
+
+            hardwareParamsChanged = true
+        end
+
+        obj.setAlpha(dataTunnel.light)
+        if dataTunnel.material and dataTunnel.material ~= material then
+            obj.setCanvasMaterial(dataTunnel.material)
+        end
+        for key, value in pairs(oldHardwareParams) do
+            if dataTunnel[key] ~= value then
+                hardwareParamsChanged = true
+                oldHardwareParams[key] = dataTunnel[key]
+            end
+        end
+        if hardwareParamsChanged then
+            switchHardware()
+        end
+    end
+
+    return obj
+end
+
+--simulates the API of display from SComputers on the client side of your parts
+--this is the easiest way to implement the display in your mod
+function canvasAPI.createClientScriptableCanvas(parent, sizeX, sizeY, pixelSize, offset, rotation, material)
+    local dataTunnel = {}
+    local canvas = canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotation, material)
+    local api = canvasAPI.createScriptableApi(sizeX, sizeY, dataTunnel, nil, canvas.drawer, canvasAPI.materialList, 1, {
+        maxOffset = math.huge,
+        maxScale = math.huge
+    }, {
+        maxPixels = math.huge
+    })
+    api.registerClick = canvasAPI.addTouch(api, dataTunnel)
+    api.dataTunnel = dataTunnel
+    api.canvas = canvas
+
+    local renderDistance = 15
+
+    for k, v in pairs(canvas) do
+        if k ~= "flush" then
+            api[k] = v
+        end
+    end
+
+    function api.getAudience()
+        return canvas.isRendering() and 1 or 0
+    end
+
+    function api.update()
+        canvas.disable(not api.isAllow())
+        if dataTunnel.renderAtDistance then
+            canvas.setRenderDistance()
+        else
+            canvas.setRenderDistance(renderDistance)
+        end
+        canvas.pushDataTunnelParams(dataTunnel)
+        canvas.update()
+        dataTunnel.scriptableApi_update()
+
+        if dataTunnel.display_reset then
+            canvas.drawerReset()
+            dataTunnel.display_reset = nil
+        end
+
+        if dataTunnel.display_flush then
+            if needPushStack(canvas, dataTunnel) then
+                canvas.pushStack(dataTunnel.display_stack)
+                canvas.flush()
+            end
+            
+            dataTunnel.display_flush()
+            dataTunnel.display_stack = nil
+            dataTunnel.display_flush = nil
+            dataTunnel.display_forceFlush = nil
+        end
+    end
+
+    function api.setRenderDistance(dist)
+        renderDistance = dist
+    end
+
+    return api
+end
+
+local customFontIndexesCache = {}
+local checkedFonts = {}
+
+--implement the SComputers API, does not implement data transfer
+function canvasAPI.createScriptableApi(width, height, dataTunnel, flushCallback, drawer, materialList, defaultMaterial, allowHoloAPI, allowSetResolution)
+    local defaultResolutionX, defaultResolutionY = width, height
+    
+    dataTunnel = dataTunnel or {}
+    dataTunnel.rotation = 0
+    dataTunnel.light = DEFAULT_ALPHA_VALUE
+    dataTunnel.skipAtNotSight = false
+    dataTunnel.utf8support = false
+    dataTunnel.renderAtDistance = false
+    dataTunnel.display_forceFlush = true
+    dataTunnel.dataUpdated = true
+    dataTunnel.optimizationLevel = 16
+
+    local stack = {}
+    local stackIndex = 1
+    local pixelsCache = {} --optimizations for cameras
+    local pixelsCacheExists = false
+    local oldStackSum, oldDataSum, oldStack, oldStackIndex
+    local forceFlag = false
+
+    local function clearStackForce()
+        stack = {}
+        stackIndex = 1
+    end
+
+    local function clearStack()
+        if dataTunnel.display_stack == stack then
+            clearStackForce()
+        end
+    end
+
+    local function setForceFrame()
+        if pixelsCacheExists then
+            pixelsCache = {}
+            pixelsCacheExists = false
+        end
+        forceFlag = true
+        dataTunnel.display_forceFlush = true
+    end
+
+    local oldPlayersCount = #sm.player.getAllPlayers()
+    function dataTunnel.scriptableApi_update()
+        local playersCount = #sm.player.getAllPlayers()
+        --local force = sm.game.getCurrentTick() % 80 == 0
+        local force = false
+        if oldPlayersCount ~= playersCount or force then
+            --dataTunnel.display_forceForceFlush = force
+            setForceFrame()
+            oldPlayersCount = playersCount
+        end
+    end
+
+    local rwidth, rheight = width, height
+    local rmwidth, rmheight = width - 1, height - 1
+    local utf8support = false
+    local monoFont = true
+    local newDataFlag = false
+    local spacing = 1
+    local fontIndex = 0
+    local lastPixelX, lastPixelY, lastPixelColor, lastAction
+    local currentSettedFont
+    local currentTouchs = {}
+
+    local viewport_x, viewport_y, viewport_sx, viewport_sy
+
+    local dFontX, dFontY = defaultFont.width, defaultFont.height
+    local drFontX, drFontY = defaultFont.width, defaultFont.height
+    local fontX, fontY
+    local mFontX, mFontY
+    local xFontX, xFontY
+    local sFontX, sFontY
+    local rFontX, rFontY
+    local fontScaleX, fontScaleY = 1, 1
+    local function updateFontSize()
+        fontX, fontY = math_ceil(dFontX * fontScaleX), math_ceil(dFontY * fontScaleY)
+        rFontX, rFontY = math_ceil(drFontX * fontScaleX), math_ceil(drFontY * fontScaleY)
+        mFontX, mFontY = fontX - 1, fontY - 1
+        xFontX, xFontY = fontX + 1, fontY + 1
+        sFontX, sFontY = fontX + spacing, fontY + 1
+    end
+    updateFontSize()
+
+    ---------------- color equals check
+    local optimizationValue = optimizationLevelToValue(16)
+
+    --local maxVal = math_sqrt((255 ^ 2) + (255 ^ 2) + (255 ^ 2))
+    local function colorEquals(color1, color2)
+        if color1 == color2 then return true end
+        local rVal, gVal, bVal = hexToRGB256(color1)
+        local rVal2, gVal2, bVal2 = hexToRGB256(color2)
+        --return (math_sqrt(((rVal - rVal2) ^ 2) + ((gVal - gVal2) ^ 2) + ((bVal - bVal2) ^ 2)) / maxVal) <= optimizationValue
+        return ((math_abs(rVal - rVal2) + math_abs(gVal - gVal2) + math_abs(bVal - bVal2)) / 1024) <= optimizationValue
+    end
+
+    ----------------
+
+    local api
+    local api_flush
+    api = {
+        --[[
+        getBuffer = function (x, y)
+            if not drawer or x < 0 or x >= width or y < 0 or y >= height then return 0 end
+            return drawer.getNewBuffer(x + (y * rwidth))
+        end,
+        getCurrent = function (x, y)
+            if not drawer or x < 0 or x >= width or y < 0 or y >= height then return 0 end
+            return drawer.getRealBuffer(x + (y * rwidth))
+        end,
+        ]]
+        get = function (x, y)
+            if not drawer or x < 0 or x >= width or y < 0 or y >= height then return 0 end
+            return drawer.getNewBuffer(y + (x * rheight))
+        end,
+
+        -- not implemented (implement it yourself if necessary)
+        isAllow = function()
+            return true
+        end,
+        getAudience = function()
+            return 1
+        end,
+
+        setOptimizationLevel = function(value)
+            checkArg(1, value, "number")
+            value = round(value)
+            if value < 0 then value = 0 end
+            if value > 255 then value = 255 end
+            if dataTunnel.optimizationLevel ~= value then
+                optimizationValue = optimizationLevelToValue(value)
+                dataTunnel.optimizationLevel = value
+                dataTunnel.dataUpdated = true
+            end
+        end,
+        getOptimizationLevel = function()
+            return dataTunnel.optimizationLevel
+        end,
+
+
+        -- stubs (outdated methods)
+        optimize = function() end,
+        setFrameCheck = function () end,
+        getFrameCheck = function () return false end,
+        setSkipAtLags = function() end,
+        getSkipAtLags = function() return false end,
+
+
+        -- main
+        setFontScale = function(scaleX, scaleY)
+            checkArg(1, scaleX, "number")
+            checkArg(2, scaleY, "number")
+            if scaleX < 0 then scaleX = 0 end
+            if scaleY < 0 then scaleY = 0 end
+            fontScaleX, fontScaleY = scaleX, scaleY
+            updateFontSize()
+        end,
+        getFontScale = function()
+            return fontScaleX, fontScaleY
+        end,
+        setTextSpacing = function(_spacing)
+            if _spacing < 0 then _spacing = 0 end
+            spacing = _spacing
+            updateFontSize()
+        end,
+        setFontSize = function(_width, _height)
+            api.setFontScale(_width / dFontX, _height / dFontY)
+        end,
+        getTextSpacing = function()
+            return spacing
+        end,
+        calcTextBox = function(text) --it will return two numbers, this will be the size of the box that your text will occupy with this font and this scale
+            local px, py
+            local len, sep
+            if utf8support then
+                len, sep = utf8_len, utf8_sub
+            else
+                len, sep = string_len, string_byte
+            end
+
+            local textLen = len(text)
+            if textLen == 0 then
+                return 0, 0
+            end
+
+            local totalSize = 0
+            if monoFont then
+                totalSize = textLen * (fontX + spacing)
+            else
+                local localFontWidth = dFontX
+                local localFont = dataTunnel.customFont or font.optimized
+                if fontIndex > 0 and fontsOptimized[fontIndex] then
+                    localFont = fontsOptimized[fontIndex]
+                    localFontWidth = localFont.width
+                end
+
+                local char, chrdata
+                for i = 1, textLen do
+                    char = sep(text, i, i)
+                    if char ~= " " and char ~= spaceCharCode then
+                        chrdata = localFont[char] or localFont.error or defaultError
+                        totalSize = totalSize + (chrdata[0] and math_ceil(chrdata[0] * fontScaleX) or 0) + spacing
+                    else
+                        totalSize = totalSize + (localFont.spaceSize or localFontWidth) + spacing
+                    end
+                    canvasAPI.yield()
+                end
+            end
+
+            return totalSize - spacing, fontY
+        end,
+        calcCharsSize = function(text) --calculates the length of each character in a string, taking into account its spacing from the next character, and returns a table with these values
+            local px, py
+            local len, sep
+            if utf8support then
+                len, sep = utf8_len, utf8_sub
+            else
+                len, sep = string_len, string_byte
+            end
+
+            local textLen = len(text)
+            if textLen == 0 then
+                return 0, 0
+            end
+
+            local lens = {}
+
+            local localFontWidth = dFontX
+            local localFont = dataTunnel.customFont or font.optimized
+            if fontIndex > 0 and fontsOptimized[fontIndex] then
+                localFont = fontsOptimized[fontIndex]
+                localFontWidth = localFont.width
+            end
+
+            local char, chrdata
+            for i = 1, textLen do
+                char = sep(text, i, i)
+                if char ~= " " and char ~= spaceCharCode then
+                    chrdata = localFont[char] or localFont.error or defaultError
+                    table_insert(lens, (chrdata[0] and math_ceil(chrdata[0] * fontScaleX) or 0) + spacing)
+                else
+                    table_insert(lens, (localFont.spaceSize or localFontWidth) + spacing)
+                end
+                canvasAPI.yield()
+            end
+
+            lens[#lens] = lens[#lens] - spacing
+            return lens
+        end,
+        calcDecreasingTextSizes = function(text) --it works almost like calcCharsSize. however, each value contains all the previous ones. this is used in the graphic.textBox function, but probably not applicable to any other
+            local px, py
+            local len, sep
+            if utf8support then
+                len, sep = utf8_len, utf8_sub
+            else
+                len, sep = string_len, string_byte
+            end
+
+            local textLen = len(text)
+            if textLen == 0 then
+                return 0, 0
+            end
+
+            local lens = {}
+            local otherVals = 0
+
+            local localFontWidth = dFontX
+            local localFont = dataTunnel.customFont or font.optimized
+            if fontIndex > 0 and fontsOptimized[fontIndex] then
+                localFont = fontsOptimized[fontIndex]
+                localFontWidth = localFont.width
+            end
+
+            local char, chrdata
+            for i = 1, textLen do
+                char = sep(text, i, i)
+                local val
+                if char ~= " " and char ~= spaceCharCode then
+                    chrdata = localFont[char] or localFont.error or defaultError
+                    val = (chrdata[0] and math_ceil(chrdata[0] * fontScaleX) or 0) + spacing
+                else
+                    val = (localFont.spaceSize or localFontWidth) + spacing
+                end
+                otherVals = otherVals + val
+                table_insert(lens, otherVals)
+                canvasAPI.yield()
+            end
+
+            lens[#lens] = lens[#lens] - spacing
+            return lens
+        end,
+        isMonospacedFont = function()
+            return not not monoFont
+        end,
+
+        getWidth = function()
+            return rwidth
+        end,
+        getHeight = function()
+            return rheight
+        end,
+        getSize = function()
+            return rwidth, rheight
+        end,
+        getResolution = function()
+            return rwidth, rheight
+        end,
+
+        clear = function(color)
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+
+            lastAction = nil
+
+            clearStackForce()
+            stackIndex = 4
+            stack[1] = resetViewportCodeID
+            stack[2] = 0
+            stack[3] = formatColorToSmallNumber(color, blackSmallNumber)
+            
+            --[[
+            for i = 3, stackIndex - 1 do
+                stack[i] = nil
+            end
+            stackIndex = 3
+            ]]
+        end,
+        drawPixel = function(x, y, color)
+            x, y = round(x), round(y)
+            if x < 0 or x >= width or y < 0 or y >= height then return end
+            local index = x + (y * rwidth)
+            color = formatColorToSmallNumber(color, whiteSmallNumber)
+            if pixelsCache[index] ~= color then
+                if lastAction and x == lastPixelX + 1 and y == lastPixelY and colorEquals(lastPixelColor, color) then
+                    if lastAction == 1 then
+                        local i = stackIndex - 1
+                        stack[i] = stack[i] + 1
+                    else
+                        stack[stackIndex] = 12
+                        stackIndex = stackIndex + 1
+                        stack[stackIndex] = 1
+                        stackIndex = stackIndex + 1
+                    end
+
+                    lastAction = 1
+                elseif lastAction and x == lastPixelX - 1 and y == lastPixelY and colorEquals(lastPixelColor, color) then
+                    if lastAction == 2 then
+                        local i = stackIndex - 1
+                        stack[i] = stack[i] + 1
+                    else
+                        stack[stackIndex] = 13
+                        stackIndex = stackIndex + 1
+                        stack[stackIndex] = 1
+                        stackIndex = stackIndex + 1
+                    end
+
+                    lastAction = 2
+                elseif lastAction and x == lastPixelX and y == lastPixelY + 1 and colorEquals(lastPixelColor, color) then
+                    if lastAction == 3 then
+                        local i = stackIndex - 1
+                        stack[i] = stack[i] + 1
+                    else
+                        stack[stackIndex] = 14
+                        stackIndex = stackIndex + 1
+                        stack[stackIndex] = 1
+                        stackIndex = stackIndex + 1
+                    end
+
+                    lastAction = 3
+                elseif lastAction and x == lastPixelX and y == lastPixelY - 1 and colorEquals(lastPixelColor, color) then
+                    if lastAction == 4 then
+                        local i = stackIndex - 1
+                        stack[i] = stack[i] + 1
+                    else
+                        stack[stackIndex] = 15
+                        stackIndex = stackIndex + 1
+                        stack[stackIndex] = 1
+                        stackIndex = stackIndex + 1
+                    end
+
+                    lastAction = 4
+                else
+                    lastPixelColor = color
+
+                    stack[stackIndex] = 16
+                    stackIndex = stackIndex + 1
+                    stack[stackIndex] = index
+                    stackIndex = stackIndex + 1
+                    stack[stackIndex] = color
+                    stackIndex = stackIndex + 1
+
+                    lastAction = 0
+                end
+
+                lastPixelX, lastPixelY = x, y
+                pixelsCache[index] = color
+                pixelsCacheExists = true
+            end
+        end,
+        fillRect = function(x, y, sizeX, sizeY, color)
+            if x <= 0 and y <= 0 and x + sizeX >= width and y + sizeY >= height then
+                return api.clear(color or 0xffffff)
+            end
+
+            stack[stackIndex] = 2
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(x)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(y)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(sizeX)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(sizeY)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+            stackIndex = stackIndex + 1
+            
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+        end,
+        drawEllipse = function(x, y, sizeX, sizeY, cornerRadius, color)
+            stack[stackIndex] = 17
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(x)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(y)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(sizeX)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(sizeY)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(cornerRadius)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+            stackIndex = stackIndex + 1
+            
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+        end,
+        fillEllipse = function(x, y, sizeX, sizeY, cornerRadius, color)
+            stack[stackIndex] = 18
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(x)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(y)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(sizeX)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(sizeY)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(cornerRadius)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+            stackIndex = stackIndex + 1
+            
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+        end,
+        drawRect = function(x, y, sizeX, sizeY, color, lineWidth)
+            lineWidth = round(lineWidth or 1)
+            if lineWidth < 1 then
+                lineWidth = 1
+            end
+
+            stack[stackIndex] = 3
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(x)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(y)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(sizeX)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(sizeY)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = lineWidth
+            stackIndex = stackIndex + 1
+            
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+        end,
+        drawText = function(x, y, text, color)
+            if y > rmheight or y + mFontY < 0 or fontScaleX <= 0 or fontScaleY <= 0 then return end
+            text = tostring(text)
+
+            if monoFont then
+                local maxTextLen = math_ceil((width - x) / sFontX)
+                if maxTextLen <= 0 then return end
+                local startTextFrom = math_max(1, math_floor(-x / sFontX) + 1)
+
+                if utf8support then
+                    if utf8.len(text) > maxTextLen or startTextFrom > 1 then
+                        text = utf8.sub(text, startTextFrom, maxTextLen)
+                    end
+                else
+                    if #text > maxTextLen or startTextFrom > 1 then
+                        text = text:sub(startTextFrom, maxTextLen)
+                    end
+                end
+
+                if #text == 0 then return end
+                stack[stackIndex] = 4
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = round(x) + ((startTextFrom - 1) * sFontX)
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = round(y)
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = text
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = fontScaleX
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = fontScaleY
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = spacing
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = fontIndex
+                stackIndex = stackIndex + 1
+            else
+                if #text == 0 then return end
+                stack[stackIndex] = 4
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = round(x)
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = round(y)
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = text
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = fontScaleX
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = fontScaleY
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = spacing
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = fontIndex
+                stackIndex = stackIndex + 1
+            end
+            
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+        end,
+        drawCenteredText = function(x, y, text, color, centerX, centerY)
+            if centerX == nil then centerX = true end
+            if centerY == nil then centerY = true end
+            
+            local sizeX, sizeY
+            if centerX or centerY then
+                sizeX, sizeY = api.calcTextBox(text)
+            end
+
+            if centerX then
+                x = x - (sizeX / 2)
+            end
+
+            if centerY then
+                y = y - (sizeY / 2)
+            end
+
+            api.drawText(x, y, text, color)
+        end,
+        drawLine = function(x, y, x2, y2, color, width, roundFlag)
+            width = round(width or 1)
+            if width < 1 then
+                width = 1
+            end
+            if roundFlag then
+                width = -width
+            end
+
+            stack[stackIndex] = 5
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(x)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(y)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(x2)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(y2)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = width
+            stackIndex = stackIndex + 1
+            
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+        end,
+        drawCircle = function (x, y, r, color)
+            stack[stackIndex] = 6
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(x)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(y)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(r)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+            stackIndex = stackIndex + 1
+            
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+        end,
+        fillCircle = function (x, y, r, color)
+            stack[stackIndex] = 7
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(x)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(y)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(r)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+            stackIndex = stackIndex + 1
+            
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+        end,
+        drawCircleEvenly = function (x, y, r, color)
+            stack[stackIndex] = 8
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(x)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(y)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(r)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+            stackIndex = stackIndex + 1
+            
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+        end,
+        drawCircleVeryEvenly = function (x, y, r, color, stroke)
+            if not stroke or stroke < 1 then stroke = 1 end
+
+            stack[stackIndex] = 9
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(x)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(y)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(r)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = round(stroke)
+            stackIndex = stackIndex + 1
+            
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+        end,
+        drawPoly = function(color, ...)
+            api.drawWidePoly(color, 1, false, ...)
+        end,
+        drawWidePoly = function(color, width, roundFlag, ...)
+            stack[stackIndex] = 10
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+            stackIndex = stackIndex + 1
+
+            width = round(width or 1)
+            if width < 1 then
+                width = 1
+            end
+            if roundFlag then
+                width = -width
+            end
+
+            local points = {...}
+            if #points == 0 or #points % 2 ~= 0 then
+                error("an odd number of points are specified", 2)
+            end
+            stack[stackIndex] = #points
+            stackIndex = stackIndex + 1
+
+            stack[stackIndex] = width
+            stackIndex = stackIndex + 1
+
+            for _, v in ipairs(points) do
+                stack[stackIndex] = round(v)
+                stackIndex = stackIndex + 1
+            end
+            
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+        end,
+        fillPoly = function(color, ...)
+            api.fillWidePoly(color, 1, false, ...)
+        end,
+        fillWidePoly = function(color, width, roundFlag, ...)
+            stack[stackIndex] = 11
+            stackIndex = stackIndex + 1
+            stack[stackIndex] = formatColorToSmallNumber(color, whiteSmallNumber)
+            stackIndex = stackIndex + 1
+
+            width = round(width or 1)
+            if width < 1 then
+                width = 1
+            end
+            if roundFlag then
+                width = -width
+            end
+
+            local points = {...}
+            if #points == 0 or #points % 2 ~= 0 then
+                error("an odd number of points are specified", 2)
+            end
+            stack[stackIndex] = #points
+            stackIndex = stackIndex + 1
+
+            stack[stackIndex] = width
+            stackIndex = stackIndex + 1
+
+            for _, v in ipairs(points) do
+                stack[stackIndex] = round(v)
+                stackIndex = stackIndex + 1
+            end
+            
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
+        end,
+        drawTriangle = function(x1, y1, x2, y2, x3, y3, color)
+            api.drawPoly(color, x1, y1, x2, y2, x3, y3)
+        end,
+        fillTriangle = function(x1, y1, x2, y2, x3, y3, color)
+            api.fillPoly(color, x1, y1, x2, y2, x3, y3)
+        end,
+        flush = function()
+            lastAction = nil
+            api.setViewport()
+
+            if dataTunnel.display_flush and dataTunnel.display_stack == stack then
+                return
+            end
+
+            local needFlush = forceFlag
+            --print("--------------------------- FLUSH 1", needFlush, stack, stackChecksum(stack), stackChecksum(canvasAPI.minimizeDataTunnel(dataTunnel)))
+
+            if not needFlush and stackIndex ~= oldStackIndex then
+                --print("FLUSH 2", stackIndex, oldStackIndex)
+                needFlush = true
+            end
+
+            if not needFlush and newDataFlag then
+                local dataSum = stackChecksum(canvasAPI.minimizeDataTunnel(dataTunnel))
+                if dataSum ~= oldDataSum then
+                    --print("FLUSH 3")
+                    needFlush = true
+                    oldDataSum = dataSum
+                end
+            end
+
+            if not needFlush and stack ~= oldStack then
+                for i = 1, stackIndex - 1 do
+                    if stack[i] ~= oldStack[i] then
+                        needFlush = true
+                        --print("FLUSH 4", oldStack)
+                        break
+                    end
+                end
+            end
+
+            --[[
+            if needFlush then
+                oldStackSum = nil
+            else
+                local stachSum = stackChecksum(stack)
+                if stachSum ~= oldStackSum then
+                    --print("FLUSH 5")
+                    needFlush = true
+                    oldStackSum = stachSum
+                end
+            end
+            ]]
+            
+            if needFlush then
+                --print("FLUSH ACTION")
+                oldStack = stack
+                oldStackIndex = stackIndex
+
+                dataTunnel.display_stack = stack
+                dataTunnel.display_flush = clearStack
+                
+                if flushCallback then
+                    flushCallback()
+                end
+            else
+                clearStackForce()
+            end
+
+            forceFlag = false
+            newDataFlag = false
+        end,
+        forceFlush = function()
+            api_flush()
+            dataTunnel.display_forceFlush = true
+        end,
+
+        -- settings
+        setUtf8Support = function (state)
+            if type(state) == "boolean" then
+                if dataTunnel.utf8support ~= state then
+                    dataTunnel.utf8support = state
+                    dataTunnel.dataUpdated = true
+                    newDataFlag = true
+                    utf8support = state
+                end
+            else
+                error("Type must be boolean", 2)
+            end
+        end,
+        getUtf8Support = function () return dataTunnel.utf8support end,
+
+        setRenderAtDistance = function (c)
+            if type(c) == "boolean" then
+                if dataTunnel.renderAtDistance ~= c then
+                    dataTunnel.renderAtDistance = c
+                    dataTunnel.dataUpdated = true
+                end
+            else
+                error("Type must be boolean", 2)
+            end
+        end,
+        getRenderAtDistance = function () return dataTunnel.renderAtDistance end,
+
+        setRotation = function (rotation)
+            if type(rotation) == "number" and rotation % 1 == 0 and rotation >= 0 and rotation <= 3 then
+                if rotation ~= dataTunnel.rotation then
+                    dataTunnel.rotation = rotation
+                    dataTunnel.dataUpdated = true
+                    newDataFlag = true
+
+                    if pixelsCacheExists then
+                        pixelsCache = {}
+                        pixelsCacheExists = false
+                    end
+
+                    if rotation == 1 or rotation == 3 then
+                        rwidth = height
+                        rheight = width
+                    else
+                        rwidth = width
+                        rheight = height
+                    end
+                    rmheight = rheight - 1
+                    rmwidth = rwidth - 1
+                end
+            else
+                error("integer must be in [0; 3]", 2)
+            end
+        end,
+        getRotation = function () return dataTunnel.rotation end,
+
+        setFont = function (customFont)
+            checkArg(1, customFont, "table", "nil")
+            currentSettedFont = customFont
+            fontIndex = 0
+            if dataTunnel.customFont then
+                dataTunnel.dataUpdated = true
+                dataTunnel.customFont = nil
+            end
+            if customFont then
+                if not checkedFonts[customFont] then
+                    checkFont(customFont)
+                    checkedFonts[customFont] = true
+                end
+                dFontX, dFontY = customFont.width, customFont.height
+                drFontX, drFontY = customFont.returnWidth or customFont.width, customFont.returnHeight or customFont.height
+                fontIndex = customFontIndexesCache[customFont]
+                if not fontIndex then
+                    fontIndex = 0
+                    for _, v in pairs(fonts) do
+                        if v == customFont then
+                            fontIndex = v.index
+                        end
+                    end
+                    customFontIndexesCache[customFont] = fontIndex
+                end
+                if fontIndex == 0 then
+                    dataTunnel.customFont = font.optimizeFont(customFont)
+                    dataTunnel.dataUpdated = true
+                end
+                monoFont = customFont.mono or customFont.mono == nil
+            else
+                dFontX, dFontY = defaultFont.width, defaultFont.height
+                drFontX, drFontY = defaultFont.width, defaultFont.height
+                monoFont = true
+            end
+            updateFontSize()
+            newDataFlag = true
+        end,
+        getFont = function()
+            return currentSettedFont
+        end,
+
+        getFontWidth = function ()
+            return rFontX
+        end,
+        getFontHeight = function ()
+            return rFontY
+        end,
+        getFontSize = function()
+            return rFontX, rFontY
+        end,
+
+        getRealFontWidth = function ()
+            return drFontX
+        end,
+        getRealFontHeight = function ()
+            return drFontY
+        end,
+        getRealFontSize = function()
+            return drFontX, drFontY
+        end,
+
+        setSkipAtNotSight = function (state)
+            checkArg(1, state, "boolean")
+            if dataTunnel.skipAtNotSight ~= state then
+                dataTunnel.skipAtNotSight = state
+                dataTunnel.dataUpdated = true
+            end
+        end,
+        getSkipAtNotSight = function () return dataTunnel.skipAtNotSight end,
+
+        getViewport = function()
+            return viewport_x, viewport_y, viewport_sx, viewport_sy
+        end,
+        setViewport = function(x, y, sizeX, sizeY)
+            if x or y or sizeX or sizeY then
+                viewport_x, viewport_y, viewport_sx, viewport_sy = x or 0, y or 0, sizeX or api.getWidth(), sizeY or api.getHeight()
+                stack[stackIndex] = -1
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = round(viewport_x)
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = round(viewport_y)
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = round(viewport_sx)
+                stackIndex = stackIndex + 1
+                stack[stackIndex] = round(viewport_sy)
+                stackIndex = stackIndex + 1
+            else
+                viewport_x, viewport_y, viewport_sx, viewport_sy = nil, nil, nil, nil
+                stack[stackIndex] = resetViewportCodeID
+                stackIndex = stackIndex + 1
+            end
+        end,
+        setInlineViewport = function(x, y, sizeX, sizeY)
+            if viewport_x then
+                local x2 = x + (sizeX - 1)
+                local y2 = y + (sizeY - 1)
+                local px2 = viewport_x + (viewport_sx - 1)
+                local py2 = viewport_y + (viewport_sy - 1)
+                if x < viewport_x then x = viewport_x elseif x > px2 then x = px2 end
+                if y < viewport_y then y = viewport_y elseif y > py2 then y = py2 end
+                if x2 < viewport_x then x2 = viewport_x elseif x2 > px2 then x2 = px2 end
+                if y2 < viewport_y then y2 = viewport_y elseif y2 > py2 then y2 = py2 end
+                api.setViewport(x, y, (x2 - x) + 1, (y2 - y) + 1)
+            else
+                api.setViewport(x, y, sizeX, sizeY)
+            end
+        end,
+
+        setBrightness = function(value) --legacy
+            checkArg(1, value, "number")
+            --[[
+            if value < 0 then value = 0 end
+            if value > 255 then value = 255 end
+            if dataTunnel.brightness ~= value then
+                dataTunnel.brightness = value
+                dataTunnel.dataUpdated = true
+            end
+            ]]
+        end,
+        getBrightness = function() --legacy
+            --return dataTunnel.brightness
+            return 1
+        end,
+
+        setLight = function(value)
+            checkArg(1, value, "number")
+            value = math_floor(value + 0.5)
+            if value < 0 then value = 0 end
+            if value > 255 then value = 255 end
+            if dataTunnel.light ~= value then
+                dataTunnel.light = value
+                dataTunnel.dataUpdated = true
+            end
+        end,
+        getLight = function(value)
+            return dataTunnel.light
+        end,
+
+        getDefaultResolution = function()
+            return defaultResolutionX, defaultResolutionY
+        end,
+
+        getTouchs = function()
+            for i = 1, MAX_CLICKS do
+                local click = api.getClick()
+                if not click then
+                    break
+                end
+                local index = #currentTouchs + 1
+                for lindex, lclick in reverse_ipairs(currentTouchs) do
+                    if lclick.nickname == click.nickname and lclick.button == click.button then
+                        index = lindex
+                        break
+                    end
+                end
+                if click.state == "released" then
+                    table.remove(currentTouchs, index)
+                else
+                    currentTouchs[index] = click
+                end
+            end
+
+            return currentTouchs
+        end,
+
+        getTouch = function()
+            return api.getTouchs()[1]
+        end,
+
+        reset = function()
+            currentTouchs = {}
+            if api.setMaterial then api.setMaterial(api.getDefaultMaterial()) end
+            if api.setFontScale then api.setFontScale(1, 1) end
+            if api.setTextSpacing then api.setTextSpacing(1) end
+            if api.setFont then api.setFont() end
+            if api.setRotation then api.setRotation(0) end
+            if api.setUtf8Support then api.setUtf8Support(false) end
+            if api.setClicksAllowed then api.setClicksAllowed(false) end
+            if api.setMaxClicks then api.setMaxClicks(MAX_CLICKS) end
+            if api.clearClicks then api.clearClicks() end
+            if api.setSkipAtNotSight then api.setSkipAtNotSight(false) end
+            if api.setRenderAtDistance then api.setRenderAtDistance(false) end
+            if api.setViewport then api.setViewport() end
+            if api.setLight then api.setLight(DEFAULT_ALPHA_VALUE) end
+            if api.setOptimizationLevel then api.setOptimizationLevel(16) end
+            if api.setHoloOffset then api.setHoloOffset(0, 0, 0) end
+            if api.setHoloRotation then api.setHoloRotation(0, 0, 0) end
+            if api.setHoloScale then api.setHoloScale(1, 1) end
+            if api.setResolution then api.setResolution(defaultResolutionX, defaultResolutionY) end
+            dataTunnel.display_reset = true
+        end
+    }
+
+    if materialList then
+        defaultMaterial = defaultMaterial or (materialList[0] and 0 or 1)
+        local currentMaterialID
+
+        function api.setMaterial(materialId)
+            checkArg(1, materialId, "number")
+            currentMaterialID = materialId
+            if not materialList[currentMaterialID] then
+                currentMaterialID = defaultMaterial
+            end
+            local material = materialList[currentMaterialID]
+            if material == true then
+                error("this material is not supported on this display", 2)
+            end
+            if dataTunnel.material ~= material then
+                dataTunnel.material = material
+                dataTunnel.dataUpdated = true
+            end
+        end
+
+        function api.getMaterial()
+            return currentMaterialID
+        end
+
+        function api.getDefaultMaterial()
+            return defaultMaterial
+        end
+
+        api.setMaterial(api.getDefaultMaterial())
+    end
+
+    dataTunnel.offset_x, dataTunnel.offset_y, dataTunnel.offset_z = 0, 0, 0
+    dataTunnel.rotation_x, dataTunnel.rotation_y, dataTunnel.rotation_z = 0, 0, 0
+    dataTunnel.scale_x, dataTunnel.scale_y = 1, 1
+    dataTunnel.altRotation = false
+    if allowHoloAPI then
+        local maxOffset = 5
+        local maxScale = 5
+        if type(allowHoloAPI) == "table" then
+            maxOffset = allowHoloAPI.maxOffset or maxOffset
+            maxScale = allowHoloAPI.maxScale or maxScale
+        end
+
+        function api.setHoloOffset(x, y, z)
+            checkArg(1, x, "number")
+            checkArg(2, y, "number")
+            checkArg(3, z, "number")
+            
+            if x < -maxOffset then x = -maxOffset end
+            if y < -maxOffset then y = -maxOffset end
+            if z < -maxOffset then z = -maxOffset end
+            if x > maxOffset then x = maxOffset end
+            if y > maxOffset then y = maxOffset end
+            if z > maxOffset then z = maxOffset end
+
+            if x ~= dataTunnel.offset_x or y ~= dataTunnel.offset_y or z ~= dataTunnel.offset_z then
+                dataTunnel.offset_x, dataTunnel.offset_y, dataTunnel.offset_z = x, y, z
+                dataTunnel.dataUpdated = true
+            end
+        end
+
+        function api.getHoloOffset()
+            return dataTunnel.offset_x, dataTunnel.offset_y, dataTunnel.offset_z
+        end
+
+        function api.setHoloRotation(x, y, z, altRotation)
+            checkArg(1, x, "number")
+            checkArg(2, y, "number")
+            checkArg(3, z, "number")
+            checkArg(4, altRotation, "boolean", "nil")
+            if x ~= dataTunnel.rotation_x or y ~= dataTunnel.rotation_y or z ~= dataTunnel.rotation_z then
+                dataTunnel.rotation_x, dataTunnel.rotation_y, dataTunnel.rotation_z = x, y, z
+                dataTunnel.altRotation = not not altRotation
+                dataTunnel.dataUpdated = true
+            end
+        end
+
+        function api.getHoloRotation()
+            return dataTunnel.rotation_x, dataTunnel.rotation_y, dataTunnel.rotation_z, dataTunnel.altRotation
+        end
+
+        function api.setHoloScale(x, y)
+            checkArg(1, x, "number")
+            checkArg(2, y, "number")
+
+            if x < 0 then x = 0 end
+            if y < 0 then y = 0 end
+            if x > maxScale then x = maxScale end
+            if y > maxScale then y = maxScale end
+
+            if x ~= dataTunnel.scale_x or y ~= dataTunnel.scale_y then
+                dataTunnel.scale_x, dataTunnel.scale_y = x, y
+                dataTunnel.dataUpdated = true
+            end
+        end
+
+        function api.getHoloScale()
+            return dataTunnel.scale_x, dataTunnel.scale_y
+        end
+    end
+
+    dataTunnel.res_x, dataTunnel.res_y = defaultResolutionX, defaultResolutionY
+    if allowSetResolution then
+        if type(allowSetResolution) ~= "table" then
+            allowSetResolution = {
+                maxPixels = 4096 * 4096,
+                maxWidth = 4096,
+                maxHeight = 4096
+            }
+        end
+
+        function api.setResolution(resX, resY)
+            checkArg(1, resX, "number")
+            checkArg(2, resY, "number")
+
+            resX = math.floor(resX)
+            resY = math.floor(resY)
+            if resX < 1 then resX = 1 end
+            if resY < 1 then resY = 1 end
+
+            if allowSetResolution.maxWidth and resX > allowSetResolution.maxWidth then
+                error("the width resolution has been exceeded. maximum: " .. allowSetResolution.maxWidth, 2)
+            end
+
+            if allowSetResolution.maxHeight and resX > allowSetResolution.maxHeight then
+                error("the height resolution has been exceeded. maximum: " .. allowSetResolution.maxHeight, 2)
+            end
+
+            if allowSetResolution.maxPixels and (resX * resY) > allowSetResolution.maxPixels then
+                error("the total maximum number of pixels has been exceeded. maximum: " .. allowSetResolution.maxPixels, 2)
+            end
+            
+            if resX ~= dataTunnel.res_x or resY ~= dataTunnel.res_y then
+                dataTunnel.res_x, dataTunnel.res_y = resX, resY
+                dataTunnel.dataUpdated = true
+                dataTunnel.resolutionChanged = true
+
+                if pixelsCacheExists then
+                    pixelsCache = {}
+                    pixelsCacheExists = false
+                end
+
+                width, height = resX, resY
+                if dataTunnel.rotation == 1 or dataTunnel.rotation == 3 then
+                    rwidth = height
+                    rheight = width
+                else
+                    rwidth = width
+                    rheight = height
+                end
+                rmheight = rheight - 1
+                rmwidth = rwidth - 1
+            end
+        end
+    end
+
+    api.update = api.flush
+    api.getBuffer = api.get
+    api.getCurrent = api.get
+    api_flush = api.flush
+
+    local internal = {
+        rawPush = function(tbl)
+            for i = 1, #tbl do
+                stack[stackIndex] = tbl[i]
+                stackIndex = stackIndex + 1
+            end
+        end,
+        setForceFrame = setForceFrame
+    }
+
+    return api, internal
+end
+
+--adds a touch screen API (does not implement click processing)
+function canvasAPI.addTouch(api, dataTunnel)
+    dataTunnel = dataTunnel or {}
+    dataTunnel.clicksAllowed = false
+    dataTunnel.maxClicks = MAX_CLICKS
+    dataTunnel.clickData = {}
+
+    api.getClick = function ()
+        return (table_remove(dataTunnel.clickData, 1))
+    end
+
+    api.setMaxClicks = function (c)
+        if type(c) == "number" and c % 1 == 0 and c > 0 and c <= 16 then
+            dataTunnel.maxClicks = c
+        else
+            error("integer must be in [1; 16]", 2)
+        end
+    end
+
+    api.getMaxClicks = function ()
+        return dataTunnel.maxClicks
+    end
+
+    api.clearClicks = function ()
+        dataTunnel.clickData = {}
+    end
+
+    api.setClicksAllowed = function (c)
+        if type(c) == "boolean" then
+            if dataTunnel.clicksAllowed ~= c then
+                dataTunnel.clicksAllowed = c
+                dataTunnel.dataUpdated = true
+            end
+        else
+            error("Type must be boolean", 2)
+        end
+    end
+
+    api.getClicksAllowed = function ()
+        return dataTunnel.clicksAllowed
+    end
+
+    return function (tbl)
+        tbl.x = tbl[1] or tbl.x
+        tbl.y = tbl[2] or tbl.y
+        tbl.state = tbl[3] or tbl.state
+        tbl.button = tbl[4] or tbl.button
+        tbl.nickname = tbl[5] or tbl.nickname
+        tbl[1] = tbl.x or tbl[1]
+        tbl[2] = tbl.y or tbl[2]
+        tbl[3] = tbl.state or tbl[3]
+        tbl[4] = tbl.button or tbl[4]
+        tbl[5] = tbl.nickname or tbl[5]
+        if #dataTunnel.clickData < dataTunnel.maxClicks then
+            table_insert(dataTunnel.clickData, tbl)
+        end
+    end
+end
+
+--leaves only those tunnel fields that are needed for transmission over the network
+function canvasAPI.minimizeDataTunnel(dataTunnel)
+    return {
+        clicksAllowed = dataTunnel.clicksAllowed,
+        rotation = dataTunnel.rotation,
+        renderAtDistance = dataTunnel.renderAtDistance,
+        skipAtNotSight = dataTunnel.skipAtNotSight,
+        utf8support = dataTunnel.utf8support,
+        customFont = dataTunnel.customFont,
+        display_reset = dataTunnel.display_reset,
+        optimizationLevel = dataTunnel.optimizationLevel,
+        light = dataTunnel.light,
+        material = dataTunnel.material,
+
+        offset_x = dataTunnel.offset_x,
+        offset_y = dataTunnel.offset_y,
+        offset_z = dataTunnel.offset_z,
+
+        rotation_x = dataTunnel.rotation_x,
+        rotation_y = dataTunnel.rotation_y,
+        rotation_z = dataTunnel.rotation_z,
+        altRotation = dataTunnel.altRotation,
 
         scale_x = dataTunnel.scale_x,
         scale_y = dataTunnel.scale_y,
@@ -55929,12 +60745,13 @@ function chaff:server_onFixedUpdate()
 
     if self.shotFlag then
         local body = self:sv_getBodyForChraff()
+        local timeLimit = math.random(sc.chaff_time_limit_min, sc.chaff_time_limit_max)
         if body then
-            scomputers.addChaffObject(self.shape.worldPosition, body.id, body.mass)
+            scomputers.addChaffObject(self.shape.worldPosition, body.id, body.mass, timeLimit)
         else
-            scomputers.addChaffObject(self.shape.worldPosition, math.random(1, 99999), (math.random() * (15000 - 50)) + 50)
+            scomputers.addChaffObject(self.shape.worldPosition, math.random(1, 99999), (math.random() * (15000 - 50)) + 50, timeLimit)
         end
-        self.network:sendToClients("cl_n_addChaffObject", self.shape.worldPosition)
+        self.network:sendToClients("cl_n_addChaffObject", {self.shape.worldPosition, timeLimit})
         
         self.shotFlag = nil
     end
@@ -55977,11 +60794,12 @@ function chaff:sv_shot()
     return true
 end
 
-function chaff:cl_n_addChaffObject(position)
-    scomputers.addChaffObject(position)
+function chaff:cl_n_addChaffObject(data)
+    scomputers.addChaffObject(data[1], nil, nil, data[2])
 end
 end
 function scmframework_dd62d679ca9366cd1fa2c776f164718b() --$CONTENT_DATA/Scripts/chaff_task.lua
+print("loading chaff background")
 sc.background.chaff = sc.background.chaff or {}
 
 local uuid = sm.uuid.new("24986ff2-3735-42d5-b3ba-f8c60c3b70bb")
@@ -55993,12 +60811,9 @@ local function doChaffObjects(chaff_objects, clientSide)
     for i = #chaff_objects, 1, -1 do
         local chaffObject = chaff_objects[i]
         
+        local destroyFlag = false
         if sm.physics.raycast(sm.vec3.new(0, 0, checkFromHeight), chaffObject.position + sm.vec3.new(0, 0, sc.chaff_visible_size + 4), nil, sm.physics.filter.terrainSurface) then
-            table.remove(chaff_objects, i)
-
-            if chaffObject.effect then
-                chaffObject.effect:destroy()
-            end
+            destroyFlag = true            
         elseif clientSide then
             if not chaffObject.effect then
                 chaffObject.radius = 0.1
@@ -56029,6 +60844,20 @@ local function doChaffObjects(chaff_objects, clientSide)
         end
 
         chaffObject.position = chaffObject.position + chaffObject.move
+        if chaffObject.timeLimit then
+            chaffObject.timeLimit = chaffObject.timeLimit - 1
+            if chaffObject.timeLimit <= 0 then
+                destroyFlag = true
+            end
+        end
+
+        if destroyFlag then
+            table.remove(chaff_objects, i)
+
+            if chaffObject.effect then
+                chaffObject.effect:destroy()
+            end
+        end
     end
 end
 
@@ -56298,6 +61127,8 @@ function scmframework_f96595358a600a527c5fbabaf47403f9() --$CONTENT_DATA/Scripts
 if __scConfigLoaded then return end
 __scConfigLoaded = true
 
+print("SComputers: Config.lua")
+
 dofile("$SURVIVAL_DATA/Scripts/game/survival_constants.lua")
 dofile("$SURVIVAL_DATA/Scripts/game/survival_items.lua")
 dofile("examples.lua")
@@ -56339,6 +61170,7 @@ dofile("$CONTENT_DATA/Scripts/encryptVM/encryptVM.lua")
 local pairs = pairs
 local ipairs = ipairs
 local type = type
+local math_floor = math.floor
 
 local sm_color_new = sm.color.new
 local sm_vec3_new = sm.vec3.new
@@ -56359,6 +61191,8 @@ sm.interactable.connectionType.networkCamera = 2 ^ 24
 sm.interactable.connectionType.loopConnection = 2 ^ 25
 
 local sc = {
+    UNSAFE_COMPUTER_UUID = sm.uuid.new("14b629d7-a1b6-4803-ae6e-a0ff50d45053"),
+
 	wasdInfo = {},
 	
     gpstags = {},
@@ -56386,10 +61220,39 @@ local sc = {
     sv_chaff_objects = {},
     cl_chaff_objects = {},
 
-    chaff_visible_size = 1,
-    chaff_real_size = 32
+    chaff_visible_size = 0.25,
+    --chaff_real_size = 32,
+    chaff_real_size = 2,
+    chaff_time_limit_min = math_floor(1.8 * 40),
+    chaff_time_limit_max = math_floor(2.2 * 40),
+
+    passiveRadarTargets = {},
+    passiveRadarDetectTimeFrame = 2
 }
 _G.sc = sc
+
+sc.forceLoadLibs = {
+    "base64",
+    "colors",
+    "enlua",
+    "fonts",
+    "graphic",
+    "gui",
+    "image",
+    "json",
+    "midi",
+    "nbs",
+    "objs",
+    "process",
+    "ramfs",
+    "styles",
+    "syntax",
+    "timer",
+    "utils",
+    "vdisplay",
+    "vfs",
+    "xEngine"
+}
 
 sc.architectures = {}
 sc.envhooks = {}
@@ -56407,13 +61270,13 @@ function sc.mt_hook(mt)
     return empty_class()
 end
 
-sc.version = "5.4a"
+sc.version = "5.6.1a"
 sc.actualBetterAPI = 45
 sc.actualCoroutineBetterAPI = 45
 sc.computersCount = 0
 
 sc.deltaTime = 0
-sc.maxcodelen = 32 * 1024
+sc.maxcodelen = 64 * 1024
 sc.clockLagMul = 150
 sc.radarDetectedBodies = {}
 
@@ -56422,9 +61285,11 @@ sc.networking = {}
 
 sc.disableFilesystemMenu = false
 sc.useOriginalSettings = false
-sc.enableByDefault = false
+sc.enableByDefault = false --the menu died with the release of the second chapter
 sc.noCommands = false
 sc.componentsBackend = sc.mt_hook({__mode = "v"}) --sc.componentsBackend[table] = self
+
+sc.background = sc.background or {}
 
 
 function sc.shutdown()
@@ -56665,10 +61530,21 @@ function sc.selfCoroutineCheck(self)
     end
 end
 
+local firstCheckTime
 function sc.creativeCheck(self, isCreative)
-    if isCreative and sc.restrictions and not sc.restrictions.acreative then
+    local needDestroy = isCreative and sc.restrictions and not sc.restrictions.acreative
+
+    --I'm making a delay so that SComputers integrable has time to turn on the creative components before they are deleted
+    firstCheckTime = firstCheckTime or sm_game_getCurrentTick()
+    if sm_game_getCurrentTick() - firstCheckTime < 40 then
+        return needDestroy
+    end
+
+    if needDestroy then
         self.shape:destroyShape()
     end
+
+    return needDestroy
 end
 
 ----------------------   STORAGE    ----------------------
@@ -56919,7 +61795,6 @@ local sm_color_new = sm.color.new
 local tostring = tostring
 local math_max = math.max
 local math_min = math.min
-local math_floor = math.floor
 local string_format = string.format
 
 function numberToColorpart(number)
@@ -57308,6 +62183,8 @@ end
 -------------------------------------------------------
 
 sc.moduuid = sm.json.open("$CONTENT_DATA/description.json").localId --you need to read the file for scmframework to work with betterAPI
+print("sc.moduuid", sc.moduuid)
+
 sc.origModPrefix = "$CONTENT_3aeb81c2-71b9-45a1-9479-1f48f1e8ff21"
 sc.modPrefix = "$CONTENT_" .. sc.moduuid
 sc.reg_lib_folder(sc.modPrefix .. "/Scripts/internal_libs")
@@ -57334,11 +62211,11 @@ else
 end
 
 if dlm and dlm.setupContentPath then
-    print("SComputers dlm.setupContentPath: ", pcall(dlm.setupContentPath, "SComputers [Fork]", sm.uuid.new(sc.moduuid), 2949350596))
+    print("SComputers dlm.setupContentPath: ", pcall(dlm.setupContentPath, "SComputers", sm.uuid.new(sc.moduuid), 2949350596))
 end
 
 if better then
-    print("SComputers better.autoRegistration: ", pcall(better.autoRegistration, "SComputers [Fork]"))
+    print("SComputers better.autoRegistration: ", pcall(better.autoRegistration, "SComputers"))
 end
 
 function sc.customVersion(char)
@@ -57357,6 +62234,10 @@ dofile("$CONTENT_DATA/Scripts/internal_libs/xEngine.lua")
 dofile("$CONTENT_DATA/Scripts/ai.lua")
 
 dofile("$CONTENT_DATA/Scripts/scomputersAPI.lua")
+
+------------------------------------------------------- background tasks
+
+dofile("$CONTENT_DATA/Scripts/chaff_task.lua")
 
 -------------------------------------------------------
 
@@ -57612,7 +62493,7 @@ local rates = {1, 2, 4, 6, 8, 10}
 local bigSize2 = 256 * 256
 local bigSize1 = 128 * 128
 function AnyDisplay:server_onFixedUpdate()
-    local computerConnected = scomputers.isComputerConnected(self.interactable)
+    local computerConnected = sm.scomputers.isComputerConnected(self.interactable)
     if not computerConnected and self.sv_oldComputerConnected then
         self.internalApi.setForceFrame()
     end
@@ -57810,7 +62691,7 @@ function AnyDisplay:client_onCreate()
         local boxSizeY = self.data.fakeY or boundingBox.y * 4
         local borderSizeX = 0.2
         local borderSizeY = 0.2
-        if boxSizeX <= 3 and not (boxSizeX == 3 and boxSizeY == 2) then
+        if (boxSizeX <= 3 or boxSizeY == 1) and not (boxSizeX == 3 and boxSizeY == 2) then
             borderSizeX = 0.1
             borderSizeY = 0.1
         end
@@ -57825,13 +62706,18 @@ function AnyDisplay:client_onCreate()
         if allowDistortGeometry then
             self.pixelScale = sm.vec3.new(pixelScaleX, pixelScaleY, 0.00025)
         else
-            local pixelScaleXY = math.max(pixelScaleX, pixelScaleY)
+            local pixelScaleXY
+            if self.data.use_min or (self.data.ultra_flat_min and self.data.ultra_flat) then
+                pixelScaleXY = math.min(pixelScaleX, pixelScaleY)
+            else
+                pixelScaleXY = math.max(pixelScaleX, pixelScaleY)
+            end
             self.pixelScale = sm.vec3.new(pixelScaleXY, pixelScaleXY, 0.00025)
         end
 
         self.pixelScaleX = self.pixelScale.x / PIXEL_SCALE
         self.pixelScaleY = self.pixelScale.y / PIXEL_SCALE
-    elseif self.data.sizeX then
+    elseif self.data.sizeX and not self.data.displayIgnoreSize then
         local pixelScaleX = self.data.sizeX / self.width
         local pixelScaleY = self.data.sizeY / self.height
 
@@ -57853,7 +62739,7 @@ function AnyDisplay:client_onCreate()
 	else
 		canvasAttachObject = self.interactable
 	end
-    self.canvas = canvasAPI.createCanvas(canvasAttachObject, self.width, self.height, self.pixelScale, pos, rot, material, nil, self.data.altFromEuler, self.data.unrestrictedOffsets)
+    self.canvas = canvasAPI.createCanvas(canvasAttachObject, self.width, self.height, self.pixelScale, pos, rot, material, nil, self.data.altFromEuler, self.data.unrestrictedOffsets, not self.data.allowOffsets and not self.data.noConstParameters)
 	self.network:sendToServer("sv_dataRequest")
 
 	self.c_dataTunnel = {}
@@ -58034,7 +62920,7 @@ function AnyDisplay:client_onFixedUpdate()
         return
     end
 
-    local computerConnected = scomputers.isComputerConnected(self.interactable)
+    local computerConnected = sm.scomputers.isComputerConnected(self.interactable)
     if not computerConnected and self.oldComputerConnected then
         self.canvas.pushStack({canvasAPI.draw.clear, 0})
         self.canvas.flush()
@@ -58135,7 +63021,7 @@ function AnyDisplay:client_canTinker(character)
 end
 
 function AnyDisplay:cl_pushStack(stack)
-    if self.disableState or not scomputers.isComputerConnected(self.interactable) then
+    if self.disableState or not sm.scomputers.isComputerConnected(self.interactable) then
         return
     end
     
@@ -77857,7 +82743,7 @@ function hdd.server_onCreate(self)
 				self.worldKey = tostring(sm.uuid.new())
 				self.storage:save({key = self.worldKey})
 				sm.storage.save(self.worldKey, self.fs:serialize())
-				print("autochange uuid", oldKey, ">", self.worldKey)
+				print("two world disks with the same uuid exist simultaneously, automatic cloning", oldKey, ">", self.worldKey)
 			end
 			if self.data then
 				local newsize = math.floor(self.data.size)
@@ -77903,11 +82789,11 @@ function hdd.server_onCreate(self)
 	sc.hardDiskDrivesDatas[id] = FileSystem.createSelfData(self)
 	self.changed = false
 	fsmanager_init(self)
-	sc.creativeCheck(self, not self.data)
+    if sc.creativeCheck(self, not self.data) then return end
 end
 
 function hdd:server_onFixedUpdate()
-	sc.creativeCheck(self, not self.data)
+    if sc.creativeCheck(self, not self.data) then return end
 
 	if self.changed and self.data and sc.needSaveData() then
 		--print("SAVE DISK DATA")
@@ -78173,12 +83059,14 @@ function holoprojector:server_onCreate()
 
     self.voxelsCount = 0
     sc.holoDatas[self.interactable.id].reset()
+    sc.holoDatas[self.interactable.id].clear()
 
-    sc.creativeCheck(self, self.creative)
+    if sc.creativeCheck(self, self.creative) then return end
 end
 
 local sendToClients = vnetwork.sendToClients
 function holoprojector:server_onFixedUpdate()
+    if sc.creativeCheck(self, self.creative) then return end
 	if sc.needScreenSend() then self.allow_update = true end
 
     if self.allow_update and (self.updateData or self.flushFlag) then
@@ -78264,8 +83152,6 @@ function holoprojector:server_onFixedUpdate()
             self.flushFlag = nil
         end
     end
-
-    sc.creativeCheck(self, self.creative)
 end
 
 function holoprojector:server_onDestroy()
@@ -78400,6 +83286,8 @@ function holoprojector:cl_upload(datas)
 end
 end
 function scmframework_a104751f322dd97eb958c7b38b272781() --$CONTENT_DATA/Scripts/ibridge.lua
+dofile( "$CONTENT_DATA/Scripts/Config.lua" )
+
 ibridge = class()
 ibridge.maxParentCount = 1
 ibridge.maxChildCount = 0
@@ -79885,7 +84773,7 @@ function objinstance:_getBackColor()
     if self.sceneinstance.color and type(self.sceneinstance.color) ~= "function" then
         return self.sceneinstance.color
     end
-    if self.sceneinstance then
+    if self.sceneinstance and self.sceneinstance._getBackColor then
         return self.sceneinstance:_getBackColor()
     end
 end
@@ -82463,6 +87351,9 @@ return midilib
 end
 end
 function scmframework_61ef67404754c8c9ca2fb1ab9a45fb14() --$CONTENT_DATA/Scripts/internal_libs/nbs.lua
+local defaultNoteShift = -39
+local defaultInstrument = 4
+
 local function parseNBS(handle)
     local function readInteger(handle)
         local buffer = handle:read(4)
@@ -82769,6 +87660,13 @@ function nbs:configWaveSamples(customInstruments)
     end)
 end
 
+function nbs:configDefault()
+    self:setNoteShift(defaultNoteShift)
+    self:setNoteDuration(0, false, false)
+    self:setDefaultInstrument(defaultInstrument)
+    self:setAltBeep(nil)
+end
+
 function nbs:tick()
     if not self.state then return end
 
@@ -82921,9 +87819,9 @@ function sc_reglib_nbs()
         return {
             currentNotes = {},
             synthesizers = {},
-            instrument = 4,
+            instrument = defaultInstrument,
             volume = 0.1,
-            noteshift = -39,
+            noteshift = defaultNoteShift,
             notealigment = 1,
             speed = 1,
             noteDuration = 0,
@@ -82967,7 +87865,8 @@ function sc_reglib_nbs()
             setNoteDuration = nbs.setNoteDuration,
             setAltBeep = nbs.setAltBeep,
             configNoteblockSamples = nbs.configNoteblockSamples,
-            configWaveSamples = nbs.configWaveSamples
+            configWaveSamples = nbs.configWaveSamples,
+            configDefault = nbs.configDefault
         }
     end
 
@@ -83886,6 +88785,23 @@ function utils.fromEuler(euler)
     return fromEuler(euler.x, euler.y, euler.z)
 end
 utils.toEuler = toEuler
+
+function utils.radarTriangulation(radarTarget, radarPosition, radarDirectionYPrad)
+    local radar_X = radarPosition.x * 4
+    local radar_Y = radarPosition.y * 4
+    local radar_Z = radarPosition.z * 4
+
+    local flip = 1
+    local target_2d_distance = math.abs(radarTarget[4] * 4*math.cos(radarTarget[3]))
+
+    return sm.vec3.new(
+        radar_X + (target_2d_distance * math.sin(flip*(radarTarget[2]+radarDirectionYPrad))) * -1,
+        radar_Y + (target_2d_distance * (-1*math.cos(flip*(radarTarget[2]+radarDirectionYPrad)))) * 1,
+        radar_Z + (radarTarget[4]*4)*math.sin(-flip*radarTarget[3]) * -1
+    ) / 4
+end
+
+utils.createPID = createPID
 
 return utils
 end
@@ -85090,6 +90006,9 @@ function keyboard:server_onCreate()
         end,
         isSyntax = function()
             return self.syntax
+        end,
+        closeGui = function()
+            self.closeGuiOnClients = true
         end
     }
     self.btns = {}
@@ -85120,6 +90039,11 @@ function keyboard:server_onFixedUpdate()
     if self.flushSyntaxEnable then
         self.network:sendToClients("cl_setSyntaxEnable", self.syntax)
         self.flushSyntaxEnable = nil
+    end
+
+    if self.closeGuiOnClients then
+        self.network:sendToClients("cl_closeGuiOnClients")
+        self.closeGuiOnClients = nil
     end
 end
 
@@ -85166,6 +90090,10 @@ function keyboard:sv_getData(_, caller)
 end
 
 -------------------------------------------------------
+
+function keyboard:cl_closeGuiOnClients()
+    self.gui:close()
+end
 
 function keyboard:cl_createGui()
     if self.gui then
@@ -85818,7 +90746,7 @@ function safe_load_code(self, chunk, chunkname, mode, env)
 
 	local codelen = #chunk
 	if codelen > sc.maxcodelen then
-		return nil, "the code len " .. math.round(codelen) .. " bytes, the maximum code len " .. sc.maxcodelen .. " bytes"
+		return nil, "the code len " .. mathRound(codelen) .. " bytes, the maximum code len " .. sc.maxcodelen .. " bytes"
 	end
 
 	env = env or {}
@@ -87595,7 +92523,7 @@ end
 
 ------------------------
 
-NetworkPort.ledShape = sm.uuid.new("64d41b06-9b71-4e19-9f87-1e7e63845e59")
+NetworkPort.ledShape = sm.uuid.new("b46ae32a-9037-4360-9f98-3bef1cd4f366")
 
 NetworkPort.sendOn = sm.color.new("#00ed76")
 NetworkPort.sendOn.a = 1
@@ -87604,7 +92532,7 @@ NetworkPort.reciveOn.a = 1
 
 NetworkPort.sendOff = NetworkPort.sendOn * 0.5
 NetworkPort.sendOff.a = 0
-NetworkPort.reciveOff = NetworkPort.reciveOn * 0.5
+NetworkPort.reciveOff = NetworkPort.reciveOn * 0.9
 NetworkPort.reciveOff.a = 0
 
 NetworkPort.ledScale = sm.vec3.new(0.06, 0.04, 0)
@@ -87612,8 +92540,8 @@ NetworkPort.sendLedOffset = sm.vec3.new(-0.076, 0.1, 0.12)
 NetworkPort.reciveLedOffset = sm.vec3.new(0.076, 0.1, 0.12)
 
 function NetworkPort:client_onCreate()
-    self.sendLed = sm.effect.createEffect("ShapeRenderable", self.interactable)
-    self.reciveLed = sm.effect.createEffect("ShapeRenderable", self.interactable)
+    self.sendLed = sm.effect.createEffect(canvasAPI.getEffectName(), self.interactable)
+    self.reciveLed = sm.effect.createEffect(canvasAPI.getEffectName(), self.interactable)
 
     self.sendLed:setParameter("uuid", NetworkPort.ledShape)
     self.reciveLed:setParameter("uuid", NetworkPort.ledShape)
@@ -87771,6 +92699,469 @@ function paintGun:cl_shot(data)
         sm.effect.playEffect("PaintTool - Paint", self.shape.worldPosition)
     end
     --sm.effect.playEffect("Steam - quench", self.shape.worldPosition, (self.shape.worldRotation * sm.vec3.new(0, 0, 3)))
+end
+end
+function scmframework_ef20752faea8126869a26a0e59d52cf2() --$CONTENT_DATA/Scripts/PatchedStepperMotor.lua
+--by Error404Not_Found
+
+dofile '$CONTENT_DATA/Scripts/Config.lua'
+
+PatchedStepperMotor = class(nil)
+
+PatchedStepperMotor.maxParentCount = -1
+PatchedStepperMotor.maxChildCount = 16
+PatchedStepperMotor.connectionInput = sm.interactable.connectionType.composite + sm.interactable.connectionType.electricity
+PatchedStepperMotor.connectionOutput = sm.interactable.connectionType.bearing
+PatchedStepperMotor.colorNormal = sm.color.new(0x9f6213ff)
+PatchedStepperMotor.colorHighlight = sm.color.new(0xde881bff)
+PatchedStepperMotor.componentType = "motor"
+
+--PatchedStepperMotor.nonActiveImpulse = 0.25
+PatchedStepperMotor.nonActiveImpulse = 0
+PatchedStepperMotor.chargeAdditions = 4000000
+
+-- SERVER --
+
+function PatchedStepperMotor:sv_resourcesLimit()
+	return self.data and self.data.survival and sc.restrictions.resourceConsumption
+end
+
+function PatchedStepperMotor.server_createData(self)
+	return {
+		getVelocity = function () return self.velocity end,
+		setVelocity = function (v)
+		    if type(v) == "number" then
+				self.velocity = sm.util.clamp(v, -self.mVelocity, self.mVelocity)
+			else
+				error("Value must be number")
+			end
+		end,
+		getStrength = function () return self.maxImpulse end,
+		setStrength = function (v)
+		    if type(v) == "number" then
+				self.maxImpulse = sm.util.clamp(v, 0, self.mImpulse)
+			else
+				error("Value must be number")
+			end
+		end,
+		getAngle = function () return self.angle end,
+		setAngle = function (v)
+			if type(v) == "number" or type(v) == "nil" then
+				self.angle = v and sm.util.clamp(v, -3.402e+38, 3.402e+38) or nil
+			else
+				error("Value must be number or nil")
+			end
+		end,
+		isActive = function () return self.isActive end,
+		setActive = function (v) 
+			if type(v) == "boolean" then
+				self.isActive = v
+			elseif type(v) == "number" then
+				self.isActive = v > 0
+			else
+				error("Type must be boolean or number")
+			end
+		end,
+
+		getAvailableBatteries = function ()
+			return self:sv_resourcesLimit() and (self.batteries or 0) or math.huge
+		end,
+		getCharge = function ()
+			return self.sdata.energy
+		end,
+		getChargeDelta = function ()
+			return self.chargeDelta
+		end,
+		isWorkAvailable = function ()
+			if self:sv_resourcesLimit() then
+				if self.sdata.energy > 0 then
+					return true
+				end
+
+				if self.batteries and self.batteries > 0 then
+					return true
+				end
+
+				return false
+			end
+			return true
+		end,
+		getBearingsCount = function ()
+			return self.bearingsCount or 0
+		end,
+
+		maxStrength = function ()
+			return self.mImpulse
+		end,
+		maxVelocity = function ()
+			return self.mVelocity
+		end,
+		getChargeAdditions = function ()
+			return PatchedStepperMotor.chargeAdditions
+		end,
+		setSoundType = function (num)
+			checkArg(1, num, "number")
+			self.soundtype = num
+		end,
+		getSoundType = function ()
+			return self.soundtype
+		end,
+        setBearingAngle = function (i, a)
+            if type(i) ~= "number" or type(a) ~= "number" and a ~= nil then
+                error("Index must be number, angle must be number or nil")
+            end
+            if i < 1 or i > self.bearingsCount then
+                error("Invalid bearing index")
+            end
+            self.bearingSettings[i].angle = a and sm.util.clamp(a, -3.402e+38, 3.402e+38) or nil
+        end,
+        getBearingAngle = function (i)
+            if type(i) ~= "number" then
+                error("Index must be number")
+            end
+            if i < 1 or i > self.bearingsCount then
+                error("Invalid bearing index")
+            end
+            local bearing = self.interactable:getBearings()[i]
+            return bearing and bearing.angle or 0
+        end,
+        setBearingVelocity = function (i, v)
+            if type(i) ~= "number" or type(v) ~= "number" then
+                error("Index and velocity must be numbers")
+            end
+            if i < 1 or i > self.bearingsCount then
+                error("Invalid bearing index")
+            end
+            self.bearingSettings[i].velocity = sm.util.clamp(v, -self.mVelocity, self.mVelocity)
+        end,
+        getBearingVelocity = function (i)
+            if type(i) ~= "number" then
+                error("Index must be number")
+            end
+            if i < 1 or i > self.bearingsCount then
+                error("Invalid bearing index")
+            end
+            local bearing = self.interactable:getBearings()[i]
+            return bearing and bearing.angularVelocity or 0
+        end,
+        setBearingStrength = function (i, s)
+            if type(i) ~= "number" or type(s) ~= "number" then
+                error("Index and strength must be numbers")
+            end
+            if i < 1 or i > self.bearingsCount then
+                error("Invalid bearing index")
+            end
+            self.bearingSettings[i].strength = sm.util.clamp(s, 0, self.mImpulse)
+        end,
+        getBearingStrength = function (i)
+            if type(i) ~= "number" then
+                error("Index must be number")
+            end
+            if i < 1 or i > self.bearingsCount then
+                error("Invalid bearing index")
+            end
+            local bearing = self.interactable:getBearings()[i]
+            return bearing and math.abs(bearing:getAppliedImpulse()) or 0
+        end,
+        setBearingActive = function (index, active)
+            if type(index) ~= "number" then
+                error("Index must be number")
+            end
+            if type(active) ~= "boolean" and type(active) ~= "number" then
+                error("Active must be boolean or number")
+            end
+            if index < 1 or index > self.bearingsCount then
+                error("Invalid bearing index")
+            end
+            if type(active) == "number" then
+                active = active > 0
+            end
+            self.bearingSettings[index].active = active
+        end,
+        getBearingActive = function (i)
+            if type(i) ~= "number" then
+                error("Index must be number")
+            end
+            if i < 1 or i > self.bearingsCount then
+                error("Invalid bearing index")
+            end
+            return self.bearingSettings[i].active
+        end
+	}
+end
+
+function PatchedStepperMotor:sv_getBearingData()
+    self.bearingList = self.interactable:getBearings()
+    self.bearingsCount = #self.bearingList
+    for i = #self.bearingSettings + 1, self.bearingsCount do
+        self.bearingSettings[i] = self.bearingSettings[i] or { active = true }
+    end
+    for i = self.bearingsCount + 1, #self.bearingSettings do
+        self.bearingSettings[i] = nil
+    end
+end
+
+function PatchedStepperMotor.server_onCreate(self)
+	self.chargeDelta = 0
+	
+	self.soundtype = 1
+	self.mVelocity = 10000
+	self.mImpulse = 10000000
+	self.sdata = self.storage:load() or {energy = 0, label = ""}
+	self:sv_setData(self.sdata)
+	if self.data and self.data.survival then
+		self.mVelocity = self.data.v or 10
+		self.mImpulse = self.data.i or 10
+	else
+		self.isCreative = true
+	end
+
+	self.velocity = 0
+	self.maxImpulse = 0
+	self.angle = nil
+	self.isActive = false
+	self.wasActive = false
+	self.bearingSettings = {}
+	self:sv_getBearingData()
+
+	sc.motorsDatas[self.interactable:getId()] = self:server_createData()
+
+	if sc.creativeCheck(self, self.isCreative) then return end
+end
+
+function PatchedStepperMotor:sv_setData(data)
+	data.label = tostring(data.label or "")
+    self.sdata = data
+	self.interactable.publicData = {
+        label = self.sdata.label
+    }
+    self.network:sendToClients("cl_setData", self.sdata)
+    self.storage:save(self.sdata)
+end
+
+function PatchedStepperMotor.server_onDestroy(self)
+	sc.motorsDatas[self.interactable:getId()] = nil
+end
+
+function PatchedStepperMotor.server_onFixedUpdate(self, dt)
+    if sc.creativeCheck(self, self.isCreative) then return end
+    
+	self:sv_getBearingData()
+
+	--------------------------------------------------------
+
+	local container
+	for _, parent in ipairs(self.interactable:getParents()) do
+		if parent:hasOutputType(sm.interactable.connectionType.electricity) then
+			container = parent:getContainer(0)
+			break
+		end
+	end
+
+	self.batteries = self:sv_mathCount()
+	self.chargeDelta = 0
+
+	--------------------------------------------------------
+
+	local active = self.isActive
+	if active and self.sdata.energy <= 0 and self:sv_resourcesLimit() then
+		self:sv_removeItem()
+		if self.sdata.energy <= 0 then
+			active = nil
+		end
+	end
+
+	if not active and self.wasActive then
+        self.bearingSettings = {}
+        self:sv_getBearingData()
+    end
+
+	if active then
+		for i, v in ipairs(self.interactable:getBearings()) do
+            local settings = self.bearingSettings[i] or { active = true }
+            if settings.active then
+                local velocity = settings.velocity or self.velocity or 0
+                local strength = settings.strength or self.maxImpulse or 0
+                local angle = settings.angle or self.angle
+                if angle == nil then
+                    v:setMotorVelocity(velocity, strength)
+                else
+                    v:setTargetAngle(angle, velocity, strength)
+                end
+                if strength > 0 then
+                    self.chargeDelta = self.chargeDelta + math.abs(v:getAppliedImpulse())
+                end
+            else
+                v:setMotorVelocity(0, PatchedStepperMotor.nonActiveImpulse)
+            end
+        end
+	elseif self.wasActive then
+        for i, v in ipairs(self.interactable:getBearings()) do
+            v:setMotorVelocity(0, PatchedStepperMotor.nonActiveImpulse)
+        end
+    end
+	self.wasActive = active
+
+	if self.sdata.energy < 0 then
+		self.sdata.energy = 0
+	end
+
+	local rpm = math.min(1, math.abs(self.velocity) / 100)
+	local load = (self.chargeDelta / self.maxImpulse) / (self.bearingsCount or 0)
+	if self.old_active ~= active or
+       rpm ~= self.old_rpm or
+       load ~= self.old_load or
+       self.soundtype ~= self.old_type then
+        if active and self.soundtype ~= 0 then
+            local lload, lrpm = load, rpm
+            if self.soundtype == 1 then
+                lrpm = lload
+            end
+            self.network:sendToClients("cl_setEffectParams", {
+                rpm = lrpm,
+                load = lload,
+                soundtype = self.soundtype
+            })
+        else
+            self.network:sendToClients("cl_setEffectParams")
+        end
+    end
+    self.old_active = active
+    self.old_rpm = rpm
+    self.old_load = load
+    self.old_type = self.soundtype
+
+    if sc.needSaveData() and self.sdata.energy ~= self.oldEnergy then
+        self.storage:save(self.sdata)
+        self.oldEnergy = self.sdata.energy
+    end
+end
+
+function PatchedStepperMotor:sv_removeItem()
+	for _, parent in ipairs(self.interactable:getParents()) do
+        if parent:hasOutputType(sm.interactable.connectionType.electricity) then
+			local container = parent:getContainer(0)
+			if sm.container.canSpend(container, obj_consumable_battery, 1) then
+				sm.container.beginTransaction()
+				sm.container.spend(container, obj_consumable_battery, 1, true)
+				if sm.container.endTransaction() then
+					self.sdata.energy = self.sdata.energy + PatchedStepperMotor.chargeAdditions
+					break
+				end
+			end
+		end
+	end
+end
+
+function PatchedStepperMotor:sv_mathCount()
+    local count = 0
+    for _, parent in ipairs(self.interactable:getParents()) do
+        if parent:hasOutputType(sm.interactable.connectionType.electricity) then
+            local container = parent:getContainer(0)
+            for i = 0, container.size - 1 do
+                count = count + (container:getItem(i).quantity)
+            end
+		end
+	end
+    return count
+end
+
+function PatchedStepperMotor:sv_dataRequest(_, player)
+    self.network:sendToClient(player, "cl_setData", self.sdata)
+end
+
+
+-- CLIENT --
+
+function PatchedStepperMotor:client_onCreate()
+	self.gui = sm.gui.createGuiFromLayout("$CONTENT_DATA/Gui/Layouts/MotorLabel.layout", false, { backgroundAlpha = 0 })
+	self.gui:setTextChangedCallback("Label", "cl_onLabelChanged")
+	self.gui:setButtonCallback("Save", "cl_onLabelChange")
+
+	self.network:sendToServer("sv_dataRequest")
+end
+
+function PatchedStepperMotor:cl_onLabelChanged(_, data)
+	if #data <= 32 then
+		self.cl_temp_label = data
+        self:cl_guiError(nil)
+	else
+		self:cl_guiError("label is too long")
+	end
+end
+
+function PatchedStepperMotor:cl_onLabelChange()
+    self.csdata.label = self.cl_temp_label
+    self.network:sendToServer("sv_setData", self.csdata)
+	self.gui:close()
+end
+
+function PatchedStepperMotor:client_onInteract(_, state)
+	if state and self.csdata then
+        self.cl_temp_label = self.csdata.label
+        self.gui:setText("Label", tostring(self.cl_temp_label))
+	    self:cl_guiError(nil)
+		self.gui:open()
+	end
+end
+
+function PatchedStepperMotor:cl_guiError(text)
+	if text ~= nil then
+		self.gui:setVisible("Save", false)
+        self.gui:setVisible("Error", true)
+		self.gui:setText("Error", text)
+	else
+		self.gui:setVisible("Save", true)
+        self.gui:setVisible("Error", false)
+		self.gui:setText("Error", "")
+	end
+end
+
+function PatchedStepperMotor:cl_setData(data)
+    self.csdata = data
+end
+
+function PatchedStepperMotor:client_onDestroy()
+	self.gui:destroy()
+end
+
+function PatchedStepperMotor:cl_setEffectParams(tbl)
+	if tbl then
+		if tbl.soundtype ~= self.cl_oldSoundType then
+			if self.effect then
+				self.effect:setAutoPlay(false)
+				self.effect:stop()
+				self.effect:destroy()
+				self.effect = nil
+			end
+			self.cl_oldSoundType = tbl.soundtype
+		end
+
+		if not self.effect then
+			if tbl.soundtype == 1 or tbl.soundtype == 3 then
+				self.effect = sm.effect.createEffect("ElectricEngine - Level 2", self.interactable)
+			elseif tbl.soundtype == 2 then
+				self.effect = sm.effect.createEffect("GasEngine - Level 3", self.interactable)
+			end
+			
+			if self.effect then
+				self.effect:setAutoPlay(true)
+				self.effect:start()
+			end
+		end
+
+		if self.effect then
+			self.effect:setParameter("rpm", tbl.rpm)
+			self.effect:setParameter("load", tbl.load)
+		end
+	else
+		if self.effect then
+			self.effect:setAutoPlay(false)
+			self.effect:stop()
+			self.effect:destroy()
+			self.effect = nil
+		end
+	end
 end
 end
 function scmframework_6a44882dcfd6ed66c89bb131c3dc87c4() --$CONTENT_DATA/Scripts/pistonController.lua
@@ -88072,6 +93463,34 @@ function ExtraBigRadar.server_onDestroy(self)
 	sc.radar.server_onDestroy(self.radar)
 end
 end
+function scmframework_175486f0731122010f55f1fcb3c35324() --$CONTENT_DATA/Scripts/Radars/PassiveRadar.lua
+dofile '$CONTENT_DATA/Scripts/Radars/RadarBase.lua'
+
+PassiveRadar = class(nil)
+
+PassiveRadar.maxParentCount = 1
+PassiveRadar.maxChildCount = 0
+PassiveRadar.connectionInput = sm.interactable.connectionType.composite
+PassiveRadar.colorNormal = sm.color.new(0x7b139eff)
+PassiveRadar.colorHighlight = sm.color.new(0xb81cedff)
+PassiveRadar.componentType = "radar"
+
+
+function PassiveRadar.server_onCreate(self)
+    self.passive = true
+	self.radar = sc.radar.createRadar(self, nil, nil, math.pi / 6, math.pi / 6)
+	sc.radar.server_onCreate(self.radar)
+end
+
+function PassiveRadar.server_onFixedUpdate(self)
+	sc.creativeCheck(self, self.data and self.data.creative)
+	sc.radar.server_onTick(self.radar)
+end
+
+function PassiveRadar.server_onDestroy(self)
+	sc.radar.server_onDestroy(self.radar)
+end
+end
 function scmframework_b949564a9f96fb1dc997834b5383285d() --$CONTENT_DATA/Scripts/Radars/Radar.lua
 dofile '$CONTENT_DATA/Scripts/Radars/RadarBase.lua'
 
@@ -88107,106 +93526,106 @@ sc.radar = {}
 clamp = sm.util.clamp
 
 function radar_needRaycast(direction, halfHcos, halfVcos) -- self pos is (0, 0, 0)
-	-- forward direction is (-1, 0, 0)
-	-- up direction is (0, 1, 0)
-	local dX = direction.x
-	local dZ = direction.z
+    -- forward direction is (-1, 0, 0)
+    -- up direction is (0, 1, 0)
+    local dX = direction.x
+    local dZ = direction.z
 
-	local xzLen = math.sqrt(dX * dX + dZ * dZ)
+    local xzLen = math.sqrt(dX * dX + dZ * dZ)
 
-	local hdot = clamp(-dX / xzLen, -1, 1) -- clamp because if > 1 acos is nan
-	local vdot = clamp((dX*dX + dZ*dZ) / xzLen, -1, 1) -- vec(dX, 0, dZ).normalized().dot( vec(dX, dY, dZ) )
+    local hdot = clamp(-dX / xzLen, -1, 1) -- clamp because if > 1 acos is nan
+    local vdot = clamp((dX*dX + dZ*dZ) / xzLen, -1, 1) -- vec(dX, 0, dZ).normalized().dot( vec(dX, dY, dZ) )
 
-	return hdot >= halfHcos and vdot >= halfVcos
+    return hdot >= halfHcos and vdot >= halfVcos
 end
 
 function radar_getAngles(direction)
-	local dX = direction.x
-	local dZ = direction.z
+    local dX = direction.x
+    local dZ = direction.z
 
-	local xzLen = math.sqrt(dX * dX + dZ * dZ)
+    local xzLen = math.sqrt(dX * dX + dZ * dZ)
 
-	local hdot = clamp(-dX / xzLen, -1, 1)
-	local vdot = clamp((dX*dX + dZ*dZ) / xzLen, -1, 1)
+    local hdot = clamp(-dX / xzLen, -1, 1)
+    local vdot = clamp((dX*dX + dZ*dZ) / xzLen, -1, 1)
 
-	local acos = math.acos
+    local acos = math.acos
 
-	return acos(hdot) * (direction.z <= 0 and 1 or -1), acos(vdot) * (direction.y >= 0 and 1 or -1)
+    return acos(hdot) * (direction.z <= 0 and 1 or -1), acos(vdot) * (direction.y >= 0 and 1 or -1)
 end
 
 function sc.radar.createRadar(scriptableObject, hResol, vResol, hFov, vFov, minDetectionMassRatio)
-	return {
-		hResol = hResol,
-		vResol = vResol,
-		hFov = hFov,
-		vFov = vFov,
-		angle = 0,
+    return {
+        hResol = hResol,
+        vResol = vResol,
+        hFov = hFov,
+        vFov = vFov,
+        angle = 0,
         vAngle = 0,
-		scriptableObject = scriptableObject,
-		minDetectionMassRatio = minDetectionMassRatio
-	}
+        scriptableObject = scriptableObject,
+        minDetectionMassRatio = minDetectionMassRatio
+    }
 end
 
 function sc.radar.createData(self)
-	return {
-		getTargets = function () --> {hangle, vangle, distance}
-			local tick = sm.game.getCurrentTick()
-			if tick == self.old_tick and not sc.restrictions.disableCallLimit then
-				error("getTargets can only be used 1 time per tick on one radar", 2)
-			end
-			self.old_tick = tick
+    return {
+        getTargets = function () --> {hangle, vangle, distance}
+            local tick = sm.game.getCurrentTick()
+            if tick == self.old_tick and not sc.restrictions.disableCallLimit then
+                error("getTargets can only be used 1 time per tick on one radar", 2)
+            end
+            self.old_tick = tick
 
-			return sc.radar.server_makeCasts(self)
-		end,
+            return sc.radar.server_makeCasts(self)
+        end,
 
-		setAngle = function (a) 
-			if type(a) == "number" then
-				self.angle = a
-			else
-				error("Type must be number", 2)
-			end
-		end,
-		getAngle = function () return self.angle end,
+        setAngle = function (a) 
+            if type(a) == "number" then
+                self.angle = a
+            else
+                error("Type must be number", 2)
+            end
+        end,
+        getAngle = function () return self.angle end,
 
         setVAngle = function (a) 
-			if type(a) == "number" then
-				self.vAngle = a
-			else
-				error("Type must be number", 2)
-			end
-		end,
-		getVAngle = function () return self.vAngle end,
+            if type(a) == "number" then
+                self.vAngle = a
+            else
+                error("Type must be number", 2)
+            end
+        end,
+        getVAngle = function () return self.vAngle end,
 
-		setHFov = function (a)
-			if type(a) == "number" then
-				local pi = math.pi
+        setHFov = function (a)
+            if type(a) == "number" then
+                local pi = math.pi
 
-				if a >= -pi and a <= pi then
-					self.hFov = a
-				else
-					error("Angle must be in [0, pi]", 2)
-				end
-			else
-				error("Type must be number", 2)
-			end
-		end,
-		getHFov = function () return self.hFov end,
+                if a >= -pi and a <= pi then
+                    self.hFov = a
+                else
+                    error("Angle must be in [0, pi]", 2)
+                end
+            else
+                error("Type must be number", 2)
+            end
+        end,
+        getHFov = function () return self.hFov end,
 
-		setVFov = function (a)
-			if type(a) == "number" then
-				local pi = math.pi
+        setVFov = function (a)
+            if type(a) == "number" then
+                local pi = math.pi
 
-				if a >= -pi and a <= pi then
-					self.vFov = a
-				else
-					error("Angle must be in [0, pi]", 2)
-				end
-			else
-				error("Type must be number", 2)
-			end
-		end,
-		getVFov = function () return self.vFov end,
-	}
+                if a >= -pi and a <= pi then
+                    self.vFov = a
+                else
+                    error("Angle must be in [0, pi]", 2)
+                end
+            else
+                error("Type must be number", 2)
+            end
+        end,
+        getVFov = function () return self.vFov end,
+    }
 end
 
 local function checkChaffCollision(pos1, pos2)
@@ -88217,260 +93636,377 @@ local function checkChaffCollision(pos1, pos2)
     end
 end
 
-local zero = sm.vec3.zero()
-function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
-	local hFov = self.hFov
-	local vFov = self.vFov
-	local hResol = self.hResol
-	local vResol = self.vResol
-	local angle = self.angle
-    local vAngle = self.vAngle
+local function rawObjectCompare(rawObject1, rawObject2)
+    if type(rawObject1) == "Body" and type(rawObject2) == "Body" then
+        return rawObject1.id == rawObject2.id
+    end
 
-	local minDetectionMassRatio = self.minDetectionMassRatio
+    if type(rawObject1) == "Character" and type(rawObject2) == "Character" then
+        return rawObject1.id == rawObject2.id
+    end
 
-	local quatOffset = sm.quat.angleAxis(angle, sm.vec3.new(0, 1, 0))
-    local vQuatOffset = sm.quat.angleAxis(vAngle, sm.vec3.new(0, 0, 1))
+    return rawObject1 == rawObject2
+end
 
-	local shape = self.scriptableObject.shape
-	local sbody = shape.body
-	local sbodyId = sbody:getId()
-
-	local sgpos = shape:getWorldPosition()
-
-	local hAngleStep = hFov / hResol
-	local vAngleStep = vFov / vResol
-
-	local halfHcos = math.cos(hFov / 2)
-	local halfVcos = math.cos(vFov / 2)
-	
-	local raycast = sm.physics.raycast
-
-	local points = {} -- pointData = { id, x, y, distance, force }
-
-	--local insert = table.insert
-	local floor = math.floor
-	local insert = table.insert
-	local fmod = math.fmod
-	local pi = math.pi
-
-	local random = math.random
-
-	local genNoise
-	if self.scriptableObject.unrestricted then
-		genNoise = function (a)
-			return 0
-		end
-	else
-		genNoise = function (a)
-			return random() * a - a / 2
-		end
-	end
+local function getPassiveRadarTarget(self, rawObject)
+    if not self.scriptableObject.passive then
+        return {}
+    end
 
     local ctick = sm.game.getCurrentTick()
-	local bodies = sm.body.getAllBodies()
-	for i = 1, #bodies do
-		local body = bodies[i]
 
-		local id = body:getId()
+    local highLevelPassiveRadarTarget
+    local maxLevelRadar = -math.huge
+    for _, passiveRadarTarget in ipairs(sc.passiveRadarTargets) do
+        if ctick - passiveRadarTarget.ctick <= sc.passiveRadarDetectTimeFrame and rawObjectCompare(passiveRadarTarget.rawObject, rawObject) then
+            local radarLevel = passiveRadarTarget.self.hResol + (passiveRadarTarget.addParameterMass and 1 or 0)
+            if radarLevel > maxLevelRadar then
+                highLevelPassiveRadarTarget = passiveRadarTarget
+                maxLevelRadar = radarLevel
+            end
+        end
+    end
 
-		if id ~= sbodyId then
-			local gpos
-			if body:isStatic() then
-				gpos = body:getShapes()[1].worldPosition
-			else
-				gpos = body:getCenterOfMassPosition()
-			end
+    return highLevelPassiveRadarTarget
+end
 
-			local lpos = vQuatOffset * quatOffset * shape:transformPoint(gpos)
-			local dir = lpos:normalize()
+local zero = sm.vec3.zero()
+function sc.radar.server_makeCasts(self) --> table[hResol, vResol]
+    local hFov = self.hFov
+    local vFov = self.vFov
+    local angle = self.angle
+    local vAngle = self.vAngle
 
-			local len = (sgpos - gpos):length()
+    local hResol = self.hResol
+    local vResol = self.vResol
+    local minDetectionMassRatio = self.minDetectionMassRatio
+    local error = self.hResol and ((1 / hResol + 1 / vResol) / 2)
 
-			local massRatio = body:getMass() / len
+    local quatOffset = sm.quat.angleAxis(angle, sm.vec3.new(0, 1, 0))
+    local vQuatOffset = sm.quat.angleAxis(vAngle, sm.vec3.new(0, 0, 1))
 
-			if massRatio >= minDetectionMassRatio and radar_needRaycast(dir, halfHcos, halfVcos) and not checkChaffCollision(sgpos, gpos) then
+    local shape = self.scriptableObject.shape
+    local sbody = shape.body
+    local sbodyId = sbody:getId()
+
+    local sgpos = shape:getWorldPosition()
+
+    local halfHcos = math.cos(hFov / 2)
+    local halfVcos = math.cos(vFov / 2)
+    
+    local raycast = sm.physics.raycast
+
+    local points = {} -- pointData = { id, x, y, distance, force }
+
+    --local insert = table.insert
+    local floor = math.floor
+    local insert = table.insert
+    local fmod = math.fmod
+    local pi = math.pi
+
+    local random = math.random
+
+    local genNoise
+    if self.scriptableObject.unrestricted then
+        genNoise = function (a)
+            return 0
+        end
+    else
+        genNoise = function (a)
+            return random() * a - a / 2
+        end
+    end
+
+    local addParameterMass = self.scriptableObject.unrestricted
+
+    local ctick = sm.game.getCurrentTick()
+    local bodies = sm.body.getAllBodies()
+    for i = 1, #bodies do
+        local body = bodies[i]
+        local passiveRadarTarget = getPassiveRadarTarget(self, body)
+        if not self.scriptableObject.passive or passiveRadarTarget then
+            local hResol = passiveRadarTarget.hResol or hResol
+            local vResol = passiveRadarTarget.vResol or vResol
+            local hAngleStep = hFov / hResol
+            local vAngleStep = vFov / vResol
+            local minDetectionMassRatio = passiveRadarTarget.minDetectionMassRatio or minDetectionMassRatio
+
+            local id = body:getId()
+
+            if id ~= sbodyId then
+                local gpos
+                if body:isStatic() then
+                    gpos = body:getShapes()[1].worldPosition
+                else
+                    gpos = body:getCenterOfMassPosition()
+                end
+
+                local lpos = vQuatOffset * quatOffset * shape:transformPoint(gpos)
+                local dir = lpos:normalize()
+
+                local len = (sgpos - gpos):length()
+
+                local massRatio = body:getMass() / len
+
+                if massRatio >= minDetectionMassRatio and radar_needRaycast(dir, halfHcos, halfVcos) and not checkChaffCollision(sgpos, gpos) then
+                    local valid, data = raycast(sgpos, gpos, sbody)
+                    local b = data:getBody()
+
+                    if valid and b and b:getId() == body:getId() then
+                        local hangle, vangle = radar_getAngles(dir)
+
+                        local hcoord = floor( hangle / hAngleStep + 0.5 )
+                        local vcoord = floor( vangle / vAngleStep + 0.5 )
+                        local pos = hcoord + vcoord * vResol
+
+                        if not sc.radarDetectedBodies[b.id] then sc.radarDetectedBodies[b.id] = {} end
+                        sc.radarDetectedBodies[b.id][self] = {ctick + 40, sgpos, {}}
+
+                        local d = points[pos]
+                        if d == nil then
+                            local radarObjectData = {
+                                x = hcoord,
+                                y = vcoord,
+
+                                distance = len,
+                                force = massRatio / minDetectionMassRatio,
+                                id = id,
+                                type = "body",
+
+                                -- rawObject не возврашается пользователю
+                                rawObject = body,
+                                genNoise = passiveRadarTarget.genNoise or genNoise,
+                                error = passiveRadarTarget.error or error,
+                                hResol = hResol,
+                                vResol = vResol
+                            }
+
+                            if addParameterMass or passiveRadarTarget.addParameterMass then
+                                radarObjectData.mass = massRatio
+                            end
+
+                            points[pos] = radarObjectData
+                        elseif d.distance > len then
+                            d.distance = len
+                            d.id = id
+                            d.force = massRatio / minDetectionMassRatio
+                            d.mass = massRatio
+                        end
+                    end
+                end
+            end
+        end
+    end
+
+    local characters = {}
+    for index, value in ipairs(sm.player.getAllPlayers()) do
+        table.insert(characters, value.character)
+    end
+    for index, value in ipairs(sm.unit.getAllUnits()) do
+        table.insert(characters, value.character)
+    end
+
+    for i = 1, #characters do
+        local character = characters[i]
+        local passiveRadarTarget = getPassiveRadarTarget(self, character)
+        if not self.scriptableObject.passive or passiveRadarTarget then
+            local hResol = passiveRadarTarget.hResol or hResol
+            local vResol = passiveRadarTarget.vResol or vResol
+            local hAngleStep = hFov / hResol
+            local vAngleStep = vFov / vResol
+            local minDetectionMassRatio = passiveRadarTarget.minDetectionMassRatio or minDetectionMassRatio
+
+            local id = character:getId()
+
+            local gpos = character:getWorldPosition()
+
+            local lpos = vQuatOffset * quatOffset * shape:transformPoint(gpos)
+            local dir = lpos:normalize()
+
+            local len = (sgpos - gpos):length()
+            local massRatio = character:getMass() / len
+
+            if massRatio >= minDetectionMassRatio and radar_needRaycast(dir, halfHcos, halfVcos) and not checkChaffCollision(sgpos, gpos) then
                 local valid, data = raycast(sgpos, gpos, sbody)
-                local b = data:getBody()
+                local p = data:getCharacter()
 
-                if valid and b and b:getId() == body:getId() then
+                if valid and p and p:getId() == character:getId() then
                     local hangle, vangle = radar_getAngles(dir)
 
                     local hcoord = floor( hangle / hAngleStep + 0.5 )
                     local vcoord = floor( vangle / vAngleStep + 0.5 )
                     local pos = hcoord + vcoord * vResol
 
-                    if not sc.radarDetectedBodies[b.id] then sc.radarDetectedBodies[b.id] = {} end
-                    sc.radarDetectedBodies[b.id][self] = {ctick + 40, sgpos, {}}
-
                     local d = points[pos]
                     if d == nil then
-                        points[pos] = {
+                        local radarObjectData = {
                             x = hcoord,
                             y = vcoord,
 
                             distance = len,
                             force = massRatio / minDetectionMassRatio,
                             id = id,
-                            type = "body"
+                            type = "character",
+
+                            rawObject = character,
+                            genNoise = passiveRadarTarget.genNoise or genNoise,
+                            error = passiveRadarTarget.error or error,
+                            hResol = hResol,
+                            vResol = vResol
                         }
-                    else
-                        if d.distance > len then
-                            d.distance = len
-                            d.id = id
-                            d.force = massRatio / minDetectionMassRatio
+
+                        if addParameterMass or passiveRadarTarget.addParameterMass then
+                            radarObjectData.mass = massRatio
                         end
+
+                        points[pos] = radarObjectData
+                    elseif d.distance > len then
+                        d.distance = len
+                        d.id = id
+                        d.force = massRatio / minDetectionMassRatio
+                        d.mass = massRatio
                     end
                 end
-			end
-		end
-	end
-
-	local characters = {}
-	for index, value in ipairs(sm.player.getAllPlayers()) do
-		table.insert(characters, value.character)
-	end
-	for index, value in ipairs(sm.unit.getAllUnits()) do
-		table.insert(characters, value.character)
-	end
-
-	for i = 1, #characters do
-		local character = characters[i]
-
-		local id = character:getId()
-
-		local gpos = character:getWorldPosition()
-
-		local lpos = vQuatOffset * quatOffset * shape:transformPoint(gpos)
-		local dir = lpos:normalize()
-
-		local len = (sgpos - gpos):length()
-		local massRatio = character:getMass() / len
-
-		if massRatio >= minDetectionMassRatio and radar_needRaycast(dir, halfHcos, halfVcos) and not checkChaffCollision(sgpos, gpos) then
-			local valid, data = raycast(sgpos, gpos, sbody)
-			local p = data:getCharacter()
-
-			if valid and p and p:getId() == character:getId() then
-				local hangle, vangle = radar_getAngles(dir)
-
-				local hcoord = floor( hangle / hAngleStep + 0.5 )
-				local vcoord = floor( vangle / vAngleStep + 0.5 )
-				local pos = hcoord + vcoord * vResol
-
-				local d = points[pos]
-
-				if d == nil then
-					points[pos] = {
-						x = hcoord,
-						y = vcoord,
-
-						distance = len,
-						force = massRatio / minDetectionMassRatio,
-						id = id,
-						type = "character"
-					}
-				else
-					if d.distance > len then
-						d.distance = len
-						d.id = id
-						d.force = massRatio / minDetectionMassRatio
-					end
-				end
-			end
-		end
-	end
+            end
+        end
+    end
 
     for i = 1, #sc.sv_chaff_objects do
-		local chaffObject = sc.sv_chaff_objects[i]
-		local id = chaffObject.id
-		local gpos = chaffObject.position
+        local chaffObject = sc.sv_chaff_objects[i]
+        local passiveRadarTarget = getPassiveRadarTarget(self, chaffObject)
+        if not self.scriptableObject.passive or passiveRadarTarget then
+            local hResol = passiveRadarTarget.hResol or hResol
+            local vResol = passiveRadarTarget.vResol or vResol
+            local hAngleStep = hFov / hResol
+            local vAngleStep = vFov / vResol
+            local minDetectionMassRatio = passiveRadarTarget.minDetectionMassRatio or minDetectionMassRatio
 
-		local lpos = vQuatOffset * quatOffset * shape:transformPoint(gpos)
-		local dir = lpos:normalize()
+            local id = chaffObject.id
+            local gpos = chaffObject.position
 
-		local len = (sgpos - gpos):length()
-		local massRatio = chaffObject.mass / len
+            local lpos = vQuatOffset * quatOffset * shape:transformPoint(gpos)
+            local dir = lpos:normalize()
 
-		if massRatio >= minDetectionMassRatio and radar_needRaycast(dir, halfHcos, halfVcos) then
-			if not raycast(sgpos, gpos, sbody) then
-				local hangle, vangle = radar_getAngles(dir)
+            local len = (sgpos - gpos):length()
+            local massRatio = chaffObject.mass / len
 
-				local hcoord = floor( hangle / hAngleStep + 0.5 )
-				local vcoord = floor( vangle / vAngleStep + 0.5 )
-				local pos = hcoord + vcoord * vResol
+            if massRatio >= minDetectionMassRatio and radar_needRaycast(dir, halfHcos, halfVcos) then
+                if not raycast(sgpos, gpos, sbody) then
+                    local hangle, vangle = radar_getAngles(dir)
 
-				local d = points[pos]
+                    local hcoord = floor( hangle / hAngleStep + 0.5 )
+                    local vcoord = floor( vangle / vAngleStep + 0.5 )
+                    local pos = hcoord + vcoord * vResol
 
-				if d == nil then
-					points[pos] = {
-						x = hcoord,
-						y = vcoord,
+                    local d = points[pos]
+                    if d == nil then
+                        local radarObjectData = {
+                            x = hcoord,
+                            y = vcoord,
 
-						distance = len,
-						force = massRatio / minDetectionMassRatio,
-						id = id,
-						type = "body"
-					}
-				else
-					if d.distance > len then
-						d.distance = len
-						d.id = id
-						d.force = massRatio / minDetectionMassRatio
-					end
-				end
-			end
-		end
-	end
+                            distance = len,
+                            force = massRatio / minDetectionMassRatio,
+                            id = id,
+                            type = "body",
 
-	local result = {} -- [{ id, hangle, vangle, dist, force }]
-	local pi2 = pi * 2
-	local error = (1 / hResol + 1 / vResol) / 2
+                            rawObject = chaffObject,
+                            genNoise = passiveRadarTarget.genNoise or genNoise,
+                            error = passiveRadarTarget.error or error,
+                            hResol = hResol,
+                            vResol = vResol
+                        }
 
-	for k, v in pairs(points) do
-		local hangle = v.x * hAngleStep + angle + genNoise(hAngleStep)
-		hangle = fmod(hangle + pi, pi2) - pi
+                        if addParameterMass or passiveRadarTarget.addParameterMass then
+                            radarObjectData.mass = massRatio
+                        end
 
-		local vangle = v.y * vAngleStep + genNoise(vAngleStep)
-		vangle = fmod(vangle + pi, pi2) - pi
-		
-		local distance = v.distance
-		distance = distance + genNoise(error * distance)
+                        points[pos] = radarObjectData
+                    elseif d.distance > len then
+                        d.distance = len
+                        d.id = id
+                        d.force = massRatio / minDetectionMassRatio
+                        d.mass = massRatio
+                    end
+                end
+            end
+        end
+    end
 
-		local force = v.force
-		force = force + genNoise(error * force)
+    if not self.scriptableObject.passive then
+        for pos, data in pairs(points) do
+            insert(sc.passiveRadarTargets, {
+                ctick = ctick,
+                self = self,
+                rawObject = data.rawObject,
+                genNoise = genNoise,
+                error = error,
+                hResol = hResol,
+                vResol = vResol,
+                minDetectionMassRatio = minDetectionMassRatio,
+                addParameterMass = addParameterMass
+            })
+        end
+    end
+    
+    local result = {} -- [{ id, hangle, vangle, dist, force }]
+    local pi2 = pi * 2
 
-		insert(result, {
-			v.id,
-			hangle,
-			vangle,
-			distance,
-			force,
-			v.type,
+    for k, v in pairs(points) do
+        local hAngleStep = hFov / v.hResol
+        local vAngleStep = vFov / v.vResol
+
+        local hangle = v.x * hAngleStep + angle + v.genNoise(hAngleStep)
+        hangle = fmod(hangle + pi, pi2) - pi
+
+        local vangle = v.y * vAngleStep + v.genNoise(vAngleStep)
+        vangle = fmod(vangle + pi, pi2) - pi
+        
+        local distance = v.distance
+        distance = distance + v.genNoise(v.error * distance)
+
+        local force = v.force
+        force = force + v.genNoise(v.error * force)
+
+        -- в данный момент масса в сыром виде возврашается только в unrestricted радаре, а шума он не содержит по определению
+        -- но я все равно реализовал этот код на случай если параметер mass будет добавлен в какой либо радар содержащий шум
+        local mass = v.mass
+        if mass then
+            mass = mass + v.genNoise(v.error * mass)
+        end
+
+        insert(result, {
+            v.id,
+            hangle,
+            vangle,
+            distance,
+            force,
+            v.type,
 
             id = v.id,
             hangle = hangle,
             vangle = vangle,
             distance = distance,
             force = force,
-            type = v.type
-		})
-	end
+            type = v.type,
+            mass = mass
+        })
+    end
 
     tableShuffle(result)
 
-	return result
+    return result
 end
 
 function sc.radar.server_onTick(self)
-	
+    
 end
 
 function sc.radar.server_onCreate(self)
-	sc.radarsDatas[self.scriptableObject.interactable:getId()] = sc.radar.createData(self)
+    sc.radarsDatas[self.scriptableObject.interactable:getId()] = sc.radar.createData(self)
 end
 
 function sc.radar.server_onDestroy(self)
-	sc.radarsDatas[self.scriptableObject.interactable:getId()] = nil
+    sc.radarsDatas[self.scriptableObject.interactable:getId()] = nil
 end
 end
 function scmframework_48be20ed1737479c1e9c56a182387d2f() --$CONTENT_DATA/Scripts/Radars/SmallRadar.lua
@@ -88514,18 +94050,18 @@ UnrestrictedRadar.componentType = "radar"
 
 
 function UnrestrictedRadar.server_onCreate(self)
-	self.unrestricted = true
-	self.radar = sc.radar.createRadar(self, 2048, 2048, math.pi / 6, math.pi / 6, 0)
-	sc.radar.server_onCreate(self.radar)
+    self.unrestricted = true
+    self.radar = sc.radar.createRadar(self, 2048, 2048, math.pi / 6, math.pi / 6, 0)
+    sc.radar.server_onCreate(self.radar)
 end
 
 function UnrestrictedRadar.server_onFixedUpdate(self)
-	sc.creativeCheck(self, true)
-	sc.radar.server_onTick(self.radar)
+    sc.creativeCheck(self, true)
+    sc.radar.server_onTick(self.radar)
 end
 
 function UnrestrictedRadar.server_onDestroy(self)
-	sc.radar.server_onDestroy(self.radar)
+    sc.radar.server_onDestroy(self.radar)
 end
 end
 function scmframework_98da336c793e414411082ba7520d7245() --$CONTENT_DATA/Scripts/RaycastCamera.lua
@@ -89416,6 +94952,12 @@ local function getCurrentRotation(self)
     return currentRotation
 end
 
+local function unrestrictedOnly(self)
+    if not self.unrestricted then
+        error("this method is intended only for unrestricted camera from the power toys addon", 3)
+    end
+end
+
 function RaycastCamera:createData(forceMinimap) --forceMinimap is used from CameraTunnel.lua to get an up-to-date list of minimap methods
     self.iterator = 0
     self.downscale = 1
@@ -89678,6 +95220,12 @@ function RaycastCamera:createData(forceMinimap) --forceMinimap is used from Came
             self.lightTick = sm.game.getCurrentTick()
             self:sv_drawCustom(false, display, drawer, ...)
         end,
+        deepDrawCustom = function(display, drawer, maxIntersections, ...)
+            checkArg(3, maxIntersections, "number", "nil")
+            unrestrictedOnly(self)
+            self.lightTick = sm.game.getCurrentTick()
+            self:sv_deepDrawCustom(false, display, drawer, maxIntersections or 1, ...)
+        end,
         drawAdvanced = function (display, advancedSettings)
             self.lightTick = sm.game.getCurrentTick()
             local backend = sc.componentsBackend[display]
@@ -89762,6 +95310,12 @@ function RaycastCamera:createData(forceMinimap) --forceMinimap is used from Came
         rawRay = function (x, y, maxdist)
             self.lightTick = sm.game.getCurrentTick()
             return self:rawRay(x, y, maxdist)
+        end,
+        deepRawRay = function (x, y, maxdist, maxIntersections)
+            checkArg(1, maxIntersections, "number", "nil")
+            unrestrictedOnly(self)
+            self.lightTick = sm.game.getCurrentTick()
+            return self:rawRay(x, y, maxdist, maxIntersections or 1)
         end,
         getSkyColor = function (constDayLightValue)
             return self:getSkyColor({constDayLightValue = constDayLightValue})
@@ -89876,7 +95430,40 @@ function RaycastCamera:createData(forceMinimap) --forceMinimap is used from Came
         end,
         getDetectableObjects = function()
             return _detectable
-        end
+        end,
+
+        setUseMaskForRawRay = function(state)
+            checkArg(1, state, "boolean")
+            self.netdata.useMaskForRawRay = state
+            self.netdataSend = true
+        end,
+        getUseMaskForRawRay = function()
+            return self.netdata.useMaskForRawRay
+        end,
+        setCustomWorldPosition = function(customWorldPosition)
+            checkArg(1, customWorldPosition, "Vec3", "nil")
+            unrestrictedOnly(self)
+            self.netdata.customWorldPosition = customWorldPosition
+            self.netdataSend = true
+        end,
+        setCustomWorldRotation = function(customWorldRotation)
+            checkArg(1, customWorldRotation, "Quat", "nil")
+            unrestrictedOnly(self)
+            self.netdata.customWorldRotation = customWorldRotation
+            self.netdataSend = true
+        end,
+        setCustomLocalPosition = function(customLocalPosition)
+            checkArg(1, customLocalPosition, "Vec3", "nil")
+            unrestrictedOnly(self)
+            self.netdata.customLocalPosition = customLocalPosition
+            self.netdataSend = true
+        end,
+        setCustomLocalAfterPosition = function(customLocalAfterPosition)
+            checkArg(1, customLocalAfterPosition, "Vec3", "nil")
+            unrestrictedOnly(self)
+            self.netdata.customLocalAfterPosition = customLocalAfterPosition
+            self.netdataSend = true
+        end,
     }
 
     --[[
@@ -89887,6 +95474,7 @@ function RaycastCamera:createData(forceMinimap) --forceMinimap is used from Came
     ]]
 
     self.netdata = self.netdata or {}
+    self.netdata.useMaskForRawRay = false
     self.netdata.currentRotation = 0
     self.netdata.fovX = rad_60
     self.netdata.fovY = rad_60
@@ -90069,7 +95657,11 @@ function RaycastCamera:sv_drawWaypoints(display, waypoints, drawer)
     end
 end
 
-function RaycastCamera:position()
+function RaycastCamera:_position()
+    if self.netdata.customWorldPosition then
+        return self.netdata.customWorldPosition
+    end
+
     if self.data and self.data.minimap then
         local pos = self.shape.worldPosition
         if self.netdata.worldMode then
@@ -90078,10 +95670,21 @@ function RaycastCamera:position()
         pos.x = pos.x + self.netdata.offsetX
         pos.y = pos.y + self.netdata.offsetY
         pos.z = self.netdata.currentHeight
-        --print(self.netdata.offsetX, self.netdata.offsetY, pos)
         return pos
     end
+
     return self.shape.worldPosition
+end
+
+function RaycastCamera:position()
+    local pos = self:_position()
+    if self.netdata.customLocalPosition then
+        pos = pos + (self:rotation() * self.netdata.customLocalPosition)
+    end
+    if self.netdata.customLocalAfterPosition then
+        pos = pos + self.netdata.customLocalAfterPosition
+    end
+    return pos
 end
 
 local function rotate_quaternion(q, angle, axis)
@@ -90100,6 +95703,10 @@ end
 
 local downQuat = sm.quat.new(0.707107, 0.707107, 0, 0)
 function RaycastCamera:rotation()
+    if self.netdata.customWorldRotation then
+        return self.netdata.customWorldRotation
+    end
+
     local rotation
 
     if self.data and self.data.minimap then
@@ -90218,6 +95825,102 @@ function RaycastCamera:rays(resolutionX, resolutionY, currentPixel, stepM, dista
     return rc_multicast(rays)
 end
 
+function RaycastCamera:deepRays(resolutionX, resolutionY, currentPixel, stepM, distance, fovX, fovY, downscale, maxIntersections)
+    local resultsIntersections = {}
+    local currentPositions = {}
+    local currentDistance = {}
+    local currentOffset = {}
+
+    local _startPosition = self:calcStartPosition()
+    for i = 0, stepM do
+        resultsIntersections[i] = {}
+        currentPositions[i] = _startPosition
+        currentDistance[i] = distance
+        currentOffset[i] = 0
+    end
+
+    for intersectionIndex = 1, maxIntersections do
+        local rays = {}
+        local raysI = 1
+        local mapping = {}
+
+        if self.netdata.isometricRender then
+            local rotation = rotate_quaternion(downQuat, getCurrentRotation(self) + (math.pi / 2), downQuat * vec3_new(0, 0, 1))
+
+            for i = 0, stepM do
+                local pixel = currentPixel + i
+                local x = floor(pixel / resolutionY) % resolutionX
+                local y = pixel % resolutionY
+
+                local vec = rotation * vec3_new(
+                    ((resolutionY - 1 - y) / resolutionY - 0.5) * self.netdata.isometricSizeY,
+                    (x / resolutionX - 0.5) * self.netdata.isometricSizeX,
+                    0
+                )
+
+                if currentDistance[i] then
+                    rays[raysI] = {
+                        type = "ray",
+                        startPoint = currentPositions[i] + vec,
+                        endPoint = currentPositions[i] + vec + downDirection * currentDistance[i],
+                        mask = self.netdata.ray_mask
+                    }
+                    mapping[i] = raysI
+                    raysI = raysI + 1
+                end
+            end
+        else
+            local rotation = self:rotation()
+
+            local vec = vec3_new(0, 0, 1)
+
+            for i = 0, stepM do
+                local pixel = currentPixel + i
+                local x = floor(pixel / resolutionY) % resolutionX
+                local y = pixel % resolutionY
+
+                local u = ( x / resolutionX - 0.5 ) * fovX
+                local v = ( y / resolutionY - 0.5 ) * fovY
+
+                vec.x = -u
+                vec.y = -v
+                local direction = rotation * vec
+
+                if currentDistance[i] then
+                    rays[raysI] = {
+                        type = "ray",
+                        startPoint = currentPositions[i],
+                        endPoint = currentPositions[i] + direction * currentDistance[i],
+                        mask = self.netdata.ray_mask
+                    }
+                    mapping[i] = raysI
+                    raysI = raysI + 1
+                end
+            end
+        end
+
+        local results = rc_multicast(rays)
+
+        for i = 0, stepM do
+            if mapping[i] then
+                local t = results[mapping[i]]
+                if t[1] then
+                    table.insert(resultsIntersections[i], self:getRaydata(t[1], t[2], currentDistance[i], currentOffset[i], distance, intersectionIndex == maxIntersections))
+                    currentPositions[i] = t[2].pointWorld
+                    local dist = currentDistance[i] * t[2].fraction
+                    currentDistance[i] = currentDistance[i] - dist
+                    currentOffset[i] = currentOffset[i] + dist
+                    if currentDistance[i] < 0 then currentDistance[i] = nil end
+                else
+                    currentDistance[i] = nil
+                end
+            end
+        end
+    end
+
+    return resultsIntersections
+end
+
 function RaycastCamera:sunRays(resolutionX, resolutionY, currentPixel, distance, results, advancedSettings)
     local shape = self.shape
     local position = self:position()
@@ -90308,7 +96011,19 @@ function RaycastCamera:getSunDirection(advancedSettings)
     return self:getSkyState(advancedSettings).dir
 end
 
-function RaycastCamera:getRaydata(successful, raydata, maxdist)
+function RaycastCamera:getRaydata(successful, raydata, maxdist, offset, sourceMaxdist, endIntersection)
+    local tbl = self:_getRaydata(successful, raydata, maxdist, offset)
+    if tbl and self.unrestricted and scomputers.isUnsafeFeatures(self.interactable) then
+        tbl.raydata = raydata
+    end
+    if endIntersection then
+        tbl.deepDistance = offset + tbl.distance
+        tbl.deepFraction = tbl.deepDistance / sourceMaxdist
+    end
+    return tbl
+end
+
+function RaycastCamera:_getRaydata(successful, raydata, maxdist)
     if not successful then return end
 
     local rtype = raydata.type
@@ -90336,7 +96051,7 @@ function RaycastCamera:getRaydata(successful, raydata, maxdist)
             type = "shape"
         }
 
-        if raydata.fraction * maxdist <= 4 then
+        if self.unrestricted or raydata.fraction * maxdist <= 4 then
             tbl.uuid = shape.uuid
         end
 
@@ -90419,24 +96134,47 @@ function RaycastCamera:getRaydata(successful, raydata, maxdist)
     end
 end
 
-function RaycastCamera:rawRay(xAngle, yAngle, maxdist)
+function RaycastCamera:rawRay(xAngle, yAngle, maxdist, maxIntersections)
     local position = self:position()
     local rotation = self:rotation()
 
-    if xAngle < -rad_82_5 then
-        xAngle = -rad_82_5
-    elseif xAngle > rad_82_5 then
-        xAngle = rad_82_5
+    if not self.unrestricted then
+        if xAngle < -rad_82_5 then
+            xAngle = -rad_82_5
+        elseif xAngle > rad_82_5 then
+            xAngle = rad_82_5
+        end
+
+        if yAngle < -rad_82_5 then
+            yAngle = -rad_82_5
+        elseif yAngle > rad_82_5 then
+            yAngle = rad_82_5
+        end
     end
 
-    if yAngle < -rad_82_5 then
-        yAngle = -rad_82_5
-    elseif yAngle > rad_82_5 then
-        yAngle = rad_82_5
+    local mask
+    if self.netdata.useMaskForRawRay then
+        mask = self.netdata.ray_mask
     end
 
-    local successful, raydata = rc_raycast(position, position + (rotation * vec3_new(-xAngle, -yAngle, 1)) * maxdist)
-    return self:getRaydata(successful, raydata, maxdist)
+    local sourceMaxdist = maxdist
+    if maxIntersections then
+        local offset = 0
+        local intersections = {}
+        for i = 1, maxIntersections do
+            if maxdist <= 0 then break end
+            local successful, raydata = rc_raycast(position, position + (rotation * vec3_new(-xAngle, -yAngle, 1)) * maxdist, nil, mask)
+            table.insert(intersections, self:getRaydata(successful, raydata, maxdist, offset, sourceMaxdist, i == maxIntersections))
+            position = raydata.pointWorld
+            local dist = raydata.fraction * maxdist
+            maxdist = maxdist - dist
+            offset = offset + dist
+        end
+        return intersections
+    else
+        local successful, raydata = rc_raycast(position, position + (rotation * vec3_new(-xAngle, -yAngle, 1)) * maxdist, nil, mask)
+        return self:getRaydata(successful, raydata, maxdist)
+    end
 end
 
 function RaycastCamera:sv_drawAdvanced(displayData, advancedSettings)
@@ -90492,7 +96230,7 @@ function RaycastCamera:sv_drawCustom(fromLastInfo, displayData, drawer, ...)
         if not lastInfo then return end
 
         currentPixel = lastInfo.position
-        results = lastInfo.rays
+        results = lastInfo.rays or self:rays(resolutionX, resolutionY, currentPixel, step - 1, self.distance, self.fovX, self.fovY, downscale)
     else
         currentPixel = self.nextPixel
         results = self:rays(resolutionX, resolutionY, currentPixel, step - 1, self.distance, self.fovX, self.fovY, downscale)
@@ -90530,12 +96268,69 @@ function RaycastCamera:sv_drawCustom(fromLastInfo, displayData, drawer, ...)
     end
 end
 
-function RaycastCamera:saveLastInfo(rays)
+function RaycastCamera:sv_deepDrawCustom(fromLastInfo, displayData, drawer, maxIntersections, ...)
+    local offsetX, offsetY, resolutionX, resolutionY = getViewport(self, displayData)
+    local downscale = self.downscale
+    local step
+    resolutionX, resolutionY, step = downscaleResolution(resolutionX, resolutionY, self.step, downscale)
+
+    if not fromLastInfo then
+        checkNextPixel(self, resolutionX, resolutionY)
+    end
+
+    local currentPixel, results
+    if fromLastInfo then
+        local lastInfo = self:getLastInfo()
+        if not lastInfo then return end
+
+        currentPixel = lastInfo.position
+        results = lastInfo.deepRays or self:deepRays(resolutionX, resolutionY, currentPixel, step - 1, self.distance, self.fovX, self.fovY, downscale, maxIntersections)
+    else
+        currentPixel = self.nextPixel
+        results = self:deepRays(resolutionX, resolutionY, currentPixel, step - 1, self.distance, self.fovX, self.fovY, downscale, maxIntersections)
+    end
+
+    if displayData.noCameraEncode then
+        for i = 0, step - 1 do
+            local pixel = currentPixel + i
+    
+            local x = floor(pixel / resolutionY) % resolutionX
+            local y = pixel % resolutionY
+            local color = drawer(x, y, results[i], ...)
+            if color then
+                cDrawPixel(displayData, downscale, offsetX, offsetY, x, y, color)
+            end
+        end
+    else
+        for i = 0, step - 1 do
+            local pixel = currentPixel + i
+    
+            local x = floor(pixel / resolutionY) % resolutionX
+            local y = pixel % resolutionY
+            local color = drawer(x, y, results[i], ...)
+            if color then
+                cDrawPixel(displayData, downscale, offsetX, offsetY, x, y, formatColorStr(color, true))
+            end
+        end
+    end
+
+    if not fromLastInfo then
+        self:saveLastInfo(results, true)
+        self.nextPixel = (currentPixel + step) % (resolutionX * resolutionY)
+    end
+end
+
+function RaycastCamera:saveLastInfo(rays, deep)
     self.sv_lastInfo = {
-        rays = rays,
         position = self.nextPixel,
         tick = sm.game.getCurrentTick()
     }
+
+    if deep then
+        self.sv_lastInfo.deepRays = rays        
+    else
+        self.sv_lastInfo.rays = rays
+    end
 end
 
 function RaycastCamera:cl_saveLastInfo(rays, nextPixel)
@@ -90766,6 +96561,10 @@ function RaycastCamera:sv_drawColor(displayData, noCollideColor, terrainColor, u
 end
 
 function RaycastCamera:server_onCreate()
+    if self.data and self.data.unrestricted then
+        self.unrestricted = true
+    end
+
     self.camApi = self:createData()
     if self.interactable then
         local id = self.interactable:getId()
@@ -90827,6 +96626,10 @@ end
 
 
 function RaycastCamera:client_onCreate()
+    if self.data and self.data.unrestricted then
+        self.unrestricted = true
+    end
+
     clientCameras[self.interactable.id] = self
     self.time = sm.render.getOutdoorLighting()
     self.raysCache = {}
@@ -97909,14 +103712,19 @@ _G.luavm.luaZ = luaZ
 end
 function scmframework_220977a0d1a94beb92db8eba87381493() --$CONTENT_DATA/Scripts/remade-scrapVM/scrapvm.lua
 --_G.luavm = _G.luavm or {}
+
+if _G.luavm then return end
+
+print("loading scrapVM")
 _G.luavm = {}
-dofile './LuaVM/LBI.lua'
-dofile './LuaVM/LuaZ.lua'
-dofile './LuaVM/LuaX.lua'
-dofile './LuaVM/LuaP.lua'
-dofile './LuaVM/LuaK.lua'
-dofile './LuaVM/LuaY.lua'
-dofile './LuaVM/LuaU.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LBI.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaZ.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaX.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaP.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaK.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaY.lua'
+dofile '$CONTENT_DATA/Scripts/remade-scrapVM/LuaVM/LuaU.lua'
+print("result: ", _G.luavm)
 _G.luavm.luaX:init()
 
 function _G.luavm.custom_loadstring(LuaState, str, env)
@@ -98878,6 +104686,12 @@ function scomputers.addClEnvHook(envhook)
 	table.insert(sc.cl_envhooks, envhook)
 end
 
+function scomputers.forceLoadLib(name)
+    for _, folder in ipairs(sc.internal_libs_folders) do
+        pcall(dofile, folder .. "/" .. name .. ".lua")
+    end
+end
+
 function scomputers.require(self, name)
     if name:find("%.") or name:find("%/") or name:find("%\\") then
         error("the library name cannot contain the characters: \"/.\\\"", 2)
@@ -98927,9 +104741,7 @@ function scomputers.require(self, name)
     end
     ]]
 
-    for _, folder in ipairs(sc.internal_libs_folders) do
-        pcall(dofile, folder .. "/" .. name .. ".lua")
-    end
+    scomputers.forceLoadLib(name)
     local libraryLoader = _G["sc_reglib_" .. name]
     if not libraryLoader then
         error("the \"" .. name .. "\" library was not found", 2)
@@ -98962,7 +104774,27 @@ function scomputers.isComputerConnected(interactable)
     return scomputers.realIsComputerConnected(interactable)
 end
 
-function scomputers.addChaffObject(position, id, mass)
+function scomputers.isUnsafeFeatures(interactable)
+    if sc.restrictions and sc.restrictions.scriptMode == "unsafe" then
+        return true
+    end
+
+    for _, interactable2 in ipairs(interactable:getParents()) do
+        if interactable2.shape.uuid == sc.UNSAFE_COMPUTER_UUID then
+            return true
+        end
+    end
+
+    for _, interactable2 in ipairs(interactable:getChildren()) do
+        if interactable2.shape.uuid == sc.UNSAFE_COMPUTER_UUID then
+            return true
+        end
+    end
+
+    return false
+end
+
+function scomputers.addChaffObject(position, id, mass, timeLimit)
     local chaffObject = {
         position = sm.vec3.new(position.x, position.y, position.z),
         move = sm.vec3.new(
@@ -98971,7 +104803,8 @@ function scomputers.addChaffObject(position, id, mass)
             math.random(-350, -250) / 40 / 100
         ),
         id = id,
-        mass = mass
+        mass = mass,
+        timeLimit = timeLimit
     }
 
     if sm.isServerMode() then
@@ -99005,6 +104838,10 @@ function scomputers.md5_hex(data)
     return md5.sumhexa(data, true)
 end
 
+for _, name in ipairs(sc.forceLoadLibs) do
+    scomputers.forceLoadLib(name)
+end
+
 _G.scomputers = scomputers
 
 if not __SCMFRAMEWORK then
@@ -99029,7 +104866,7 @@ ScriptableComputer.UV_ACTIVE_OFFSET = 6
 ScriptableComputer.UV_HAS_ERROR = 10
 ScriptableComputer.UV_HAS_DISABLED = 9
 
-ScriptableComputer.maxcodesize = 64 * 1024
+ScriptableComputer.maxcodesize = sc.maxcodelen
 ScriptableComputer.maxPromptsize = 16 * 1024
 ScriptableComputer.maxEncryptMessageSize = 16 * 1024
 ScriptableComputer.max_patience = 4
@@ -99202,7 +105039,7 @@ local function loadArchitecture(self, key)
     if self.data and self.data.architectureName then
         self[key] = sc.architectures[self.data.architectureName]
         if not self[key] and self.data.architecturePath then
-            dofile(self.data.architecturePath)
+            pcall(dofile, self.data.architecturePath)
             sc.architectures[self.data.architectureName] = sc.architectures[self.data.architectureName] or SCArchitecture
             self[key] = sc.architectures[self.data.architectureName]
             SCArchitecture = nil
@@ -100693,23 +106530,20 @@ function ScriptableComputer.cl_onScriptDataChanged(self, widgetName, data)
 end
 
 function ScriptableComputer:cl_realSave()
-    self.network:sendToServer("sv_updateScript", self.last_script)
-end
-
-function ScriptableComputer.cl_onSaveScript(self)
-    --self.gui:setText("ExceptionData", "No errors")
-
     if self.cStorageData.encryptCode then
         self:cl_internal_alertMessage(ScriptableComputer.encryptCode_warn)
         return
     end
-
+    
     if #self.last_script > ScriptableComputer.maxcodesize then
         self:cl_internal_alertMessage(ScriptableComputer.maxCodeSizeStr)
-        --self.network:sendToServer("sv_updateScript")
     else
-        self:cl_realSave()
+        self.network:sendToServer("sv_updateScript", self.last_script)
     end
+end
+
+function ScriptableComputer.cl_onSaveScript(self)
+    self:cl_realSave()
 end
 
 function ScriptableComputer:cl_closeGui()
@@ -101095,6 +106929,250 @@ function sha256.sha256hex(msg, needYield)
     return str2hexa(sha256.sha256bin(msg, needYield))
 end
 end
+function scmframework_3a4d90c7fa53633c8880325ec3d6fd5d() --$CONTENT_DATA/Scripts/SmartSign.lua
+dofile( "$CONTENT_DATA/Scripts/Config.lua" )
+dofile( "$SURVIVAL_DATA/Scripts/util.lua" )
+
+SmartSign = class()
+SmartSign.maxParentCount = 1
+SmartSign.maxChildCount = 0
+SmartSign.connectionInput = sm.interactable.connectionType.composite
+SmartSign.connectionOutput = sm.interactable.connectionType.none
+SmartSign.colorNormal = sm.color.new(0x7F7F7Fff)
+SmartSign.colorHighlight = sm.color.new(0xFFFFFFff)
+SmartSign.componentType = "smartsign" --absences can cause problems
+
+local guiData = {}
+guiData.json = sm.json.open( "$GAME_DATA/Gui/JsonGuis/DigitalSign.gui" )
+guiData.textLimitBox = FindWidget( guiData.json, "TextLimit" )
+guiData.textBox = FindWidget( guiData.json, "EnterTextBox" )
+guiData.buttons = FindWidget( guiData.json, "ButtonGrid" ).Childs
+guiData.button1ColorDefault = guiData.buttons[1].Childs[1].TextColour
+
+function SmartSign:sv_publicApi()
+    local api
+    api = {
+        setText = function (text)
+            self.sv.saved.text = tostring(text or "")
+            self.saveFlag = true
+        end,
+        getText = function()
+            return self.sv.saved.text or ""
+        end,
+
+        setTheme = function (num)
+            checkArg(1, num, "number")
+            self.sv.saved.selected = clamp( num or 1, 1, 8 )
+            self.saveFlag = true
+        end,
+        getTheme = function()
+            return self.sv.saved.selected or 1
+        end,
+
+        getMaxTextLen = function()
+            return self.data.maxTextLength or 6
+        end
+    }
+
+    self.interactable.publicData = {
+        sc_component = {
+            type = SmartSign.componentType,
+            api = api
+        }
+    }
+end
+
+function SmartSign.server_onCreate( self )
+	self.sv = {}
+	self.sv.saved = {}
+    self.sv.saved = { selected = 1, text = "" }
+    self.network:setClientData( self.sv.saved )
+
+    self:sv_publicApi()
+end
+
+function SmartSign:server_onFixedUpdate()
+    if self.saveFlag then
+        self:sv_n_changeState( self.sv.saved )
+        self.saveFlag = nil
+    end
+end
+
+function SmartSign.client_onCreate( self )
+	self.cl = {}
+	self.cl.state = { selected = 1, text = "" }
+	self.cl.defaultColor = sm.item.getShapeDefaultColor( self.shape.uuid )
+
+	if self.data then
+		if self.data.effectName then
+			self.cl.textEffect = sm.effect.createEffect( self.data.effectName, self.interactable )
+		end
+		if self.cl.textEffect then
+			if self.data.offsetPosition then
+				self.cl.textEffect:setOffsetPosition ( sm.vec3.new( self.data.offsetPosition.x, self.data.offsetPosition.y, self.data.offsetPosition.z) )
+			end
+			if self.data.scale then
+				self.cl.textEffect:setScale( sm.vec3.new( self.data.scale.x, self.data.scale.y, self.data.scale.z ) )
+			end
+			if self.data.asg then
+				self.cl.textEffect:setParameter( "ASG", sm.vec3.new( self.data.asg.a, self.data.asg.s, self.data.asg.g ) )
+			end
+			self.cl.textEffect:start()
+		end
+	end
+end
+
+function SmartSign.client_onFixedUpdate( self )
+	if self.cl.currentColor ~= self.shape.color then
+		self:cl_updateGui()
+		if self.cl.jsonGui then
+			self.cl.jsonGui:render( guiData.json )
+		end
+		self:cl_updateLook()
+
+		self.cl.currentColor = self.shape.color
+	end
+end
+
+function SmartSign.cl_updateGui( self )
+	for i, button in ipairs( guiData.buttons ) do
+		button.StateSelected = i == self.cl.state.selected
+	end
+
+	if self.shape.color ~= self.cl.defaultColor then
+		guiData.buttons[1].Childs[1].TextColour = self.shape.color:getGuiColorStr()
+	else
+		guiData.buttons[1].Childs[1].TextColour = guiData.button1ColorDefault
+	end
+
+	guiData.textBox.MaxTextLength = self.data.maxTextLength or 6
+	guiData.textBox.Caption = self.cl.state.text or ""
+end
+
+function SmartSign.cl_updateLook( self )
+	if self.cl.textEffect then
+		self.cl.textEffect:stop()
+
+		if self.cl.state.selected == 1 and self.shape.color ~= self.cl.defaultColor then
+			self.cl.textEffect:setParameter( "Color", self.shape.color )
+		else
+			self.cl.textEffect:setParameter( "Color", ColorFromGuiColor( guiData.buttons[self.cl.state.selected].Childs[1].TextColour ) )
+		end
+
+		self.interactable:setUvFrameIndex( self.cl.state.selected - 1 )
+	
+		self.cl.textEffect:setParameter( "TextContent", self.cl.state.text or "" )
+
+		local offsetPos = nil
+		if self.data and self.data.offsetPosition then
+			offsetPos = sm.vec3.new( self.data.offsetPosition.x, self.data.offsetPosition.y, self.data.offsetPosition.z)
+		else
+			offsetPos = sm.vec3.new( 0,0,0 )
+		end
+		
+		local scale = nil
+		if self.data and self.data.scale then
+			scale = sm.vec3.new( self.data.scale.x, self.data.scale.y, self.data.scale.z)
+		else
+			scale = sm.vec3.new( 1.2, 1.2, 1.2 )
+		end
+
+		if self.cl.textWidth > ( self.data.maxTextWidth or 50 ) then
+			scale = scale * (self.data.oversizeScale or 0.75 )
+		end
+
+		self.cl.textEffect:setOffsetPosition ( offsetPos )
+		self.cl.textEffect:setScale( scale )
+
+		self.cl.textEffect:start()
+	end
+end
+
+function SmartSign.client_onClientDataUpdate( self, data )
+	self.cl.state = data
+	self:cl_updateGui()
+	self:cl_textLimit( self.cl.state.text )
+	if self.cl.jsonGui then
+		self.cl.jsonGui:render( guiData.json )
+	end
+	self:cl_updateLook()
+end
+
+function SmartSign.client_onDestroy( self, dt )
+	self.cl.textEffect:stop()
+	self.cl.textEffect:destroy()
+end
+
+--[[
+function SmartSign.client_onInteract( self, character, state )
+	if state then
+		self.cl.jsonGui = sm.jsonGui.createGui()
+		self:cl_updateGui()
+		self:cl_textLimit( self.cl.state.text )
+		self.cl.jsonGui:render( guiData.json )
+	end
+end
+]]
+
+function SmartSign.cl_textLimit( self, text )
+	local width, height = sm.gui.computeTextSize( text, self.data.fontName, "Left", -1, false )
+	local length = sm.util.utf8StringLength( text )
+	guiData.textLimitBox.Caption = "#{INTERACTABLE_TEXTSIGN_TEXT_LIMIT} " .. length .. "/".. (self.data.maxTextLength or 6)
+	self.cl.textWidth = width
+end
+
+function SmartSign.cl_onTextEdit( self, name, text )
+	self:cl_updateGui()
+	self:cl_textLimit( text )
+	if self.cl.jsonGui then
+		self.cl.jsonGui:render( guiData.json )
+	end
+end
+
+function SmartSign.cl_onTextEnter( self, name, text )
+	if text ~= self.cl.state.text then
+		self.cl.state.text = text
+		self.network:sendToServer( "sv_n_changeState", self.cl.state )
+	else
+		self:cl_updateGui()
+		self:cl_textLimit( text )
+		if self.cl.jsonGui then
+			self.cl.jsonGui:render( guiData.json )
+		end
+	end
+end
+
+function SmartSign.cl_onClick( self, name )
+	if name == "Button1" then
+		self.cl.state.selected = 1
+	elseif name == "Button2" then
+		self.cl.state.selected = 2
+	elseif name == "Button3" then
+		self.cl.state.selected = 3
+	elseif name == "Button4" then
+		self.cl.state.selected = 4
+	elseif name == "Button5" then
+		self.cl.state.selected = 5
+	elseif name == "Button6" then
+		self.cl.state.selected = 6
+	elseif name == "Button7" then
+		self.cl.state.selected = 7
+	elseif name == "Button8" then
+		self.cl.state.selected = 8
+	end
+	self.network:sendToServer( "sv_n_changeState", self.cl.state )
+end
+
+function SmartSign.sv_n_changeState(self, state )
+	self.sv.saved = state
+	self.network:setClientData( self.sv.saved )
+end
+
+function SmartSign.cl_onGuiClosed( self )
+	self.cl.jsonGui = nil
+end
+
+end
 function scmframework_f439912b5440aaa6b6fa7f92942ed147() --$CONTENT_DATA/Scripts/StepperMotor.lua
 dofile '$CONTENT_DATA/Scripts/Config.lua'
 
@@ -101234,7 +107312,7 @@ function StepperMotor.server_onCreate(self)
 
 	sc.motorsDatas[self.interactable:getId()] = self:server_createData()
 
-	sc.creativeCheck(self, self.isCreative)
+	if sc.creativeCheck(self, self.isCreative) then return end
 end
 
 function StepperMotor:sv_setData(data)
@@ -101252,6 +107330,8 @@ function StepperMotor.server_onDestroy(self)
 end
 
 function StepperMotor.server_onFixedUpdate(self, dt)
+    if sc.creativeCheck(self, self.isCreative) then return end
+    
 	self:sv_getBearingData()
 
 	--------------------------------------------------------
@@ -101329,8 +107409,6 @@ function StepperMotor.server_onFixedUpdate(self, dt)
 	self.old_rpm = rpm
 	self.old_load = load
 	self.old_type = self.soundtype
-
-	sc.creativeCheck(self, self.isCreative)
 
 	if sc.needSaveData() and self.sdata.energy ~= self.oldEnergy then
 		self.storage:save(self.sdata)
@@ -101997,13 +108075,15 @@ for i = 1, 5 do
     table.insert(loopsList, "GasEngine - Level " .. i)
 end
 
-local function checkNum(num)
+local function checkNum(self, num)
+    if self.unrestricted then return end
     if num < 1 or num > maxLoops or num % 1 ~= 0 then
         error("invalid cycle number", 3)
     end
 end
 
-local function checkSampleNum(num)
+local function checkSampleNum(self, num)
+    if self.unrestricted then return end
     if num < 1 or num > maxSamples or num % 1 ~= 0 then
         error("invalid samples number", 3)
     end
@@ -102035,9 +108115,30 @@ local function soundId()
     return math.random(-2147483648, 2147483647)
 end
 
+local function getSettings()
+    return {
+        samplesDistance = 25,
+        spatialEnabled = true,
+        localSound = false
+    }
+end
+
+local function unrestrictedOnly(self)
+    if not self.unrestricted then
+        error("this method is intended only for unrestricted speaker from the power toys addon", 3)
+    end
+end
+
 function synthesizer:server_onCreate()
     self.loopData = {}
     self.flushLoops = true
+
+    if self.data and self.data.unrestricted then
+        self.unrestricted = true
+    end
+
+    self.sv_settings = getSettings()
+    self.updateSettings = true
 
     local api
     api = {
@@ -102056,7 +108157,7 @@ function synthesizer:server_onCreate()
 
             if not self.newBeeps then self.newBeeps = {} end
             local id = soundId()
-            if #self.newBeeps < maxBeeps then
+            if #self.newBeeps < maxBeeps or self.unrestricted then
                 table.insert(self.newBeeps, {0, id, 0, pitch, duration})
             end
             return id
@@ -102072,7 +108173,7 @@ function synthesizer:server_onCreate()
 
             if not self.newBeeps then self.newBeeps = {} end
             local id = soundId()
-            if #self.newBeeps < maxBeeps then
+            if #self.newBeeps < maxBeeps or self.unrestricted then
                 table.insert(self.newBeeps, {0, id, 10, velocity, duration})
             end
             return id
@@ -102092,7 +108193,7 @@ function synthesizer:server_onCreate()
 
             if not self.newBeeps then self.newBeeps = {} end
             local id = soundId()
-            if #self.newBeeps < maxBeeps then
+            if #self.newBeeps < maxBeeps or self.unrestricted then
                 local pitch
                 if device == 10 then
                     pitch = (note + 1) * 2
@@ -102114,7 +108215,9 @@ function synthesizer:server_onCreate()
 
             if not self.newBeeps then self.newBeeps = {} end
             local id = soundId()
-            if #self.newBeeps < maxBeeps then
+            if #self.newBeeps < maxBeeps or self.unrestricted then
+                if volume < 0 then volume = 0 end
+                if volume > 3 and not self.unrestricted then volume = 3 end
                 table.insert(self.newBeeps, {1, id, sample, volume or 1, speed or 1, pitch or 0, rate or 1, startpos or 0, endpos or math.huge})
             end
             return id
@@ -102124,7 +108227,7 @@ function synthesizer:server_onCreate()
 
             if not self.newBeeps then self.newBeeps = {} end
             local id = soundId()
-            if #self.newBeeps < maxBeeps then
+            if #self.newBeeps < maxBeeps or self.unrestricted then
                 table.insert(self.newBeeps, {2, id, index})
             end
             return id
@@ -102137,7 +108240,7 @@ function synthesizer:server_onCreate()
 
             if not self.newBeeps then self.newBeeps = {} end
             local id = soundId()
-            if #self.newBeeps < maxBeeps then
+            if #self.newBeeps < maxBeeps or self.unrestricted then
                 table.insert(self.newBeeps, {3, id, wave or 0, volume or 1, freq or 1000, duration or math.huge})
             end
             return id
@@ -102178,7 +108281,7 @@ function synthesizer:server_onCreate()
             checkArg(4, duration, "number", "nil")
 
             if not self.beeps then self.beeps = {} end
-            if #self.beeps < maxBeeps then
+            if #self.beeps < maxBeeps or self.unrestricted then
                 return tableInsert(self.beeps, {
                     device,
                     pitch,
@@ -102202,7 +108305,7 @@ function synthesizer:server_onCreate()
             checkArg(1, number, "number")
             checkArg(2, loopname, "string")
             checkArg(3, params, "table", "nil")
-            checkNum(number)
+            checkNum(self, number)
             for i, v in ipairs(loopsList) do
                 if v == loopname then
                     self.loopData[number] = {loopname, params}
@@ -102214,7 +108317,7 @@ function synthesizer:server_onCreate()
         end,
         stopLoop = function(number)
             checkArg(1, number, "number")
-            checkNum(number)
+            checkNum(self, number)
             self.loopData[number] = nil
             self.flushLoops = true
         end,
@@ -102225,7 +108328,7 @@ function synthesizer:server_onCreate()
         setLoopParams = function(number, params)
             checkArg(1, number, "number")
             checkArg(2, params, "table")
-            checkNum(number)
+            checkNum(self, number)
             if not self.loopData[number] then
                 error("the loop effect number " .. math.floor(number) .. " is not running", 2)
             end
@@ -102252,7 +108355,7 @@ function synthesizer:server_onCreate()
         loadSampleFromTTS = function(slot, text)
             checkArg(1, slot, "number")
             checkArg(2, text, "string")
-            checkSampleNum(slot)
+            checkSampleNum(self, slot)
             
             if not self.loadSamples then
                 self.loadSamples = {}
@@ -102268,7 +108371,7 @@ function synthesizer:server_onCreate()
         loadSampleFromURL = function(slot, url)
             checkArg(1, slot, "number")
             checkArg(2, url, "string")
-            checkSampleNum(slot)
+            checkSampleNum(self, slot)
             
             if not self.loadSamples then
                 self.loadSamples = {}
@@ -102315,7 +108418,7 @@ function synthesizer:server_onCreate()
         end,
         startSample = function(slot)
             checkArg(1, slot, "number")
-            checkSampleNum(slot)
+            checkSampleNum(self, slot)
 
             if not self.samplesActions then
                 self.samplesActions = {}
@@ -102329,7 +108432,7 @@ function synthesizer:server_onCreate()
         end,
         stopSample = function(slot)
             checkArg(1, slot, "number")
-            checkSampleNum(slot)
+            checkSampleNum(self, slot)
 
             if not self.samplesActions then
                 self.samplesActions = {}
@@ -102343,7 +108446,7 @@ function synthesizer:server_onCreate()
         end,
         pauseSample = function(slot)
             checkArg(1, slot, "number")
-            checkSampleNum(slot)
+            checkSampleNum(self, slot)
 
             if not self.samplesActions then
                 self.samplesActions = {}
@@ -102358,7 +108461,7 @@ function synthesizer:server_onCreate()
         loopSample = function(slot, state)
             checkArg(1, slot, "number")
             checkArg(2, state, "boolean")
-            checkSampleNum(slot)
+            checkSampleNum(self, slot)
 
             if not self.samplesActions then
                 self.samplesActions = {}
@@ -102373,7 +108476,7 @@ function synthesizer:server_onCreate()
         setSampleVolume = function(slot, volume)
             checkArg(1, slot, "number")
             checkArg(2, volume, "number")
-            checkSampleNum(slot)
+            checkSampleNum(self, slot)
 
             if not self.samplesParams then
                 self.samplesParams = {}
@@ -102384,14 +108487,14 @@ function synthesizer:server_onCreate()
             end
 
             if volume < 0 then volume = 0 end
-            if volume > 3 then volume = 3 end
+            if volume > 3 and not self.unrestricted then volume = 3 end
             self.samplesParams[slot].volume = volume
             self.sendSampleParams = true
         end,
         setSampleRate = function(slot, rate)
             checkArg(1, slot, "number")
             checkArg(2, rate, "number")
-            checkSampleNum(slot)
+            checkSampleNum(self, slot)
 
             if not self.samplesParams then
                 self.samplesParams = {}
@@ -102407,7 +108510,7 @@ function synthesizer:server_onCreate()
         setSamplePitch = function(slot, pitch)
             checkArg(1, slot, "number")
             checkArg(2, pitch, "number")
-            checkSampleNum(slot)
+            checkSampleNum(self, slot)
 
             if not self.samplesParams then
                 self.samplesParams = {}
@@ -102423,7 +108526,7 @@ function synthesizer:server_onCreate()
         setSampleSpeed = function(slot, speed)
             checkArg(1, slot, "number")
             checkArg(2, speed, "number")
-            checkSampleNum(slot)
+            checkSampleNum(self, slot)
 
             if not self.samplesParams then
                 self.samplesParams = {}
@@ -102435,6 +108538,37 @@ function synthesizer:server_onCreate()
 
             self.samplesParams[slot].speed = speed
             self.sendSampleParams = true
+        end,
+
+
+        setSampleDistance = function(distance)
+            unrestrictedOnly(self)
+            checkArg(1, distance, "number")
+            self.sv_settings.samplesDistance = distance
+            self.updateSettings = true
+        end,
+        getSampleDistance = function()
+            return self.sv_settings.samplesDistance
+        end,
+
+        setSpatialEnabled = function(spatialEnabled)
+            unrestrictedOnly(self)
+            checkArg(1, spatialEnabled, "boolean")
+            self.sv_settings.spatialEnabled = spatialEnabled
+            self.updateSettings = true
+        end,
+        getSpatialEnabled = function()
+            return self.sv_settings.spatialEnabled
+        end,
+
+        setLocalSound = function(localSound)
+            unrestrictedOnly(self)
+            checkArg(1, localSound, "boolean")
+            self.sv_settings.localSound = localSound
+            self.updateSettings = true
+        end,
+        getLocalSound = function()
+            return self.sv_settings.localSound
         end
     }
     api.getLoopsCount = api.getMaxLoopsCount
@@ -102447,6 +108581,11 @@ function synthesizer:server_onDestroy()
 end
 
 function synthesizer:server_onFixedUpdate()
+    if self.updateSettings then
+        self.network:sendToClients("cl_updateSettings", self.sv_settings)
+        self.updateSettings = nil
+    end
+
     if self.stopFlag then
         self.network:sendToClients("cl_stop")
         self.stopFlag = nil
@@ -102533,10 +108672,20 @@ function synthesizer:sv_flushLoops(_, caller)
     end
 end
 
+function synthesizer:sv_dataRequest()
+    self.updateSettings = true
+    self:sv_flushLoops()
+end
+
 
 
 
 function synthesizer:client_onCreate()
+    if self.data and self.data.unrestricted then
+        self.unrestricted = true
+    end
+
+    self.cl_settings = getSettings()
     self.effects = {}
     self.effectsCache = {}
     self.currentLoops = {}
@@ -102559,7 +108708,12 @@ function synthesizer:client_onCreate()
     else
         self.defaultWaves = {}
     end
-    self.network:sendToServer("sv_flushLoops")
+    --self.network:sendToServer("sv_flushLoops")
+    self.network:sendToServer("sv_dataRequest")
+end
+
+function synthesizer:cl_updateSettings(settings)
+    self.cl_settings = settings
 end
 
 function synthesizer:cl_newBeepsStop(newBeepsStop)
@@ -102578,6 +108732,16 @@ function synthesizer:cl_newBeepsStop(newBeepsStop)
     end
 end
 
+function synthesizer:createEffect(name)
+    local obj
+    if self.cl_settings.localSound then
+        obj = sm.localPlayer.getPlayer().character
+    else
+        obj = self.interactable
+    end
+    return sm.effect.createEffect(name, obj)
+end
+
 function synthesizer:cl_newBeeps(newBeeps)
     for _, newBeep in ipairs(newBeeps) do
         if #self.newBeepsEffects >= maxBeeps then
@@ -102592,9 +108756,9 @@ function synthesizer:cl_newBeeps(newBeeps)
             effectData.id = newBeep[2]
 
             if newBeep[3] == 0 then
-                effectData.effect = sm.effect.createEffect("Horn - Honk", self.interactable)
+                effectData.effect = self:createEffect("Horn - Honk")
             else
-                effectData.effect = sm.effect.createEffect(sc.getSoundEffectName("tote" .. newBeep[3]), self.interactable)
+                effectData.effect = self:createEffect(sc.getSoundEffectName("tote" .. newBeep[3]))
             end
 
             effectData.effect:setParameter(newBeep[3] == 10 and "velocity_max_50" or "pitch", newBeep[4])
@@ -102626,7 +108790,7 @@ function synthesizer:cl_newBeeps(newBeeps)
             effectData.type = 0
             effectData.timer = math.huge
             effectData.id = newBeep[2]
-            effectData.effect = sm.effect.createEffect("chapter2_alarm", self.interactable)
+            effectData.effect = self:createEffect("chapter2_alarm")
             effectData.effect:setParameter("alarm", newBeep[3])
             effectData.effect:start()
             effectValid = true
@@ -102707,7 +108871,11 @@ function synthesizer:cl_loadSamples(loadSamples)
 end
 
 function synthesizer:cl_updateSpatialSound(audio)
-    audio:updateSpatialSound(sm.camera.getPosition(), {{self.shape.worldPosition, 25}}, sm.camera.getDirection())
+    local dir
+    if self.cl_settings.spatialEnabled then
+        dir = sm.camera.getDirection()
+    end
+    audio:updateSpatialSound(sm.camera.getPosition(), {{self.shape.worldPosition, self.cl_settings.samplesDistance}}, dir)
 end
 
 function synthesizer:cl_applySampleParameters(slot)
@@ -102823,7 +108991,7 @@ function synthesizer:cl_flushLoops(data)
     end
 
     for i, ldat in pairs(data) do
-        local effect = alt[i] or sm.effect.createEffect(ldat[1], self.interactable)
+        local effect = alt[i] or self:createEffect(ldat[1])
         for k, v in pairs(ldat[2] or {}) do
             effect:setParameter(k, v)
         end
@@ -103011,9 +109179,9 @@ function synthesizer:cl_upload(datas)
                     effect = table.remove(self.effectsCache[data[1]])
                 else
                     if data[1] == 0 then
-                        effect = sm.effect.createEffect("Horn - Honk", self.interactable)
+                        effect = self:createEffect("Horn - Honk")
                     else
-                        effect = sm.effect.createEffect(sc.getSoundEffectName("tote" .. data[1]), self.interactable)
+                        effect = self:createEffect(sc.getSoundEffectName("tote" .. data[1]))
                     end
                 end
                 
@@ -103915,10 +110083,8 @@ local function checkInstance(self)
 end
 
 local function loadBackground(self)
-    if sc.background then return end
-    sc.background = {}
-
-    dofile("$CONTENT_DATA/Scripts/chaff_task.lua")
+    print("loadBackground. server: ", sm.isServerMode())
+    pcall(dofile, "$CONTENT_DATA/Scripts/Config.lua")
 
     for name, task in pairs(sc.background) do
         function task.sendToClients(...)
@@ -103967,7 +110133,6 @@ function servicetool:server_onCreate()
         return
     end
 
-    dofile("$CONTENT_DATA/Scripts/Config.lua")
     loadBackground(self)
     sc.init()
     sc.warningsCheck()
@@ -104032,6 +110197,14 @@ function servicetool:server_onFixedUpdate()
         if self.xengineClearTimeout < 0 then
             sc.xEngineClear()
             self.xengineClearTimeout = nil
+        end
+    end
+
+    local ctick = sm.game.getCurrentTick()
+    for i = #sc.passiveRadarTargets, 1, -1 do
+        local passiveRadarTarget = sc.passiveRadarTargets[i]
+        if ctick - passiveRadarTarget.ctick > sc.passiveRadarDetectTimeFrame then
+            table.remove(sc.passiveRadarTargets, i)
         end
     end
 
@@ -104127,6 +110300,7 @@ function servicetool:cl_previewToChat()
     --sm.gui.chatMessage("#f03c02be sure to read the documentation#ffffff: https://scrapmechanictools.com/modapis/SComputers/Info")
     sm.gui.chatMessage("#ff3030>> be sure to read the documentation:\n#ffffffhttps://igorkll.github.io/SComputers")
     sm.gui.chatMessage("#309eff>> SComputers discord server:\n#ffffffhttps://discord.gg/uJrsmUjaMG")
+    sm.gui.chatMessage("#a530ff>> SComputers addons:\n#ffffffhttps://igorkll.github.io/SComputers/addons.html")
     if not better then
         sm.gui.chatMessage("#f2ea05>> to improve the performance of the displays, it is recommended to install this:\n#ffffffhttps://igorkll.github.io/betterAPI")
     end
@@ -104140,7 +110314,6 @@ function servicetool:cl_n_onCreate(version)
     end
     self.clientToolInited = true
     
-    dofile("$CONTENT_DATA/Scripts/Config.lua")
     loadBackground(self)
 
     if sc.isSplashEnabled() then
@@ -104718,7 +110891,12 @@ function wasd_autotool:server_onFixedUpdate()
     local player = self.tool:getOwner()
     local seat = player.character:getLockingInteractable()
 
-    if seat and seat:getSeatCharacter().id == player.character.id then
+    local seatedCharacter
+    if seat then
+        seatedCharacter = seat:getSeatCharacter()
+    end
+
+    if seat and seatedCharacter and sm.exists(seatedCharacter) and player and sm.exists(player) and sm.exists(player.character) and seatedCharacter.id == player.character.id then
         if not self.enabled then
             self.network:sendToClient(player, "cl_enable")    
             self.enabled = true
@@ -105108,6 +111286,11 @@ function wasd:client_onFixedUpdate()
         self.AD = ADValue
         self.A = ADValue < 0
         self.D = ADValue > 0
+        if self.OLD_AD then
+            if self.AD < self.OLD_AD then self.D = false end
+            if self.AD > self.OLD_AD then self.A = false end
+        end
+        self.OLD_AD = self.AD
     end
 end
 
