@@ -2,7 +2,7 @@
 servicetool = class()
 servicetool.instance = nil
 
-local computersAlwaysEnabled = true
+local computersDefaultEnabled = true
 local noWarnings = true
 local noCheatCommand = true
 local noSafeCommand = true
@@ -246,7 +246,7 @@ function servicetool:cl_n_onCreate(version)
     
     loadBackground(self)
 
-    if sc.isSplashEnabled() and not computersAlwaysEnabled then
+    if sc.isSplashEnabled() and not computersDefaultEnabled then
         self:cl_createGui()
         if not sm.isHost then
             self:cl_previewToChat()
