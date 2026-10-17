@@ -369,8 +369,14 @@ function AnyDisplay:client_onCreate()
     if self.data.addRot then
         rot = rot + self.data.addRot
     end
+    if self.data.addRotTbl then
+        rot = rot + sm.vec3.new(unpack(self.data.addRotTbl))
+    end
     if self.data.addPos then
         pos = pos + self.data.addPos
+    end
+    if self.data.addPosTbl then
+        pos = pos + sm.vec3.new(unpack(self.data.addPosTbl))
     end
 	--self.canvas = (canvasAPI.createBetterCanvas or canvasAPI.createCanvas)(self.interactable, self.width, self.height, self.pixelScale, pos, sm.quat.fromEuler(rot), material)
     if self.data.autoV then
@@ -419,6 +425,12 @@ function AnyDisplay:client_onCreate()
         end
         self.pixelScaleX = self.pixelScale
         self.pixelScaleY = self.pixelScale
+    end
+
+    if self.data.pixelPostScale then
+        self.pixelScale = self.pixelScale * self.data.pixelPostScale
+        self.pixelScaleX = self.pixelScaleX * self.data.pixelPostScale
+        self.pixelScaleY = self.pixelScaleY * self.data.pixelPostScale
     end
 
 	local canvasAttachObject
