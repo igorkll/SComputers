@@ -21,7 +21,7 @@ function SmartSign:sv_publicApi()
     local api
     api = {
         setText = function (text)
-            self.sv.saved.text = tostring(text or "")
+            self.sv.saved.text = string.sub(tostring(text or ""), 1, api.getMaxTextLen())
             self.saveFlag = true
         end,
         getText = function()
