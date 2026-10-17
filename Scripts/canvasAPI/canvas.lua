@@ -46,7 +46,7 @@ canvasAPI.multi_layer[tostring(canvasAPI.material.classic)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.plastic)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.smoothed)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.glowing)] = true
-canvasAPI.version = 63
+canvasAPI.version = 64
 
 canvasAPI.materialList = {
     [0] = canvasAPI.material.glass,
@@ -1818,25 +1818,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
     if constParameters then
         setEffectDataParams = _setEffectDataParams_constParameters
         disableRotation = true
-    end
-
-    local function createEffect()
-        local effect
-        if bufferedEffectsIndex > 0 then
-            effect = bufferedEffects[bufferedEffectsIndex]
-            bufferedEffectsIndex = bufferedEffectsIndex - 1
-            if not effect_isPlaying(effect) then
-                effect_start(effect)
-            end
-        else
-            effect = sm_effect_createEffect(getEffectName(), parent)
-            effect_setParameter(effect, "uuid", material)
-            if showState then
-                effect_start(effect)
-            end
-            _setRotation(effect, rotation)
-        end
-        return effect
     end
 
     local function createEffectUnhide(hideList)
