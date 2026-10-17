@@ -209,7 +209,6 @@ function ScriptableComputer:server_onCreate(constData)
     self.realself = self
     loadArchitecture(self, "architecture")
     if self.architecture then
-        print(self.architecture.examplesPath, self.architecture.name)
         self.sv_examples = loadExamples(self.architecture.examplesPath, self.architecture.name)
     else
         self.sv_examples = loadExamples()
