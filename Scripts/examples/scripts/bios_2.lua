@@ -22,12 +22,13 @@ local timerhost = timerlibrary.createHost()
 -----------------------------------------
 
 local userInterfaces = {}
+local bootTimer
 
 -----------------------------------------
 
 local function create_gui(display)
     local selfTbl
-    
+
     display.reset()
     display.clearClicks()
     display.setClicksAllowed(true)
@@ -43,7 +44,9 @@ local function create_gui(display)
     end
 
     do
-        scene_logo = gui:createScene("000000")
+        scene_logo = gui:createScene("000000", function()
+            selfTbl.openUi()
+        end)
         
         local label = scene_logo:createText(0, 0, "TOUCH TO DISPLAY")
         label:setBorderDown(2 + 6)
@@ -76,12 +79,21 @@ local function create_gui(display)
     end
 
     local function openUi()
+        bootTimer:setEnabled(false)
+        bootTimer:reset()
 
+        for _, userInterface in ipairs(userInterfaces) do
+            if userInterface ~= selfTbl then
+                userInterface.ignoreUi()
+            end
+        end
 
         scene_menu:select()
     end
 
     local function ignoreUi()
+        display.clearClicks()
+        display.setClicksAllowed(false)
         scene_ignore:select()
     end
 
@@ -299,8 +311,6 @@ function tryBoot()
     end
 end
 
-local bootTimer
-
 function onStart()
     graphic_clear()
 
@@ -335,7 +345,7 @@ function onTick()
     end
 
     for _, userInterface in ipairs(userInterfaces) do
-        userInterface()
+        userInterface.onTick()
     end
 end
 
