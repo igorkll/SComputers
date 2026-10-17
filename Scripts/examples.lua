@@ -84,6 +84,10 @@ function updateExamples(self, search)
 end
 ]]
 
+if _FILE_EXAMPLES then return end
+_FILE_EXAMPLES = true
+print("loading: examples.lua")
+
 scExamples_binded = scExamples_binded or {}
 scExamples_list = scExamples_list or {}
 
@@ -93,6 +97,7 @@ local function initArchitecture(architecture)
 end
 
 function addCustomExample(name, code, architecture, bottom)
+    print("addCustomExample", tostring(scExamples_list), name, #code, architecture, bottom)
     architecture = architecture or "lua"
     initArchitecture(architecture)
     if scExamples_binded[architecture][name] then

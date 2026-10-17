@@ -1,3 +1,7 @@
+if _FILE_SCOMPUTERS_API then return end
+_FILE_SCOMPUTERS_API = true
+print("loading: scomputersAPI.lua")
+
 local scomputers = {}
 
 local function clientCallcheck(functionName)
@@ -11,7 +15,9 @@ function scomputers.addExample(name, code, architecture)
     checkArg(2, code, "string")
 	checkArg(3, architecture, "string", "nil")
 	clientCallcheck("scomputers.addExample")
+    print("scomputers.addExample", name, #code, architecture)
     addCustomExample(name, code, architecture)
+    sc.flag_reload_examples = (sc.flag_reload_examples or 0) + 1
 end
 
 function scomputers.addLibrary(name, constructor)

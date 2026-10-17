@@ -1214,13 +1214,8 @@ end
 
 function ScriptableComputer:client_onCreate()
     self.defaultData = self.data or {}
-    
     loadArchitecture(self, "cl_architecture")
-    if self.cl_architecture then
-        self.cl_examples = loadExamples(self.cl_architecture.examplesPath, self.cl_architecture.name)
-    else
-        self.cl_examples = loadExamples()
-    end
+    self:cl_reloadExamples()
 
     self.network:sendToServer("sv_onDataRequired")
     self.last_script = ""
@@ -1239,10 +1234,28 @@ function ScriptableComputer:client_onCreate()
     end
 end
 
+function ScriptableComputer:cl_reloadExamples()
+    if self.cl_architecture then
+        self.cl_examples = loadExamples(self.cl_architecture.examplesPath, self.cl_architecture.name)
+    else
+        self.cl_examples = loadExamples()
+    end
+
+    if self.gui then
+        self:cl_updateExamplesList()
+    end
+
+    self.flag_reload_examples = sc.flag_reload_examples
+end
+
 function ScriptableComputer:client_onFixedUpdate(dt)
     sc.deltaTimeTps = dt
 
     if not self.cStorageData then return end
+
+    if sc.flag_reload_examples ~= self.flag_reload_examples then
+        self:cl_reloadExamples()
+    end
 
     if self.textEditor then
         if sm.game.getCurrentTick() % 10 == 0 then
