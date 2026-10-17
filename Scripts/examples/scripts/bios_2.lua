@@ -1,6 +1,6 @@
 --more detailed instructions are here: https://igorkll.github.io/SComputers/scriptableOS.html
 
-local autoboot_timer = 40 * 2
+local autoboot_timer = 40 * 4
 
 -----------------------------------------
 
@@ -26,13 +26,21 @@ local userInterfaces = {}
 -----------------------------------------
 
 local function create_gui(display)
+    local selfTbl
+    
     display.reset()
     display.clearClicks()
     display.setClicksAllowed(true)
     local rx, ry = display.getWidth(), display.getHeight()
 
     local gui = guilib.new(display)
-    local scene_logo, scene_menu
+    local scene_logo, scene_ignore, scene_menu
+
+    local function addLogo(scene)
+        local logo = scene:createLabel(0, 0, math.round(rx * 0.9), ry / 4, "BIOS 2", 0xffffff, 0xff00ff)
+        logo:setFontParameters(nil, 8, 10, 3)
+        logo:setCenter()
+    end
 
     do
         scene_logo = gui:createScene("000000")
@@ -44,15 +52,52 @@ local function create_gui(display)
         local label1 = scene_logo:createText(0, 0, "TO OPEN BOOT MENU")
         label1:setBorderDown(2)
         label1:setBorderLeft(2)
+
+        addLogo(scene_logo)
     end
 
-    table.insert(userInterfaces, function()
-        gui:tick()
-        if gui:needFlush() then
-            gui:draw()
-            display.flush()
-        end
-    end)
+    do
+        scene_ignore = gui:createScene("000000")
+        
+        local label = scene_ignore:createText(0, 0, "BOOT MENU OPENED")
+        label:setBorderDown(2 + 6)
+        label:setBorderLeft(2)
+
+        local label1 = scene_ignore:createText(0, 0, "ON OTHER DISPLAY")
+        label1:setBorderDown(2)
+        label1:setBorderLeft(2)
+
+        addLogo(scene_ignore)
+    end
+
+    do
+        scene_menu = gui:createScene("0000ff")
+
+    end
+
+    local function openUi()
+
+
+        scene_menu:select()
+    end
+
+    local function ignoreUi()
+        scene_ignore:select()
+    end
+
+    selfTbl = {
+        onTick = function()
+            gui:tick()
+            if gui:needFlush() then
+                gui:draw()
+                display.flush()
+            end
+        end,
+        openUi = openUi,
+        ignoreUi = ignoreUi
+    }
+
+    table.insert(userInterfaces, selfTbl)
 end
 
 local function graphic_clear()
