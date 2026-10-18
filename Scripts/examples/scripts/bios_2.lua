@@ -36,18 +36,22 @@ local function userinterface_create_bootmenu(gui)
 
     refreshComponents()
 
-    local refreshButton = scene_menu:createButton(0, 0, scene_menu.sizeX - 3, objHeight, "REFRESH", 0xffffff, 0x0000ff)
-    refreshButton:setBorderLeft(1)
+    local refreshButton = scene_menu:createButton(0, 0, (scene_menu.sizeX / 2) - 3, objHeight, false, "REFRESH", 0xffffff, 0x0000ff)
+    refreshButton:setBorderLeft(2)
     refreshButton:setBorderDown(1)
+    refreshButton:setPbgColor(0x000000)
+    refreshButton:setPfgColor(0xffffff)
     function refreshButton:onDropInZone()
         refreshComponents()
     end
 
-    local bootButton = scene_menu:createButton(0, 0, scene_menu.sizeX - 3, objHeight, "BOOT", 0xffffff, 0x0000ff)
-    bootButton:setBorderRight(1)
+    local bootButton = scene_menu:createButton(0, 0, (scene_menu.sizeX / 2) - 3, objHeight, false, "BOOT", 0xffffff, 0x0000ff)
+    bootButton:setBorderRight(2)
     bootButton:setBorderDown(1)
+    bootButton:setPbgColor(0x000000)
+    bootButton:setPfgColor(0xffffff)
     function bootButton:onDropInZone()
-        
+        tryBoot()
     end
 
     return scene_menu
