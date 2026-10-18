@@ -158,7 +158,10 @@ local function bootmenu_menu(scene_menu)
     end
 
     local function addDiskButton(index, component)
-        addBootButton(component.type .. ":" .. , function()
+        local dataTable = getTable()
+        local currentBootable = dataTable.bootDeviceType == component.type && dataTable.bootDeviceIndex == index
+
+        addBootButton(component.type .. ":" .. index, function()
         
         end, )
     end
@@ -354,8 +357,8 @@ function getBootDevice(component)
     local initCode
     local initArg
     local initFs
-    local initComponent
-    local initComponentIndex
+    local bootDevice
+    local bootDeviceIndex
 
     local function tryBootFromFilesystem(fs)
         if fs.hasFile(targetFile) then
@@ -389,46 +392,46 @@ function getBootDevice(component)
         if component.type == "rom" then
             for i = 1, 1 do
                 if tryOpenRom(component, "openFilesystemImage", true) then
-                    initComponent = component
-                    initComponentIndex = getComponentIndex("rom", component)
+                    bootDevice = component
+                    bootDeviceIndex = getComponentIndex("rom", component)
                     break
                 end
 
                 if tryOpenRom(component, "openFilesystemDump", true) then
-                    initComponent = component
-                    initComponentIndex = getComponentIndex("rom", component)
+                    bootDevice = component
+                    bootDeviceIndex = getComponentIndex("rom", component)
                     break
                 end
 
                 if tryOpenRom(component, "open", false) then
-                    initComponent = component
-                    initComponentIndex = getComponentIndex("rom", component)
+                    bootDevice = component
+                    bootDeviceIndex = getComponentIndex("rom", component)
                     break
                 end
             end
         elseif component.type == "disk" then
             if tryBootFromFilesystem(component) then
-                initComponent = component
-                initComponentIndex = getComponentIndex("disk", component)
+                bootDevice = component
+                bootDeviceIndex = getComponentIndex("disk", component)
             end
         end
     else
         for componentIndex, rom in ipairs(getComponents("rom")) do
             if tryOpenRom(rom, "openFilesystemImage", true) then
-                initComponent = rom
-                initComponentIndex = componentIndex
+                bootDevice = rom
+                bootDeviceIndex = componentIndex
                 break
             end
 
             if tryOpenRom(rom, "openFilesystemDump", true) then
-                initComponent = rom
-                initComponentIndex = componentIndex
+                bootDevice = rom
+                bootDeviceIndex = componentIndex
                 break
             end
 
             if tryOpenRom(rom, "open", false) then
-                initComponent = rom
-                initComponentIndex = componentIndex
+                bootDevice = rom
+                bootDeviceIndex = componentIndex
                 break
             end
         end
@@ -436,8 +439,8 @@ function getBootDevice(component)
         if not initCode then
             for componentIndex, disk in ipairs(getComponents("disk")) do
                 if tryBootFromFilesystem(disk) then
-                    initComponent = disk
-                    initComponentIndex = componentIndex
+                    bootDevice = disk
+                    bootDeviceIndex = componentIndex
                     break
                 end
             end
@@ -452,21 +455,21 @@ function getBootDevice(component)
         initCode = initCode,
         initArg = initArg,
         initFs = initFs,
-        initComponent = initComponent,
-        initComponentIndex = initComponentIndex
+        bootDevice = bootDevice,
+        bootDeviceIndex = bootDeviceIndex
     }
 end
 
-function getComponentFromIndex(initComponentType, initComponentIndex)
-    if type(initComponentType) ~= "string" or type(initComponentIndex) ~= "number" then return end
-    return getComponents(initComponentType)[initComponentIndex]
+function getComponentFromIndex(bootDeviceType, bootDeviceIndex)
+    if type(bootDeviceType) ~= "string" or type(bootDeviceIndex) ~= "number" then return end
+    return getComponents(bootDeviceType)[bootDeviceIndex]
 end
 
 function getBootDeviceAuto()
     local dataTable = getTable()
 
-    if dataTable.initComponentType and dataTable.initComponentIndex then
-        local bootComponent = getComponentFromIndex(dataTable.initComponentType, dataTable.initComponentIndex)
+    if dataTable.bootDeviceType and dataTable.bootDeviceIndex then
+        local bootComponent = getComponentFromIndex(dataTable.bootDeviceType, dataTable.bootDeviceIndex)
         if bootComponent then
             local bootDevice = getBootDevice(bootComponent)
             if bootDevice then
@@ -478,11 +481,11 @@ function getBootDeviceAuto()
     local bootDevice = getBootDevice()
 
     if bootDevice then
-        dataTable.initComponentType = bootDevice.initComponent.type
-        dataTable.initComponentIndex = bootDevice.initComponentIndex
+        dataTable.bootDeviceType = bootDevice.bootDevice.type
+        dataTable.bootDeviceIndex = bootDevice.bootDeviceIndex
     else
-        dataTable.initComponentType = nil
-        dataTable.initComponentIndex = nil
+        dataTable.bootDeviceType = nil
+        dataTable.bootDeviceIndex = nil
     end
     setTable(dataTable)
 
@@ -491,8 +494,8 @@ end
 
 function setCurrentBootComponent(bootComponent)
     local ctype = bootComponent.type
-    dataTable.initComponentType = ctype
-    dataTable.initComponentIndex = getComponentIndex(ctype, bootComponent)
+    dataTable.bootDeviceType = ctype
+    dataTable.bootDeviceIndex = getComponentIndex(ctype, bootComponent)
 end
 
 function tryBoot()
