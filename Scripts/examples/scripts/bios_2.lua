@@ -281,6 +281,10 @@ function getBootDevice(component)
         end
     end
 
+    if not initCode then
+        return
+    end
+
     return {
         initCode = initCode,
         initArg = initArg,
@@ -290,19 +294,48 @@ function getBootDevice(component)
     }
 end
 
+function getBootComponentFromIndexAndType(initComponentIndex, initComponentType)
+
+end
+
+function getBootDeviceAuto()
+    local dataTable = getTable()
+
+    if dataTable.initComponentIndex then
+        local bootDevice = getBootDevice(getBootComponentFromIndexAndType(bootDevice.initComponentIndex, dataTable.initComponentType))
+
+        if bootDevice then
+            return bootDevice
+        end
+    end
+
+    local bootDevice = getBootDevice()
+
+    if bootDevice then
+        dataTable.initComponentIndex = bootDevice.initComponentIndex
+        dataTable.initComponentType = bootDevice.initComponent.type
+    else
+        dataTable.initComponentIndex = nil
+        dataTable.initComponentType = nil
+    end
+    setTable(dataTable)
+
+    return bootDevice
+end
+
 function tryBoot()
     userinterface_clear()
     userInterfaces = {}
     
-    local bootCode = getBootDevice()
+    local bootDevice = getBootDevice()
 
-    if bootCode.initCode then
+    if bootDevice.initCode then
         local function rawWriteInitCode(code)
-            if bootCode.initFs and not bootCode.initFs.isReadOnly() then
-                if not bootCode.initFs.hasFile(targetFile) then
-                    bootCode.initFs.createFile(targetFile)
+            if bootDevice.initFs and not bootDevice.initFs.isReadOnly() then
+                if not bootDevice.initFs.hasFile(targetFile) then
+                    bootDevice.initFs.createFile(targetFile)
                 end
-                bootCode.initFs.writeFile(targetFile, code)
+                bootDevice.initFs.writeFile(targetFile, code)
             end
         end
 
@@ -315,7 +348,7 @@ function tryBoot()
             function env.setCode(code)
                 checkArg(1, code, "string")
                 rawWriteInitCode(code)
-                bootCode.initCode = code
+                bootDevice.initCode = code
                 codeEncrypted = false
             end
 
@@ -323,21 +356,21 @@ function tryBoot()
                 if codeEncrypted then
                     return "THIS CODE WAS ENCRYPTED"
                 end
-                return bootCode.initCode
+                return bootDevice.initCode
             end
 
             function env.setData(code)
                 checkArg(1, code, "string")
-                if bootCode.initFs then
-                    bootCode.initFs.setData(code)
+                if bootDevice.initFs then
+                    bootDevice.initFs.setData(code)
                 else
                     virtualData = code
                 end
             end
 
             function env.getData()
-                if bootCode.initFs then
-                    return bootCode.initFs.getData()
+                if bootDevice.initFs then
+                    return bootDevice.initFs.getData()
                 end
                 return virtualData or ""
             end
@@ -354,7 +387,7 @@ function tryBoot()
                 if codeEncrypted then
                     return false
                 end
-                local bytecode = enlua.compile(bootCode.initCode)
+                local bytecode = enlua.compile(bootDevice.initCode)
                 if bytecode then
                     rawWriteInitCode(bytecode)
                     codeEncrypted = true
@@ -371,12 +404,12 @@ function tryBoot()
             return env
         end)
 
-        if enlua.load(bootCode.initCode) then
+        if enlua.load(bootDevice.initCode) then
             codeEncrypted = true
-            initProcess:enluaLoad(bootCode.initCode, bootCode.initArg)
+            initProcess:enluaLoad(bootDevice.initCode, bootDevice.initArg)
         else
             codeEncrypted = false
-            initProcess:load(bootCode.initCode, "=init", nil, bootCode.initArg)
+            initProcess:load(bootDevice.initCode, "=init", nil, bootDevice.initArg)
         end
     else
         userinterface_error("no bootable medium found")
