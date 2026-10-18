@@ -169,7 +169,9 @@ local function bootmenu_menu(scene_menu)
 
         local diskButton
         diskButton = addBootButton(component.type .. ":" .. index, function()
-            updateBootButtonColor(oldBootButtonSelected, false)
+            if oldBootButtonSelected then
+                updateBootButtonColor(oldBootButtonSelected, false)
+            end
             updateBootButtonColor(diskButton, true)
             setBootDevice(component)
         end, currentBootable)
@@ -179,11 +181,15 @@ local function bootmenu_menu(scene_menu)
         clearBootButtons()
 
         for index, component in ipairs(getComponents("disk")) do
-            addDiskButton(index, component)
+            if isBootDevice(component) then
+                addDiskButton(index, component)
+            end
         end
 
         for index, component in ipairs(getComponents("rom")) do
-            addDiskButton(index, component)
+            if isBootDevice(component) then
+                addDiskButton(index, component)
+            end
         end
     end
 
@@ -399,24 +405,11 @@ function getBootDevice(component)
 
     if component then
         if component.type == "rom" then
-            for i = 1, 1 do
-                if tryOpenRom(component, "openFilesystemImage", true) then
-                    bootDevice = component
-                    bootDeviceIndex = getComponentIndex("rom", component)
-                    break
-                end
-
-                if tryOpenRom(component, "openFilesystemDump", true) then
-                    bootDevice = component
-                    bootDeviceIndex = getComponentIndex("rom", component)
-                    break
-                end
-
-                if tryOpenRom(component, "open", false) then
-                    bootDevice = component
-                    bootDeviceIndex = getComponentIndex("rom", component)
-                    break
-                end
+            if tryOpenRom(component, "openFilesystemImage", true) or
+            tryOpenRom(component, "openFilesystemDump", true) or
+            tryOpenRom(component, "open", false) then
+                bootDevice = component
+                bootDeviceIndex = getComponentIndex("rom", component)
             end
         elseif component.type == "disk" then
             if tryBootFromFilesystem(component) then
@@ -426,19 +419,9 @@ function getBootDevice(component)
         end
     else
         for componentIndex, rom in ipairs(getComponents("rom")) do
-            if tryOpenRom(rom, "openFilesystemImage", true) then
-                bootDevice = rom
-                bootDeviceIndex = componentIndex
-                break
-            end
-
-            if tryOpenRom(rom, "openFilesystemDump", true) then
-                bootDevice = rom
-                bootDeviceIndex = componentIndex
-                break
-            end
-
-            if tryOpenRom(rom, "open", false) then
+            if tryOpenRom(rom, "openFilesystemImage", true) or
+            tryOpenRom(rom, "openFilesystemDump", true) or
+            tryOpenRom(rom, "open", false) then
                 bootDevice = rom
                 bootDeviceIndex = componentIndex
                 break
@@ -467,6 +450,10 @@ function getBootDevice(component)
         bootDevice = bootDevice,
         bootDeviceIndex = bootDeviceIndex
     }
+end
+
+function isBootDevice(bootComponent)
+    return not not getBootDevice(bootComponent)
 end
 
 function getComponentFromIndex(bootDeviceType, bootDeviceIndex)
