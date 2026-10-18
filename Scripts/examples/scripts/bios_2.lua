@@ -44,9 +44,13 @@ local function create_gui(display)
     end
 
     do
-        scene_logo = gui:createScene("000000", function()
-            selfTbl.openUi()
-        end)
+        scene_logo = gui:createScene("000000")
+
+        function scene_logo:onTick(click)
+            if click then
+                selfTbl.openUi()
+            end
+        end
         
         local label = scene_logo:createText(0, 0, "TOUCH TO DISPLAY")
         label:setBorderDown(2 + 6)
