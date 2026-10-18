@@ -26,7 +26,7 @@ local bootTimer
 
 -----------------------------------------
 
-local function create_gui(display)
+local function userinterface_create_display(display)
     local selfTbl
 
     display.reset()
@@ -116,7 +116,7 @@ local function create_gui(display)
     table.insert(userInterfaces, selfTbl)
 end
 
-local function graphic_clear()
+local function userinterface_clear()
     for _, display in ipairs(getComponents("display")) do
         display.reset()
         display.clear()
@@ -128,7 +128,7 @@ local function graphic_clear()
     end
 end
 
-local function graphic_error(text)
+local function userinterface_error(text)
     local bsodBackground = colors.sm.Blue[2]
     local bsodForeground = colors.sm.Gray[1]
     local bsodLabelBackground = colors.sm.Gray[1]
@@ -244,7 +244,7 @@ function getBootDevice(component)
 end
 
 function tryBoot()
-    graphic_clear()
+    userinterface_clear()
     userInterfaces = {}
     
     local bootCode = getBootDevice()
@@ -332,15 +332,15 @@ function tryBoot()
             initProcess:load(bootCode.initCode, "=init", nil, bootCode.initArg)
         end
     else
-        graphic_error("no bootable medium found")
+        userinterface_error("no bootable medium found")
     end
 end
 
 function onStart()
-    graphic_clear()
+    userinterface_clear()
 
     for _, display in ipairs(getComponents("display")) do
-        create_gui(display)
+        userinterface_create_display(display)
     end
 
     if #userInterfaces == 0 then
@@ -363,7 +363,7 @@ function onTick()
     if initProcess then
         local error = initProcess:getError()
         if error then
-            graphic_error(error)
+            userinterface_error(error)
             initProcess:destroy()
             initProcess = nil
         end
@@ -376,7 +376,7 @@ end
 
 function onStop()
     processhost:stop()
-    graphic_clear()
+    userinterface_clear()
 end
 
 _enableCallbacks = true
