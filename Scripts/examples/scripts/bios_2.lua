@@ -68,6 +68,10 @@ local function bootmenu_buttons(scene_menu, refreshComponents)
 end
 
 local function bootmenu_menu(scene_menu)
+    local buttonSizeY = 7
+    local posY = buttonSizeY + 2 + 1
+    local component = scene_menu:createWindow(2, posY, scene_menu.sizeX - 4, scene_menu.sizeY - posY - ((buttonSizeY + 2) * 2) - 2, 0xffffff)
+
     local function refreshComponents()
 
     end
