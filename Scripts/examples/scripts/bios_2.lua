@@ -21,6 +21,7 @@ local timerhost = timerlibrary.createHost()
 
 local userInterfaces = {}
 local bootTimer
+local manualBoot = false
 
 -----------------------------------------
 
@@ -51,7 +52,7 @@ local function userinterface_create_bootmenu(gui)
     bootButton:setPbgColor(0x000000)
     bootButton:setPfgColor(0xffffff)
     function bootButton:onDropInZone()
-        tryBoot()
+        manualBoot = true
     end
 
     return scene_menu
@@ -469,18 +470,32 @@ function onStart()
     end
 end
 
+function deleteBootTimer()
+    if bootTimer then
+        bootTimer:delete()
+        bootTimer = nil
+    end
+end
+
 function onTick()
     processhost:tick()
     timerhost:tick()
 
-    if bootTimer and bootTimer:isTriggered() then
-        tryBoot()
+    if not initProcess then
+        if bootTimer and bootTimer:isTriggered() then
+            tryBoot()
+            deleteBootTimer()
+        elseif manualBoot then
+            tryBoot()
+            deleteBootTimer()
+            manualBoot = false
+        end
     end
     
     if initProcess then
-        local error = initProcess:getError()
-        if error then
-            userinterface_error(error)
+        local errStr = initProcess:getError()
+        if errStr then
+            userinterface_error(errStr)
             initProcess:destroy()
             initProcess = nil
         end

@@ -99,7 +99,7 @@ local function setCustomFont(self)
 
     return function ()
         self.display.setFont(oldFont)
-        self.display.setFontSize(oldScaleX, oldScaleY)
+        self.display.setFontScale(oldScaleX, oldScaleY)
         self.display.setTextSpacing(oldTextSpacing)
     end
 end
