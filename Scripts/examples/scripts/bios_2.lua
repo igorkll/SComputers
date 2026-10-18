@@ -175,13 +175,9 @@ local targetKey = "init"
 
 local initProcess
 
-function tryBoot()
-    graphic_clear()
-    userInterfaces = {}
-    
+function getBootDevice(component)
     local initCode
     local initArg
-    local lastError
     local initFs
 
     local function tryBootFromFilesystem(fs)
@@ -212,25 +208,50 @@ function tryBoot()
         end
     end
 
-    for _, rom in ipairs(roms) do
-        if tryOpenRom(rom, "openFilesystemImage", true) then break end
-        if tryOpenRom(rom, "openFilesystemDump", true) then break end
-        if tryOpenRom(rom, "open", false) then break end
-    end
+    if component then
+        if component.type == "rom" then
+            for i = 1, 1 do
+                if tryOpenRom(component, "openFilesystemImage", true) then break end
+                if tryOpenRom(component, "openFilesystemDump", true) then break end
+                if tryOpenRom(component, "open", false) then break end
+            end
+        elseif component.type == "disk" then
+            tryBootFromFilesystem(component)
+        end
+    else
+        for _, rom in ipairs(roms) do
+            if tryOpenRom(rom, "openFilesystemImage", true) then break end
+            if tryOpenRom(rom, "openFilesystemDump", true) then break end
+            if tryOpenRom(rom, "open", false) then break end
+        end
 
-    if not initCode then
-        for _, disk in ipairs(disks) do
-            if tryBootFromFilesystem(disk) then break end
+        if not initCode then
+            for _, disk in ipairs(disks) do
+                if tryBootFromFilesystem(disk) then break end
+            end
         end
     end
 
-    if initCode then
+    return {
+        initCode = initCode,
+        initArg = initArg,
+        initFs = initFs
+    }
+end
+
+function tryBoot()
+    graphic_clear()
+    userInterfaces = {}
+    
+    local bootCode = getBootDevice()
+
+    if bootCode.initCode then
         local function rawWriteInitCode(code)
-            if initFs and not initFs.isReadOnly() then
-                if not initFs.hasFile(targetFile) then
-                    initFs.createFile(targetFile)
+            if bootCode.initFs and not bootCode.initFs.isReadOnly() then
+                if not bootCode.initFs.hasFile(targetFile) then
+                    bootCode.initFs.createFile(targetFile)
                 end
-                initFs.writeFile(targetFile, code)
+                bootCode.initFs.writeFile(targetFile, code)
             end
         end
 
@@ -243,7 +264,7 @@ function tryBoot()
             function env.setCode(code)
                 checkArg(1, code, "string")
                 rawWriteInitCode(code)
-                initCode = code
+                bootCode.initCode = code
                 codeEncrypted = false
             end
 
@@ -251,13 +272,13 @@ function tryBoot()
                 if codeEncrypted then
                     return "THIS CODE WAS ENCRYPTED"
                 end
-                return initCode
+                return bootCode.initCode
             end
 
             function env.setData(code)
                 checkArg(1, code, "string")
-                if initFs then
-                    initFs.setData(code)
+                if bootCode.initFs then
+                    bootCode.initFs.setData(code)
                 else
                     virtualData = code
                 end
@@ -282,7 +303,7 @@ function tryBoot()
                 if codeEncrypted then
                     return false
                 end
-                local bytecode = enlua.compile(initCode)
+                local bytecode = enlua.compile(bootCode.initCode)
                 if bytecode then
                     rawWriteInitCode(bytecode)
                     codeEncrypted = true
@@ -299,15 +320,15 @@ function tryBoot()
             return env
         end)
 
-        if enlua.load(initCode) then
+        if enlua.load(bootCode.initCode) then
             codeEncrypted = true
-            initProcess:enluaLoad(initCode, initArg)
+            initProcess:enluaLoad(bootCode.initCode, bootCode.initArg)
         else
             codeEncrypted = false
-            initProcess:load(initCode, "=init", nil, initArg)
+            initProcess:load(bootCode.initCode, "=init", nil, bootCode.initArg)
         end
     else
-        graphic_error("no bootable medium found" .. (lastError and ("\n" .. lastError) or ""))
+        graphic_error("no bootable medium found")
     end
 end
 
