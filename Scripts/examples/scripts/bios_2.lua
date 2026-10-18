@@ -70,10 +70,41 @@ end
 local function bootmenu_menu(scene_menu)
     local buttonSizeY = 7
     local posY = buttonSizeY + 2 + 1
-    local component = scene_menu:createWindow(2, posY, scene_menu.sizeX - 4, scene_menu.sizeY - posY - ((buttonSizeY + 2) * 2) - 2, 0xffffff)
+    local arroyButtonsSize = 6
+    local bootButtonsContainer = scene_menu:createWindow(2, posY, scene_menu.sizeX - 4, scene_menu.sizeY - posY - ((buttonSizeY + 2) * 2) - 2, 0xffffff)
+
+    local arrowPosX = bootButtonsContainer.sizeX - arroyButtonsSize - 1
+    local arrowSizeY = 25
+    local arrowUp = bootButtonsContainer:createButton(arrowPosX, 1, arroyButtonsSize, arrowSizeY, false, "V", 0x000000, 0xffffff)
+
+    local bootButtons = {}
+    local bootButtonPosY = 1
+
+    local function clearBootButtons()
+        bootButtonPosY = 1
+
+        for _, bootButton in ipairs(bootButtons) do
+            bootButton:destroy()
+        end
+
+        bootButtons = {}
+    end
+
+    local function addBootButton()
+        local bootButton = bootButtonsContainer:createButton(1, bootButtonPosY, arrowPosX - 2, buttonSizeY, false, "QWE", 0x000000, 0xffffff)
+        bootButton:setPbgColor(0x0000ff)
+        bootButton:setPfgColor(0xffffff)
+
+        table.insert(bootButtons, bootButton)
+        bootButtonPosY = bootButtonPosY + buttonSizeY + 1
+    end
 
     local function refreshComponents()
+        clearBootButtons()
 
+        addBootButton()
+        addBootButton()
+        addBootButton()
     end
 
     return refreshComponents
