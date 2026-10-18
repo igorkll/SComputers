@@ -912,7 +912,9 @@ local function windowPosCheck(self)
 end
 
 local function getLocalPosition(self, click)
-    return click.x - self.x, click.y - self.y
+    if not click then return self.lastClkX, self.lastClkY end
+    self.lastClkX, self.lastClkY = click.x - self.x, click.y - self.y
+    return self.lastClkX, self.lastClkY
 end
 
 local function processNewCallbacks(click, self, state, inZone)
@@ -1062,7 +1064,7 @@ function objinstance:_tick(click)
             for i = #objs, 1, -1 do
                 sc.yield()
                 local obj = objs[i]
-                if not objs.destroyed and obj:_tick(click) then
+                if not obj.destroyed and obj:_tick(click) then
                     elementCapture = true
                     if clktype ~= "released" then
                         break
