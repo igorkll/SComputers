@@ -94,6 +94,11 @@ local function bootmenu_menu(scene_menu)
     local bootButtons = {}
     local bootButtonPosY = 1
 
+    local baseScroll = 1
+    local scrollStep = buttonSizeY + 1
+    local baseScrollMax = 1
+    local baseScrollMin = 1
+
     local function incBootButtonPosY()
         bootButtonPosY = bootButtonPosY + buttonSizeY + 1
     end
@@ -108,6 +113,8 @@ local function bootmenu_menu(scene_menu)
 
     local function clearBootButtons()
         bootButtonPosY = 1
+        baseScrollMin = 1
+        baseScroll = 1
 
         for _, bootButton in ipairs(bootButtons) do
             bootButton:destroy()
@@ -115,11 +122,6 @@ local function bootmenu_menu(scene_menu)
 
         bootButtons = {}
     end
-
-    local baseScroll = 1
-    local scrollStep = buttonSizeY + 1
-    local baseScrollMax = 1
-    local baseScrollMin = -55
 
     function arrowUp:onDropInZone()
         baseScroll = baseScroll + scrollStep
@@ -130,6 +132,7 @@ local function bootmenu_menu(scene_menu)
     function arrowDown:onDropInZone()
         baseScroll = baseScroll - scrollStep
         if baseScroll < baseScrollMin then baseScroll = baseScrollMin end
+        print(baseScroll, baseScrollMin)
         setScrollButtons(baseScroll)
     end
 
@@ -137,6 +140,10 @@ local function bootmenu_menu(scene_menu)
         local bootButton = bootButtonsContainer:createButton(1, bootButtonPosY, arrowPosX - 2, buttonSizeY, false, "QWE", 0x000000, 0xffffff)
         bootButton:setPbgColor(0x0000ff)
         bootButton:setPfgColor(0xffffff)
+
+        if #bootButtons > 0 then
+            baseScrollMin = baseScrollMin - buttonSizeY - 1
+        end
 
         table.insert(bootButtons, bootButton)
         incBootButtonPosY()
