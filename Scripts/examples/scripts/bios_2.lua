@@ -45,7 +45,7 @@ local function userinterface_create_display(display)
         scene_logo = gui:createScene("000000")
 
         function scene_logo:onTick(click)
-            if click then
+            if click and click.state == "pressed" then
                 selfTbl.openUi()
             end
         end
@@ -300,7 +300,7 @@ end
 function getBootDeviceAuto()
     local dataTable = getTable()
 
-    if dataTable.initComponentIndex then
+    if dataTable.initComponentType and dataTable.initComponentIndex then
         local bootComponent = getComponentFromIndex(dataTable.initComponentType, dataTable.initComponentIndex)
         if bootComponent then
             local bootDevice = getBootDevice(bootComponent)
