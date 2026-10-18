@@ -37,22 +37,43 @@ local function userinterface_create_bootmenu(gui)
 
     refreshComponents()
 
-    local refreshButton = scene_menu:createButton(0, 0, (scene_menu.sizeX / 2) - 3, objHeight, false, "REFRESH", 0xffffff, 0x0000ff)
+    local buttonSizeX = (scene_menu.sizeX / 2) - 3
+
+    local function setupButton(button, oldButton)
+        button:setPbgColor(0x000000)
+        button:setPfgColor(0xffffff)
+    end
+
+    local refreshButton = scene_menu:createButton(0, 0, buttonSizeX, objHeight, false, "REFRESH", 0xffffff, 0x0000ff)
+    setupButton(refreshButton)
+    refreshButton:setBorderDown(2 + objHeight + 2)
     refreshButton:setBorderLeft(2)
-    refreshButton:setBorderDown(1)
-    refreshButton:setPbgColor(0x000000)
-    refreshButton:setPfgColor(0xffffff)
     function refreshButton:onDropInZone()
         refreshComponents()
     end
 
-    local bootButton = scene_menu:createButton(0, 0, (scene_menu.sizeX / 2) - 3, objHeight, false, "BOOT", 0xffffff, 0x0000ff)
+    local bootButton = scene_menu:createButton(0, 0, buttonSizeX, objHeight, false, "BOOT", 0xffffff, 0x0000ff)
+    setupButton(bootButton, refreshButton)
+    bootButton:setBorderDown(2)
     bootButton:setBorderRight(2)
-    bootButton:setBorderDown(1)
-    bootButton:setPbgColor(0x000000)
-    bootButton:setPfgColor(0xffffff)
     function bootButton:onDropInZone()
         manualBoot = true
+    end
+
+    local rebootButton = scene_menu:createButton(0, 0, buttonSizeX, objHeight, false, "REBOOT", 0xffffff, 0x0000ff)
+    setupButton(rebootButton, bootButton)
+    rebootButton:setBorderDown(2)
+    rebootButton:setBorderLeft(2)
+    function rebootButton:onDropInZone()
+        reboot()
+    end
+
+    local settingsButton = scene_menu:createButton(0, 0, buttonSizeX, objHeight, false, "SETTINGS", 0xffffff, 0x0000ff)
+    setupButton(settingsButton, rebootButton)
+    settingsButton:setBorderDown(2 + objHeight + 2)
+    settingsButton:setBorderRight(2)
+    function settingsButton:onDropInZone()
+        
     end
 
     return scene_menu
