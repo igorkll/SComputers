@@ -140,7 +140,9 @@ local function bootmenu_menu(scene_menu)
         bootButton:setPbgColor(0x0000ff)
         bootButton:setPfgColor(currentBootable and 0xff00ff or 0xffffff)
         bootButton:setFgColor(currentBootable and 0xff00ff or 0xffffff)
-        oldBootButtonSelected = bootButton
+        if currentBootable then
+            oldBootButtonSelected = bootButton
+        end
     end
 
     local function addBootButton(title, callback, currentBootable)
