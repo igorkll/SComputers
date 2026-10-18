@@ -301,7 +301,7 @@ function getBootDeviceAuto()
     local dataTable = getTable()
 
     if dataTable.initComponentIndex then
-        local bootComponent = getComponentFromIndex(dataTable.initComponentType, bootDevice.initComponentIndex)
+        local bootComponent = getComponentFromIndex(dataTable.initComponentType, dataTable.initComponentIndex)
         if bootComponent then
             local bootDevice = getBootDevice(bootComponent)
             if bootDevice then
@@ -328,9 +328,9 @@ function tryBoot()
     userinterface_clear()
     userInterfaces = {}
     
-    local bootDevice = getBootDevice()
+    local bootDevice = getBootDeviceAuto()
 
-    if bootDevice.initCode then
+    if bootDevice and bootDevice.initCode then
         local function rawWriteInitCode(code)
             if bootDevice.initFs and not bootDevice.initFs.isReadOnly() then
                 if not bootDevice.initFs.hasFile(targetFile) then
