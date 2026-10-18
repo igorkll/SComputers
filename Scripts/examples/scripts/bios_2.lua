@@ -14,8 +14,6 @@ local guilib = require("gui")
 local styles = require("styles")
 local objs = require("objs")
 
-local roms = getComponents("rom")
-local disks = getComponents("disk")
 local processhost = processlibrary.createHost()
 local timerhost = timerlibrary.createHost()
 
@@ -180,7 +178,7 @@ local targetKey = "init"
 local initProcess
 
 function getComponentIndex(ctype, component)
-    for componentIndex, _component in ipairs(disks) do
+    for componentIndex, _component in ipairs(getComponents(ctype)) do
         if component == _component then
             return componentIndex
         end
@@ -250,7 +248,7 @@ function getBootDevice(component)
             end
         end
     else
-        for componentIndex, rom in ipairs(roms) do
+        for componentIndex, rom in ipairs(getComponents("rom")) do
             if tryOpenRom(rom, "openFilesystemImage", true) then
                 initComponent = rom
                 initComponentIndex = componentIndex
@@ -271,7 +269,7 @@ function getBootDevice(component)
         end
 
         if not initCode then
-            for componentIndex, disk in ipairs(disks) do
+            for componentIndex, disk in ipairs(getComponents("disk")) do
                 if tryBootFromFilesystem(disk) then
                     initComponent = disk
                     initComponentIndex = componentIndex
@@ -294,29 +292,32 @@ function getBootDevice(component)
     }
 end
 
-function getBootComponentFromIndexAndType(initComponentIndex, initComponentType)
-
+function getComponentFromIndex(initComponentType, initComponentIndex)
+    if type(initComponentType) ~= "string" or type(initComponentIndex) ~= "number" then return end
+    return getComponents(initComponentType)[initComponentIndex]
 end
 
 function getBootDeviceAuto()
     local dataTable = getTable()
 
     if dataTable.initComponentIndex then
-        local bootDevice = getBootDevice(getBootComponentFromIndexAndType(bootDevice.initComponentIndex, dataTable.initComponentType))
-
-        if bootDevice then
-            return bootDevice
+        local bootComponent = getComponentFromIndex(dataTable.initComponentType, bootDevice.initComponentIndex)
+        if bootComponent then
+            local bootDevice = getBootDevice(bootComponent)
+            if bootDevice then
+                return bootDevice
+            end
         end
     end
 
     local bootDevice = getBootDevice()
 
     if bootDevice then
-        dataTable.initComponentIndex = bootDevice.initComponentIndex
         dataTable.initComponentType = bootDevice.initComponent.type
+        dataTable.initComponentIndex = bootDevice.initComponentIndex
     else
-        dataTable.initComponentIndex = nil
         dataTable.initComponentType = nil
+        dataTable.initComponentIndex = nil
     end
     setTable(dataTable)
 
