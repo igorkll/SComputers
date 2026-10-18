@@ -751,64 +751,73 @@ function objinstance:setText(text)
 end
 
 function objinstance:setFgColor(color)
-    if self.fg ~= color then
-        self.fg = formatColor(color)
+    local formattedColor = formatColor(color)
+    if self.fg ~= formattedColor then
+        self.fg = formattedColor
         self:update()
     end
 end
 
 function objinstance:setBgColor(color)
-    if self.bg ~= color then
-        self.bg = color and formatColor(color)
+    local formattedColor = color and formatColor(color)
+    if self.bg ~= formattedColor then
+        self.bg = formattedColor
         self:update()
     end
 end
 
 function objinstance:setPfgColor(color)
-    if self.fg_press ~= color then
-        self.fg_press = formatColor(color)
+    local formattedColor = formatColor(color)
+    if self.fg_press ~= formattedColor then
+        self.fg_press = formattedColor
         self:update()
     end
 end
 
 function objinstance:setPbgColor(color)
-    if self.bg_press ~= color then
-        self.bg_press = formatColor(color)
+    local formattedColor = formatColor(color)
+    if self.bg_press ~= formattedColor then
+        self.bg_press = formattedColor
         self:update()
     end
 end
 
 function objinstance:setIbgColor(color)
-    if self.bg_interaction ~= color then
-        self.bg_interaction = formatColor(color)
+    local formattedColor = formatColor(color)
+    if self.bg_interaction ~= formattedColor then
+        self.bg_interaction = formattedColor
         self:update()
     end
 end
 
 function objinstance:setIfgColor(color)
-    if self.fg_interaction ~= color then
-        self.fg_interaction = formatColor(color)
+    local formattedColor = formatColor(color)
+    if self.fg_interaction ~= formattedColor then
+        self.fg_interaction = formattedColor
         self:update()
     end
 end
 
 function objinstance:setStColor(color)
-    if self.stroke_color ~= color then
-        self.stroke_color = formatColor(color)
+    local formattedColor = formatColor(color)
+    if self.stroke_color ~= formattedColor then
+        self.stroke_color = formattedColor
         self:update()
     end
 end
 
 function objinstance:setPstColor(color)
-    if self.stroke_press ~= color then
-        self.stroke_press = formatColor(color)
+    local formattedColor = formatColor(color)
+    if self.stroke_press ~= formattedColor then
+        self.stroke_press = formattedColor
         self:update()
     end
 end
 
 function objinstance:setIstColor(color)
-    if self.stroke_interaction ~= color then
-        self.stroke_interaction = formatColor(color)
+    local formattedColor = formatColor(color)
+    if self.stroke_interaction ~= formattedColor then
+        self.stroke_interaction = formattedColor
         self:update()
     end
 end
