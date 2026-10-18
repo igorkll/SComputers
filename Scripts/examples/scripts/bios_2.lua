@@ -25,18 +25,8 @@ local manualBoot = false
 
 -----------------------------------------
 
-local function userinterface_create_bootmenu(gui)
-    local scene_menu = gui:createScene("0000ff")
-    local objHeight = 7
-
-    scene_menu:createLabel(1, 1, scene_menu.sizeX - 2, objHeight, "BIOS 2 - BOOT MENU", 0xffffff, 0x0000ff)
-
-    local function refreshComponents()
-
-    end
-
-    refreshComponents()
-
+local function bootmenu_buttons(scene_menu, refreshComponents)
+    local buttonSizeY = 7
     local buttonSizeX = (scene_menu.sizeX / 2) - 3
 
     local function setupButton(button, oldButton)
@@ -44,15 +34,15 @@ local function userinterface_create_bootmenu(gui)
         button:setPfgColor(0xffffff)
     end
 
-    local refreshButton = scene_menu:createButton(0, 0, buttonSizeX, objHeight, false, "REFRESH", 0xffffff, 0x0000ff)
+    local refreshButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "REFRESH", 0xffffff, 0x0000ff)
     setupButton(refreshButton)
-    refreshButton:setBorderDown(2 + objHeight + 2)
+    refreshButton:setBorderDown(2 + buttonSizeY + 2)
     refreshButton:setBorderLeft(2)
     function refreshButton:onDropInZone()
         refreshComponents()
     end
 
-    local bootButton = scene_menu:createButton(0, 0, buttonSizeX, objHeight, false, "BOOT", 0xffffff, 0x0000ff)
+    local bootButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "BOOT", 0xffffff, 0x0000ff)
     setupButton(bootButton, refreshButton)
     bootButton:setBorderDown(2)
     bootButton:setBorderRight(2)
@@ -60,7 +50,7 @@ local function userinterface_create_bootmenu(gui)
         manualBoot = true
     end
 
-    local rebootButton = scene_menu:createButton(0, 0, buttonSizeX, objHeight, false, "REBOOT", 0xffffff, 0x0000ff)
+    local rebootButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "REBOOT", 0xffffff, 0x0000ff)
     setupButton(rebootButton, bootButton)
     rebootButton:setBorderDown(2)
     rebootButton:setBorderLeft(2)
@@ -68,13 +58,32 @@ local function userinterface_create_bootmenu(gui)
         reboot()
     end
 
-    local settingsButton = scene_menu:createButton(0, 0, buttonSizeX, objHeight, false, "SETTINGS", 0xffffff, 0x0000ff)
+    local settingsButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "SETTINGS", 0xffffff, 0x0000ff)
     setupButton(settingsButton, rebootButton)
-    settingsButton:setBorderDown(2 + objHeight + 2)
+    settingsButton:setBorderDown(2 + buttonSizeY + 2)
     settingsButton:setBorderRight(2)
     function settingsButton:onDropInZone()
         
     end
+end
+
+local function bootmenu_menu(scene_menu)
+    local function refreshComponents()
+
+    end
+
+    return refreshComponents
+end
+
+local function bootmenu(gui)
+    local scene_menu = gui:createScene("0000ff")
+    scene_menu:createLabel(1, 1, scene_menu.sizeX - 2, objHeight, "BIOS 2 - BOOT MENU", 0xffffff, 0x0000ff)
+
+    local refreshComponents = bootmenu_menu(scene_menu)
+
+    refreshComponents()
+
+    bootmenu_buttons(scene_menu, refreshComponents)
 
     return scene_menu
 end
@@ -130,7 +139,7 @@ local function userinterface_create_display(display)
         addLogo(scene_ignore)
     end
 
-    scene_menu = userinterface_create_bootmenu(gui)
+    scene_menu = bootmenu(gui)
 
     local function openUi()
         bootTimer:setEnabled(false)
