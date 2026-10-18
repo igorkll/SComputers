@@ -13,6 +13,7 @@ local enlua = require("enlua")
 local guilib = require("gui")
 local styles = require("styles")
 local objs = require("objs")
+local fonts = require("fonts")
 
 local processhost = processlibrary.createHost()
 local timerhost = timerlibrary.createHost()
@@ -70,12 +71,23 @@ end
 local function bootmenu_menu(scene_menu)
     local buttonSizeY = 7
     local posY = buttonSizeY + 2 + 1
-    local arroyButtonsSize = 6
+    local arroyButtonsSize = 12
     local bootButtonsContainer = scene_menu:createWindow(2, posY, scene_menu.sizeX - 4, scene_menu.sizeY - posY - ((buttonSizeY + 2) * 2) - 2, 0xffffff)
 
     local arrowPosX = bootButtonsContainer.sizeX - arroyButtonsSize - 1
-    local arrowSizeY = 25
-    local arrowUp = bootButtonsContainer:createButton(arrowPosX, 1, arroyButtonsSize, arrowSizeY, false, "V", 0x000000, 0xffffff)
+    local arrowSizeY = (bootButtonsContainer.sizeY / 2) - 2
+
+    local arrowUp = bootButtonsContainer:createButton(arrowPosX, 0, arroyButtonsSize, arrowSizeY, false, "^", 0x000000, 0xffffff)
+    arrowUp:setBorderUp(1)
+    arrowUp:setPbgColor(0x0000ff)
+    arrowUp:setPfgColor(0xffffff)
+    arrowUp:setFontParameters(fonts.wingding_72, 60, 60)
+    
+    local arrowDown = bootButtonsContainer:createButton(arrowPosX, 0, arroyButtonsSize, arrowSizeY, false, "V", 0x000000, 0xffffff)
+    arrowDown:setBorderDown(1)
+    arrowDown:setPbgColor(0x0000ff)
+    arrowDown:setPfgColor(0xffffff)
+    arrowDown:setFontParameters(fonts.wingding_72, 60, 60)
 
     local bootButtons = {}
     local bootButtonPosY = 1
