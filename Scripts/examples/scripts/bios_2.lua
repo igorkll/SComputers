@@ -132,13 +132,13 @@ local function bootmenu_menu(scene_menu)
     function arrowDown:onDropInZone()
         baseScroll = baseScroll - scrollStep
         if baseScroll < baseScrollMin then baseScroll = baseScrollMin end
-        print(baseScroll, baseScrollMin)
         setScrollButtons(baseScroll)
     end
 
     local function updateBootButtonColor(bootButton, currentBootable)
         bootButton:setPbgColor(0x0000ff)
-        bootButton:setPfgColor(currentBootable and 0xff0000 or 0xffffff)
+        bootButton:setPfgColor(currentBootable and 0xff00ff or 0xffffff)
+        bootButton:setFgColor(currentBootable and 0xff00ff or 0xffffff)
     end
 
     local function addBootButton(title, callback, currentBootable)
@@ -159,11 +159,11 @@ local function bootmenu_menu(scene_menu)
 
     local function addDiskButton(index, component)
         local dataTable = getTable()
-        local currentBootable = dataTable.bootDeviceType == component.type && dataTable.bootDeviceIndex == index
+        local currentBootable = dataTable.bootDeviceType == component.type and dataTable.bootDeviceIndex == index
 
         addBootButton(component.type .. ":" .. index, function()
         
-        end, )
+        end, currentBootable)
     end
 
     local function refreshComponents()
@@ -494,8 +494,10 @@ end
 
 function setCurrentBootComponent(bootComponent)
     local ctype = bootComponent.type
+    local dataTable = getTable()
     dataTable.bootDeviceType = ctype
     dataTable.bootDeviceIndex = getComponentIndex(ctype, bootComponent)
+    setTable(dataTable)
 end
 
 function tryBoot()
