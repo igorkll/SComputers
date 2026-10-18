@@ -135,10 +135,12 @@ local function bootmenu_menu(scene_menu)
         setScrollButtons(baseScroll)
     end
 
+    local oldBootButtonSelected
     local function updateBootButtonColor(bootButton, currentBootable)
         bootButton:setPbgColor(0x0000ff)
         bootButton:setPfgColor(currentBootable and 0xff00ff or 0xffffff)
         bootButton:setFgColor(currentBootable and 0xff00ff or 0xffffff)
+        oldBootButtonSelected = bootButton
     end
 
     local function addBootButton(title, callback, currentBootable)
@@ -155,14 +157,19 @@ local function bootmenu_menu(scene_menu)
         function bootButton:onDropInZone()
             callback()
         end
+
+        return bootButton
     end
 
     local function addDiskButton(index, component)
         local dataTable = getTable()
         local currentBootable = dataTable.bootDeviceType == component.type and dataTable.bootDeviceIndex == index
 
-        addBootButton(component.type .. ":" .. index, function()
-        
+        local diskButton
+        diskButton = addBootButton(component.type .. ":" .. index, function()
+            updateBootButtonColor(oldBootButtonSelected, false)
+            updateBootButtonColor(diskButton, true)
+            setBootDevice(component)
         end, currentBootable)
     end
 
@@ -492,7 +499,7 @@ function getBootDeviceAuto()
     return bootDevice
 end
 
-function setCurrentBootComponent(bootComponent)
+function setBootDevice(bootComponent)
     local ctype = bootComponent.type
     local dataTable = getTable()
     dataTable.bootDeviceType = ctype
