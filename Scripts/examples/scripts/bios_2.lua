@@ -24,6 +24,35 @@ local bootTimer
 
 -----------------------------------------
 
+local function userinterface_create_bootmenu(gui)
+    local scene_menu = gui:createScene("0000ff")
+    local objHeight = 7
+
+    scene_menu:createLabel(1, 1, scene_menu.sizeX - 2, objHeight, "BIOS 2 - BOOT MENU", 0xffffff, 0x0000ff)
+
+    local function refreshComponents()
+
+    end
+
+    refreshComponents()
+
+    local refreshButton = scene_menu:createButton(0, 0, scene_menu.sizeX - 3, objHeight, "REFRESH", 0xffffff, 0x0000ff)
+    refreshButton:setBorderLeft(1)
+    refreshButton:setBorderDown(1)
+    function refreshButton:onDropInZone()
+        refreshComponents()
+    end
+
+    local bootButton = scene_menu:createButton(0, 0, scene_menu.sizeX - 3, objHeight, "BOOT", 0xffffff, 0x0000ff)
+    bootButton:setBorderRight(1)
+    bootButton:setBorderDown(1)
+    function bootButton:onDropInZone()
+        
+    end
+
+    return scene_menu
+end
+
 local function userinterface_create_display(display)
     local selfTbl
 
@@ -75,10 +104,7 @@ local function userinterface_create_display(display)
         addLogo(scene_ignore)
     end
 
-    do
-        scene_menu = gui:createScene("0000ff")
-
-    end
+    scene_menu = userinterface_create_bootmenu(gui)
 
     local function openUi()
         bootTimer:setEnabled(false)
@@ -322,6 +348,12 @@ function getBootDeviceAuto()
     setTable(dataTable)
 
     return bootDevice
+end
+
+function setCurrentBootComponent(bootComponent)
+    local ctype = bootComponent.type
+    dataTable.initComponentType = ctype
+    dataTable.initComponentIndex = getComponentIndex(ctype, bootComponent)
 end
 
 function tryBoot()
