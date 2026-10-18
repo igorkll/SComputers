@@ -71,23 +71,24 @@ end
 local function bootmenu_menu(scene_menu)
     local buttonSizeY = 7
     local posY = buttonSizeY + 2 + 1
-    local arroyButtonsSize = 12
+    local arrowButtonsSize = 25
+    local arrowButtonsFontSize = 30
     local bootButtonsContainer = scene_menu:createWindow(2, posY, scene_menu.sizeX - 4, scene_menu.sizeY - posY - ((buttonSizeY + 2) * 2) - 2, 0xffffff)
 
-    local arrowPosX = bootButtonsContainer.sizeX - arroyButtonsSize - 1
-    local arrowSizeY = (bootButtonsContainer.sizeY / 2) - 2
+    local arrowPosX = bootButtonsContainer.sizeX - arrowButtonsSize - 1
+    local arrowSizeY = bootButtonsContainer.sizeY / 4
 
-    local arrowUp = bootButtonsContainer:createButton(arrowPosX, 0, arroyButtonsSize, arrowSizeY, false, "^", 0x000000, 0xffffff)
+    local arrowUp = bootButtonsContainer:createButton(arrowPosX, 0, arrowButtonsSize, arrowSizeY, false, "5", 0x000000, 0xffffff)
     arrowUp:setBorderUp(1)
     arrowUp:setPbgColor(0x0000ff)
     arrowUp:setPfgColor(0xffffff)
-    arrowUp:setFontParameters(fonts.wingding_72, 60, 60)
+    arrowUp:setFontParameters(fonts.webdings_32, arrowButtonsFontSize, arrowButtonsFontSize)
     
-    local arrowDown = bootButtonsContainer:createButton(arrowPosX, 0, arroyButtonsSize, arrowSizeY, false, "V", 0x000000, 0xffffff)
+    local arrowDown = bootButtonsContainer:createButton(arrowPosX, 0, arrowButtonsSize, arrowSizeY, false, "6", 0x000000, 0xffffff)
     arrowDown:setBorderDown(1)
     arrowDown:setPbgColor(0x0000ff)
     arrowDown:setPfgColor(0xffffff)
-    arrowDown:setFontParameters(fonts.wingding_72, 60, 60)
+    arrowDown:setFontParameters(fonts.webdings_32, arrowButtonsFontSize, arrowButtonsFontSize)
 
     local bootButtons = {}
     local bootButtonPosY = 1
@@ -141,6 +142,7 @@ local function userinterface_create_display(display)
     display.reset()
     display.clearClicks()
     display.setClicksAllowed(true)
+    display.setUtf8Support(true)
     local rx, ry = display.getWidth(), display.getHeight()
 
     local gui = guilib.new(display)
