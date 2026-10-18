@@ -74,6 +74,7 @@ local function bootmenu_menu(scene_menu)
     local arrowButtonsSize = 25
     local arrowButtonsFontSize = 30
     local bootButtonsContainer = scene_menu:createWindow(2, posY, scene_menu.sizeX - 4, scene_menu.sizeY - posY - ((buttonSizeY + 2) * 2) - 2, 0xffffff)
+    bootButtonsContainer:setAutoViewport(true)
 
     local arrowPosX = bootButtonsContainer.sizeX - arrowButtonsSize - 1
     local arrowSizeY = bootButtonsContainer.sizeY / 4
@@ -93,6 +94,18 @@ local function bootmenu_menu(scene_menu)
     local bootButtons = {}
     local bootButtonPosY = 1
 
+    local function incBootButtonPosY()
+        bootButtonPosY = bootButtonPosY + buttonSizeY + 1
+    end
+
+    local function setScrollButtons(offset)
+        bootButtonPosY = offset
+        for _, bootButton in ipairs(bootButtons) do
+            bootButton:setPositionY(bootButtonPosY)
+            incBootButtonPosY()
+        end
+    end
+
     local function clearBootButtons()
         bootButtonPosY = 1
 
@@ -103,13 +116,30 @@ local function bootmenu_menu(scene_menu)
         bootButtons = {}
     end
 
+    local baseScroll = 1
+    local scrollStep = buttonSizeY + 1
+    local baseScrollMax = 1
+    local baseScrollMin = -55
+
+    function arrowUp:onDropInZone()
+        baseScroll = baseScroll + scrollStep
+        if baseScroll > baseScrollMax then baseScroll = baseScrollMax end
+        setScrollButtons(baseScroll)
+    end
+
+    function arrowDown:onDropInZone()
+        baseScroll = baseScroll - scrollStep
+        if baseScroll < baseScrollMin then baseScroll = baseScrollMin end
+        setScrollButtons(baseScroll)
+    end
+
     local function addBootButton()
         local bootButton = bootButtonsContainer:createButton(1, bootButtonPosY, arrowPosX - 2, buttonSizeY, false, "QWE", 0x000000, 0xffffff)
         bootButton:setPbgColor(0x0000ff)
         bootButton:setPfgColor(0xffffff)
 
         table.insert(bootButtons, bootButton)
-        bootButtonPosY = bootButtonPosY + buttonSizeY + 1
+        incBootButtonPosY()
     end
 
     local function refreshComponents()
