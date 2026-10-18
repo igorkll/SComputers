@@ -136,10 +136,14 @@ local function bootmenu_menu(scene_menu)
         setScrollButtons(baseScroll)
     end
 
-    local function addBootButton()
-        local bootButton = bootButtonsContainer:createButton(1, bootButtonPosY, arrowPosX - 2, buttonSizeY, false, "QWE", 0x000000, 0xffffff)
+    local function updateBootButtonColor(bootButton, currentBootable)
         bootButton:setPbgColor(0x0000ff)
-        bootButton:setPfgColor(0xffffff)
+        bootButton:setPfgColor(currentBootable and 0xff0000 or 0xffffff)
+    end
+
+    local function addBootButton(title, callback, currentBootable)
+        local bootButton = bootButtonsContainer:createButton(1, bootButtonPosY, arrowPosX - 2, buttonSizeY, false, title, 0x000000, 0xffffff)
+        updateBootButtonColor(bootButton, currentBootable)
 
         if #bootButtons > 0 then
             baseScrollMin = baseScrollMin - buttonSizeY - 1
@@ -147,14 +151,28 @@ local function bootmenu_menu(scene_menu)
 
         table.insert(bootButtons, bootButton)
         incBootButtonPosY()
+
+        function bootButton:onDropInZone()
+            callback()
+        end
+    end
+
+    local function addDiskButton(index, component)
+        addBootButton(component.type .. ":" .. , function()
+        
+        end, )
     end
 
     local function refreshComponents()
         clearBootButtons()
 
-        addBootButton()
-        addBootButton()
-        addBootButton()
+        for index, component in ipairs(getComponents("disk")) do
+            addDiskButton(index, component)
+        end
+
+        for index, component in ipairs(getComponents("rom")) do
+            addDiskButton(index, component)
+        end
     end
 
     return refreshComponents
