@@ -156,7 +156,7 @@ function PermissionTool.client_onNewSettings(self, data)
     _G.serverTempSettings = data[2]
 
     if settings.optSpeed then
-        settings.optSpeed = round(settings.optSpeed, 1)
+        settings.optSpeed = roundTo(settings.optSpeed, 1)
     end
     _G.serverSettings = settings
 end
@@ -202,7 +202,7 @@ function PermissionTool.cl_guiUpdateButtons(self)
     self.gui:setText("disableSplash", "Disable Splash: " .. tostring(self.currentSettings.disableSplash) .. (self.currentSettings.disableSplash and " (dangerous)" or ""))
 
     if type(self.currentSettings.lagDetector) == "number" then
-        self.gui:setText("lagDetector", "Anti-Lag: " .. tostring(round(self.currentSettings.lagDetector, 3)))
+        self.gui:setText("lagDetector", "Anti-Lag: " .. tostring(roundTo(self.currentSettings.lagDetector, 3)))
     else
         self.gui:setText("lagDetector", "Anti-Lag: false")
     end
@@ -236,7 +236,7 @@ function PermissionTool.cl_guiUpdateButtons(self)
     local cputimename = "unknown"
     local altTitle
     local cpu = self.currentSettings.cpu
-    cpu = round(cpu, 5)
+    cpu = roundTo(cpu, 5)
     if cpu == onetick / 2 then
         cputimename = "half tick"
     elseif cpu == -1 then
@@ -309,8 +309,10 @@ end
 function PermissionTool:client_onCpuPress()
     if not self:client_canChangeSettings() then return end
 
+    print(self.currentSettings.cpu, type(self.currentSettings.cpu))
+
     local onetick = 1 / 40
-    self.currentSettings.cpu = round(self.currentSettings.cpu, 5)
+    self.currentSettings.cpu = roundTo(self.currentSettings.cpu, 5)
     if self.currentSettings.cpu == onetick / 2 then
         self.currentSettings.cpu = onetick
     elseif self.currentSettings.cpu == -1 then
@@ -333,7 +335,7 @@ function PermissionTool:client_onCpuPress()
             self.currentSettings.cpu = -1
         end
     end
-    self.currentSettings.cpu = round(self.currentSettings.cpu, 5)
+    self.currentSettings.cpu = roundTo(self.currentSettings.cpu, 5)
 end
 
 function PermissionTool.client_onScriptModeButtonPressed(self)
@@ -454,6 +456,7 @@ end
 
 function PermissionTool:client_lagDetector()
     if not self:client_canChangeSettings() then return end
+    print(self.currentSettings.lagDetector, type(self.currentSettings.lagDetector))
 
     if self.currentSettings.lagDetector == 0.5 then
         self.currentSettings.lagDetector = 0.75
@@ -471,7 +474,7 @@ function PermissionTool:client_lagDetector()
         if type(self.currentSettings.lagDetector) ~= "number" then
             self.currentSettings.lagDetector = 0
         end
-        self.currentSettings.lagDetector = round(self.currentSettings.lagDetector, 3)
+        self.currentSettings.lagDetector = roundTo(self.currentSettings.lagDetector, 3)
     
         self.currentSettings.lagDetector = self.currentSettings.lagDetector + 0.1
         if self.currentSettings.lagDetector > 3 then
@@ -529,7 +532,7 @@ function PermissionTool:client_onOptSPress()
     if self.currentSettings.optSpeed > 5 then
         self.currentSettings.optSpeed = false
     else
-        self.currentSettings.optSpeed = round(self.currentSettings.optSpeed, 1)
+        self.currentSettings.optSpeed = roundTo(self.currentSettings.optSpeed, 1)
     end
 end
 

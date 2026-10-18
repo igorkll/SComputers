@@ -211,13 +211,21 @@ function mathDist(pos1, pos2)
     return math_sqrt(((pos1.x - pos2.x) ^ 2) + ((pos1.y - pos2.y) ^ 2) + ((pos1.z - pos2.z) ^ 2))
 end
 
-function round(number, numbers)
+function roundTo(number, numbers)
     numbers = numbers or 3
     return tonumber(string_format("%." .. tostring(math_floor(numbers)) .. "f", number))
 end
 
 function mathRound(number)
     return math.floor(number + 0.5)
+end
+
+function round(number)
+    if number >= 0 then
+        return math.floor(number + 0.5)
+    else
+        return math.ceil(number - 0.5)
+    end
 end
 
 function isNan(number)

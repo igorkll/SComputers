@@ -29,13 +29,7 @@ defaultLibs = {
         sqrt = math.sqrt,
         tan = math.tan,
         tanh = math.tanh,
-        round = function(number)
-            if number >= 0 then
-                return math.floor(number + 0.5)
-            else
-                return math.ceil(number - 0.5)
-            end
-        end
+        round = round
     },
     string = {
         byte = string.byte,

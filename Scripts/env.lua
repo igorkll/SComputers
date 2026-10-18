@@ -675,7 +675,7 @@ function createSafeEnv(self, settings, fromProcessLibrary, isolation)
             end
         end,
         getMaxAvailableCpuTime = function ()
-            return round(self.localScriptMode.cpulimit or sc.restrictions.cpu, 5)
+            return roundTo(self.localScriptMode.cpulimit or sc.restrictions.cpu, 5)
         end,
 
         getDeltaTime = function ()
