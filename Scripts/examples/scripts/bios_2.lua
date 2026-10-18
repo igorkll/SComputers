@@ -179,6 +179,14 @@ local targetKey = "init"
 
 local initProcess
 
+function getComponentIndex(ctype, component)
+    for componentIndex, _component in ipairs(disks) do
+        if component == _component then
+            return componentIndex
+        end
+    end
+end
+
 function getBootDevice(component)
     local initCode
     local initArg
@@ -217,12 +225,29 @@ function getBootDevice(component)
     if component then
         if component.type == "rom" then
             for i = 1, 1 do
-                if tryOpenRom(component, "openFilesystemImage", true) then break end
-                if tryOpenRom(component, "openFilesystemDump", true) then break end
-                if tryOpenRom(component, "open", false) then break end
+                if tryOpenRom(component, "openFilesystemImage", true) then
+                    initComponent = component
+                    initComponentIndex = getComponentIndex("rom", component)
+                    break
+                end
+
+                if tryOpenRom(component, "openFilesystemDump", true) then
+                    initComponent = component
+                    initComponentIndex = getComponentIndex("rom", component)
+                    break
+                end
+
+                if tryOpenRom(component, "open", false) then
+                    initComponent = component
+                    initComponentIndex = getComponentIndex("rom", component)
+                    break
+                end
             end
         elseif component.type == "disk" then
-            tryBootFromFilesystem(component)
+            if tryBootFromFilesystem(component) then
+                initComponent = component
+                initComponentIndex = getComponentIndex("disk", component)
+            end
         end
     else
         for componentIndex, rom in ipairs(roms) do
