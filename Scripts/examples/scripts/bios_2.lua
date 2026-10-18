@@ -183,6 +183,8 @@ function getBootDevice(component)
     local initCode
     local initArg
     local initFs
+    local initComponent
+    local initComponentIndex
 
     local function tryBootFromFilesystem(fs)
         if fs.hasFile(targetFile) then
@@ -223,15 +225,33 @@ function getBootDevice(component)
             tryBootFromFilesystem(component)
         end
     else
-        for _, rom in ipairs(roms) do
-            if tryOpenRom(rom, "openFilesystemImage", true) then break end
-            if tryOpenRom(rom, "openFilesystemDump", true) then break end
-            if tryOpenRom(rom, "open", false) then break end
+        for componentIndex, rom in ipairs(roms) do
+            if tryOpenRom(rom, "openFilesystemImage", true) then
+                initComponent = rom
+                initComponentIndex = componentIndex
+                break
+            end
+
+            if tryOpenRom(rom, "openFilesystemDump", true) then
+                initComponent = rom
+                initComponentIndex = componentIndex
+                break
+            end
+
+            if tryOpenRom(rom, "open", false) then
+                initComponent = rom
+                initComponentIndex = componentIndex
+                break
+            end
         end
 
         if not initCode then
-            for _, disk in ipairs(disks) do
-                if tryBootFromFilesystem(disk) then break end
+            for componentIndex, disk in ipairs(disks) do
+                if tryBootFromFilesystem(disk) then
+                    initComponent = disk
+                    initComponentIndex = componentIndex
+                    break
+                end
             end
         end
     end
@@ -239,7 +259,9 @@ function getBootDevice(component)
     return {
         initCode = initCode,
         initArg = initArg,
-        initFs = initFs
+        initFs = initFs,
+        initComponent = initComponent,
+        initComponentIndex = initComponentIndex
     }
 end
 
