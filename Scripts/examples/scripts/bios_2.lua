@@ -289,8 +289,8 @@ function tryBoot()
             end
 
             function env.getData()
-                if initFs then
-                    return initFs.getData()
+                if bootCode.initFs then
+                    return bootCode.initFs.getData()
                 end
                 return virtualData or ""
             end
