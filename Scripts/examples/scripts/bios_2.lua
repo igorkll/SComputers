@@ -330,7 +330,7 @@ function tryBoot()
     
     local bootDevice = getBootDeviceAuto()
 
-    if bootDevice and bootDevice.initCode then
+    if bootDevice then
         local function rawWriteInitCode(code)
             if bootDevice.initFs and not bootDevice.initFs.isReadOnly() then
                 if not bootDevice.initFs.hasFile(targetFile) then
