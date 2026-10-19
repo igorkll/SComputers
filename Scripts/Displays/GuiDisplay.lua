@@ -1,4 +1,3 @@
-dofile("$SURVIVAL_DATA/Scripts/util.lua")
 GuiDisplay = class()
 GuiDisplay.maxParentCount = 1
 GuiDisplay.maxChildCount = 0
@@ -36,9 +35,7 @@ function GuiDisplay:client_onFixedUpdate()
 end
 
 function GuiDisplay:cl_createGuiTable()
-    local guiTable = {}
-    guiTable.root = sm.json.open("$CONTENT_DATA/Gui/JsonGuis/GuiDisplay.gui")
-    guiTable.index = IndexWidgets( guiTable.root )
+    local guiTable = sm.json.open("$CONTENT_DATA/Gui/JsonGuis/GuiDisplay.gui")
 
     return guiTable
 end
@@ -50,7 +47,7 @@ function GuiDisplay:cl_openGui()
     self.gui_table = self:cl_createGuiTable()
 
     self.gui = sm.jsonGui.createGui({ isInteractive = true, needsCursor = true })
-    self.gui:render(self.gui_table.root)
+    self.gui:render(self.gui_table)
 end
 
 function GuiDisplay:client_onDestroy()

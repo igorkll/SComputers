@@ -2,7 +2,19 @@
 	"Anchor" : "Center",
 	"Childs" : 
 	[
-		
+        {
+			"Childs" : [],
+			"ImageTexture" : "gui_inventory_icon_backpack.png",
+			"Name" : "BackpackIcon",
+			"NeedKey" : false,
+			"NeedMouse" : false,
+			"Skin" : "ImageBox",
+			"Type" : "ImageBox",
+			"height" : 100,
+			"width" : 100,
+			"x" : 0,
+			"y" : 0
+		}
 	],
 	"InheritsPick" : true,
 	"Name" : "BackPanel",
@@ -10,8 +22,8 @@
 	"NeedMouse" : false,
 	"Skin" : "BackgroundInteractableWide",
 	"Type" : "Widget",
-	"height" : 100,
-	"width" : 100,
+	"height" : 500,
+	"width" : 500,
 	"x" : 0,
 	"y" : 0
 }
