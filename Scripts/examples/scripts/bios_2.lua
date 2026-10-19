@@ -35,7 +35,7 @@ local function bootmenu_buttons(scene_menu, refreshComponents)
         button:setPfgColor(0xffffff)
     end
 
-    local refreshButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "REFRESH", 0xffffff, 0x0000ff)
+    local refreshButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "UPDATE", 0xffffff, 0x0000ff)
     setupButton(refreshButton)
     refreshButton:setBorderDown(2 + buttonSizeY + 2)
     refreshButton:setBorderLeft(2)
@@ -59,7 +59,7 @@ local function bootmenu_buttons(scene_menu, refreshComponents)
         reboot()
     end
 
-    local settingsButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "SETTINGS", 0xffffff, 0x0000ff)
+    local settingsButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "SETUP", 0xffffff, 0x0000ff)
     setupButton(settingsButton, rebootButton)
     settingsButton:setBorderDown(2 + buttonSizeY + 2)
     settingsButton:setBorderRight(2)
@@ -73,7 +73,7 @@ local function bootmenu_menu(scene_menu)
     local posY = buttonSizeY + 2 + 1
     local arrowButtonsSize = 25
     local arrowButtonsFontSize = 30
-    local bootButtonsContainer = scene_menu:createWindow(2, posY, scene_menu.sizeX - 4, scene_menu.sizeY - posY - ((buttonSizeY + 2) * 2) - 2, 0xffffff)
+    local bootButtonsContainer = scene_menu:createWindow(1, posY, scene_menu.sizeX - 2, scene_menu.sizeY - posY - ((buttonSizeY + 2) * 2) - 2, 0xffffff)
     bootButtonsContainer:setAutoViewport(true)
 
     local arrowPosX = bootButtonsContainer.sizeX - arrowButtonsSize - 1
@@ -198,7 +198,7 @@ end
 
 local function bootmenu(gui)
     local scene_menu = gui:createScene("0000ff")
-    scene_menu:createLabel(1, 1, scene_menu.sizeX - 2, objHeight, "BIOS 2 - BOOT MENU", 0xffffff, 0x0000ff)
+    scene_menu:createLabel(1, 1, scene_menu.sizeX - 2, objHeight, "BOOT MENU", 0xffffff, 0x0000ff)
 
     local refreshComponents = bootmenu_menu(scene_menu)
 
@@ -223,7 +223,8 @@ local function userinterface_create_display(display)
 
     local function addLogo(scene)
         local logo = scene:createLabel(0, 0, math.round(rx * 0.9), ry / 4, "BIOS 2", 0xffffff, 0xff00ff)
-        logo:setFontParameters(nil, 8, 10, 3)
+        local mulSize = math.round(rx / 64)
+        logo:setFontParameters(nil, 5 * mulSize, 6 * mulSize, 3 * mulSize)
         logo:setCenter()
     end
 
@@ -235,12 +236,8 @@ local function userinterface_create_display(display)
                 selfTbl.openUi()
             end
         end
-        
-        local label = scene_logo:createText(0, 0, "TOUCH TO DISPLAY")
-        label:setBorderDown(2 + 6)
-        label:setBorderLeft(2)
 
-        local label1 = scene_logo:createText(0, 0, "TO OPEN BOOT MENU")
+        local label1 = scene_logo:createText(0, 0, "TOUCH - OPEN BOOT MENU")
         label1:setBorderDown(2)
         label1:setBorderLeft(2)
 
@@ -249,14 +246,6 @@ local function userinterface_create_display(display)
 
     do
         scene_ignore = gui:createScene("000000")
-        
-        local label = scene_ignore:createText(0, 0, "BOOT MENU OPENED")
-        label:setBorderDown(2 + 6)
-        label:setBorderLeft(2)
-
-        local label1 = scene_ignore:createText(0, 0, "ON OTHER DISPLAY")
-        label1:setBorderDown(2)
-        label1:setBorderLeft(2)
 
         addLogo(scene_ignore)
     end
