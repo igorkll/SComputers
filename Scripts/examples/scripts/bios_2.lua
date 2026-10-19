@@ -228,7 +228,7 @@ local function userinterface_create_display(display)
     local function addLogo(scene)
         local logo = scene:createLabel(0, 0, math.round(rx * 0.9), ry / 4, "BIOS 2", 0xffffff, 0xff00ff)
         local mulSize = math.round(rx / 64)
-        logo:setFontParameters(fonts.oc_16x8, 8 * mulSize, math.max(16, 10 * mulSize), 3 * mulSize)
+        logo:setFontParameters(fonts.oc_16x8, math.max(12, 8 * mulSize), math.max(16, 10 * mulSize), 3 * mulSize)
         logo:setCenter()
     end
 
