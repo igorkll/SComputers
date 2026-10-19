@@ -462,6 +462,26 @@
          "sticky" : "-X+X-Y+Y-Z+Z",
          "uuid" : "126a5046-f203-438d-abd5-a9b2acfd1044"
       },
+
+        {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "8a05a6",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/reboot.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "GuiDisplay",
+            "filename" : "$CONTENT_DATA/Scripts/Displays/GuiDisplay.lua"
+         },
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "4427b780-9331-48cd-83eb-dc3646205cd6"
+      },
+
       {
          "box" : {
             "x" : 1,
