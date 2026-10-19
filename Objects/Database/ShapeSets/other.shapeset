@@ -469,7 +469,7 @@
             "y" : 1,
             "z" : 1
          },
-         "color" : "8a05a6",
+         "color" : "ffffff",
          "physicsMaterial" : "Mechanical",
          "renderable" : "$CONTENT_DATA/Objects/Renderables/reboot.rend",
          "rotationSet" : "PropYZ",
