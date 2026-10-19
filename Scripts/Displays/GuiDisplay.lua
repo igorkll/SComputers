@@ -11,10 +11,22 @@ function GuiDisplay:client_onInteract(_, state)
     end
 end
 
+function GuiDisplay:client_onFixedUpdate()
+    if self.gui then
+        local active = self.gui:isActive()
+        if active then
+            self.gui_activated = true
+        elseif self.gui_activated then
+            self.gui:close()
+            self.gui = nil
+        end
+    end
+end
+
 function GuiDisplay:cl_createGuiTable()
     local guiTable = {}
-    guiTable.root = sm.json.open( "$CONTENT_DATA/Gui/JsonGuis/GuiDisplay.gui" )
-    guiTable.index = IndexWidgets( UnstuckPopupGui.root )
+    guiTable.root = sm.json.open( "$GAME_DATA/Gui/JsonGuis/PopUp_YN.gui" )
+    guiTable.index = IndexWidgets( guiTable.root )
     guiTable.index["Title"].Caption = "#{MENU_YN_TITLE_ARE_YOU_SURE}"
     guiTable.index["Message"].Caption = "#{MENU_YN_MESSAGE_UNSTUCK}"
 
@@ -24,10 +36,11 @@ end
 function GuiDisplay:cl_openGui()
     if self.gui then return end
 
-    self.guiTable = self:cl_createGuiTable()
+    self.gui_activated = false
+    self.gui_table = self:cl_createGuiTable()
 
     self.gui = sm.jsonGui.createGui({ isInteractive = true, needsCursor = true })
-    self.gui:render(self.guiTable)
+    self.gui:render(self.gui_table.root)
 end
 
 function GuiDisplay:client_onDestroy()
@@ -36,4 +49,3 @@ function GuiDisplay:client_onDestroy()
         self.gui = nil
     end
 end
-
