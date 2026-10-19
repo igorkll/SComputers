@@ -7,6 +7,7 @@ terminal.colorNormal = sm.color.new(0x7F7F7Fff)
 terminal.colorHighlight = sm.color.new(0xFFFFFFff)
 terminal.componentType = "terminal" --absences can cause problems
 terminal.outputLimit = 1024 * 64
+terminal.poseWeightCount = 1
 
 function terminal:server_onCreate()
     self.syntax = false
@@ -125,6 +126,8 @@ function terminal:client_onFixedUpdate()
             end
         end
     end
+
+    self.interactable:setPoseWeight(0, 1)
 end
 
 function terminal:client_onInteract(_, state)

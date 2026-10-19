@@ -376,6 +376,11 @@
       "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
       "title" : "Маленький терминал"
    },
+   "67b50673-e565-4c17-9b4c-9fad4cd32297" : {
+      "description" : "Позволяет взаимодействовать с компьютером с помощью консоли.",
+      "keywords" : ["программируемый", "scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Терминал"
+   },
 
    "7f3e227c-345a-4c28-8775-f6c011b80127" : {
       "description" : "Позволяет щелкать по экрану кнопками мыши. Это также позволяет взаимодействовать с экранами на большом расстоянии.",

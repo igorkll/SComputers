@@ -477,7 +477,7 @@
             "classname" : "GuiDisplay",
             "filename" : "$CONTENT_DATA/Scripts/Displays/GuiDisplay.lua"
          },
-         "showInInventory" : false,
+         "showInInventory" : true,
          "stackSize" : 10,
          "sticky" : "-X+X-Y+Y-Z+Z",
          "uuid" : "4427b780-9331-48cd-83eb-dc3646205cd6"
@@ -769,6 +769,74 @@
          "stackSize" : 10,
          "uuid" : "2ee8588d-b29c-47f6-9693-fc2607cf3720"
       },
+
+        {
+			"box" : 
+			{
+				"x" : 2,
+				"y" : 2,
+				"z" : 3
+			},
+            "scripted" : {
+                "classname" : "terminal",
+                "filename" : "$CONTENT_DATA/Scripts/terminal.lua"
+            },
+			"color" : "cbbfa7",
+			"flammable" : true,
+			"physicsMaterial" : "Plastic",
+			"ratings" : 
+			{
+				"buoyancy" : 3,
+				"density" : 7,
+				"durability" : 2,
+				"friction" : 7
+			},
+			"renderable" : 
+			{
+				"lodList" : 
+				[
+					{
+						"includes" : 
+						[
+							"POSITION",
+							"UV0",
+							"UV1",
+							"NORMAL",
+							"TANGENTS"
+						],
+						"mesh" : "$SURVIVAL_DATA/Objects/Mesh/shoprewards/obj_shoprewards_computer_off.fbx",
+						"pose0" : "$SURVIVAL_DATA/Objects/Mesh/shoprewards/obj_shoprewards_computer_on.fbx",
+						"subMeshMap" : 
+						{
+							"computer" : 
+							{
+								"material" : "PoseAnimDifAsgNor",
+								"textureList" : 
+								[
+									"$SURVIVAL_DATA/Objects/Textures/shoprewards/obj_shoprewards_computer_dif.tga",
+									"$SURVIVAL_DATA/Objects/Textures/shoprewards/obj_shoprewards_computer_asg.tga",
+									"$SURVIVAL_DATA/Objects/Textures/shoprewards/obj_shoprewards_computer_nor.tga"
+								]
+							},
+							"screen" : 
+							{
+								"material" : "Glass",
+								"textureList" : 
+								[
+									"$SURVIVAL_DATA/Objects/Textures/shoprewards/obj_shoprewards_computer_dif.tga",
+									"$SURVIVAL_DATA/Objects/Textures/shoprewards/obj_shoprewards_computer_asg.tga",
+									"$SURVIVAL_DATA/Objects/Textures/shoprewards/obj_shoprewards_computer_nor.tga"
+								]
+							}
+						}
+					}
+				]
+			},
+			"rotationSet" : "PropY",
+			"sticky" : "-Y+X-X-Z",
+			"uuid" : "67b50673-e565-4c17-9b4c-9fad4cd32297"
+		},
+
       {
          "box" : {
             "x" : 4,

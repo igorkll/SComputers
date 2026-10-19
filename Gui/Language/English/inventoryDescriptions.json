@@ -376,6 +376,12 @@
       "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
       "title" : "Small Terminal"
    },
+    "67b50673-e565-4c17-9b4c-9fad4cd32297" : {
+      "description" : "Allows to interact with the computer using the console.",
+      "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+      "title" : "Terminal"
+   },
+   
 
    "7f3e227c-345a-4c28-8775-f6c011b80127" : {
       "description" : "Allows to click on the screen with the mouse buttons. It also allows to interact with screens at a large distance.",
