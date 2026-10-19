@@ -8,10 +8,10 @@
 	"Name" : "BackPanel",
 	"NeedKey" : false,
 	"NeedMouse" : false,
-	"Skin" : "BackgroundPromptNarrow",
+	"Skin" : "BackgroundInteractableWide",
 	"Type" : "Widget",
-	"height" : 500,
-	"width" : 500,
+	"height" : 100,
+	"width" : 100,
 	"x" : 0,
 	"y" : 0
 }
