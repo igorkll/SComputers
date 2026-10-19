@@ -471,7 +471,7 @@
          },
          "color" : "ffffff",
          "physicsMaterial" : "Mechanical",
-         "renderable" : "$CONTENT_DATA/Objects/Renderables/reboot.rend",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/guidisplay.rend",
          "rotationSet" : "PropYZ",
          "scripted" : {
             "classname" : "GuiDisplay",
