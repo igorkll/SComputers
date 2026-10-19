@@ -35,8 +35,11 @@ local function bootmenu_buttons(scene_menu, refreshComponents)
         button:setPfgColor(0xffffff)
     end
 
-    local refreshButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "UPDATE", 0xffffff, 0x0000ff)
+    local refreshButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "REFRESH", 0xffffff, 0x0000ff)
     setupButton(refreshButton)
+    if scene_menu.sizeX <= 64 then
+        refreshButton:setFontParameters(fonts.lgc_3x3, 3, 3, 1)
+    end
     refreshButton:setBorderDown(2 + buttonSizeY + 2)
     refreshButton:setBorderLeft(2)
     function refreshButton:onDropInZone()
@@ -237,9 +240,13 @@ local function userinterface_create_display(display)
             end
         end
 
-        local label1 = scene_logo:createText(0, 0, "TOUCH - OPEN BOOT MENU")
-        label1:setBorderDown(2)
-        label1:setBorderLeft(2)
+        local label = scene_logo:createText(0, 0, "TAP TO OPEN")
+        label:setBorderDown(2 + 6)
+        label:setBorderLeft(2)
+
+        local label2 = scene_logo:createText(0, 0, "BOOT MENU")
+        label2:setBorderDown(2)
+        label2:setBorderLeft(2)
 
         addLogo(scene_logo)
     end
