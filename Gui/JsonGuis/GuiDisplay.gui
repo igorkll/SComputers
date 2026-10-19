@@ -2,69 +2,7 @@
 	"Anchor" : "Center",
 	"Childs" : 
 	[
-		{
-			"Childs" : [],
-			"ImageTexture" : "gui_icon_popup_alert.png",
-			"Name" : "Icon",
-			"NeedKey" : true,
-			"NeedMouse" : true,
-			"Skin" : "ImageBox",
-			"Type" : "ImageBox",
-			"height" : 34,
-			"width" : 34,
-			"x" : 156,
-			"y" : 54
-		},
-		{
-			"Caption" : "#{WARNING_TUNNELING_TITLE}",
-			"Childs" : [],
-			"FontName" : "SM_HeaderLarge_Medium",
-			"Name" : "Title",
-			"NeedKey" : true,
-			"NeedMouse" : true,
-			"Skin" : "TextBox",
-			"Static" : true,
-			"TextAlign" : "Center",
-			"Type" : "EditBox",
-			"WordWrap" : true,
-			"height" : 56,
-			"width" : 266,
-			"x" : 40,
-			"y" : 100
-		},
-		{
-			"Caption" : "#{WARNING_TUNNELING_LINE1}",
-			"Childs" : [],
-			"FontName" : "SM_Text",
-			"Name" : "Message",
-			"NeedKey" : true,
-			"NeedMouse" : true,
-			"Skin" : "EditBoxEmpty",
-			"Static" : true,
-			"TextAlign" : "Center",
-			"TextColour" : "0.564706 0.564706 0.564706 1",
-			"Type" : "EditBox",
-			"WordWrap" : true,
-			"height" : 84,
-			"width" : 214,
-			"x" : 66,
-			"y" : 150
-		},
-		{
-			"Caption" : "#{MENU_YN_OK}",
-			"Childs" : [],
-			"FontName" : "SM_Button",
-			"Name" : "Ok",
-			"NeedKey" : true,
-			"NeedMouse" : true,
-			"Skin" : "SecondaryButton",
-			"TextAlign" : "Center",
-			"Type" : "Button",
-			"height" : 34,
-			"width" : 100,
-			"x" : 123,
-			"y" : 248
-		}
+		
 	],
 	"InheritsPick" : true,
 	"Name" : "BackPanel",
@@ -72,8 +10,8 @@
 	"NeedMouse" : false,
 	"Skin" : "BackgroundPromptNarrow",
 	"Type" : "Widget",
-	"height" : 346,
-	"width" : 346,
+	"height" : 500,
+	"width" : 500,
 	"x" : 0,
 	"y" : 0
 }

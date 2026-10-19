@@ -37,10 +37,8 @@ end
 
 function GuiDisplay:cl_createGuiTable()
     local guiTable = {}
-    guiTable.root = sm.json.open( "$GAME_DATA/Gui/JsonGuis/PopUp_YN.gui" )
+    guiTable.root = sm.json.open("$CONTENT_DATA/Gui/JsonGuis/GuiDisplay.gui")
     guiTable.index = IndexWidgets( guiTable.root )
-    guiTable.index["Title"].Caption = "#{MENU_YN_TITLE_ARE_YOU_SURE}"
-    guiTable.index["Message"].Caption = "#{MENU_YN_MESSAGE_UNSTUCK}"
 
     return guiTable
 end

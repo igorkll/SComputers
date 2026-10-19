@@ -477,6 +477,7 @@
             "classname" : "GuiDisplay",
             "filename" : "$CONTENT_DATA/Scripts/Displays/GuiDisplay.lua"
          },
+         "showInInventory" : false,
          "stackSize" : 10,
          "sticky" : "-X+X-Y+Y-Z+Z",
          "uuid" : "4427b780-9331-48cd-83eb-dc3646205cd6"
