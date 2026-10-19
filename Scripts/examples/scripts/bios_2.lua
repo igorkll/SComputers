@@ -1,6 +1,7 @@
 --more detailed instructions are here: https://igorkll.github.io/SComputers/scriptableOS.html
 
 local autoboot_timer = 40 * 4
+local min_res = 64
 
 -----------------------------------------
 
@@ -589,7 +590,9 @@ function onStart()
     userinterface_clear()
 
     for _, display in ipairs(getComponents("display")) do
-        userinterface_create_display(display)
+        if display.getWidth() >= min_res or display.getHeight() >= min_res then
+            userinterface_create_display(display)
+        end
     end
 
     if #userInterfaces == 0 then
