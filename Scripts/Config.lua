@@ -68,6 +68,7 @@ local sc = {
     UNSAFE_COMPUTER_UUID = sm.uuid.new("14b629d7-a1b6-4803-ae6e-a0ff50d45053"),
 
 	wasdInfo = {},
+    localInputState = {},
 	
     gpstags = {},
     antennasApis = {},

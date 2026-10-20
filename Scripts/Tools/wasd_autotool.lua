@@ -69,8 +69,10 @@ function wasd_autotool:client_onFixedUpdate()
             if mouseApiAvailable then
                 if left ~= old_mouse_l_state then
                     if left then
+                        sc.localInputState.mouse_l = true
                         self.network:sendToServer("sv_response", 3)
                     else
+                        sc.localInputState.mouse_l = false
                         self.network:sendToServer("sv_response", 4)
                     end
                 end
@@ -87,8 +89,10 @@ function wasd_autotool:client_onFixedUpdate()
 
                 if right ~= old_mouse_r_state then
                     if right then
+                        sc.localInputState.mouse_r = true
                         self.network:sendToServer("sv_response", 5)
                     else
+                        sc.localInputState.mouse_r = false
                         self.network:sendToServer("sv_response", 6)
                     end
                 end
@@ -121,14 +125,18 @@ function wasd_autotool:client_onEquippedUpdate(primaryState, secondaryState)
 
     if self.tool:isLocal() then
         if primaryState == sm.tool.interactState.start then
+            sc.localInputState.mouse_l = true
             self.network:sendToServer("sv_response", 3)
         elseif primaryState == sm.tool.interactState.stop then
+            sc.localInputState.mouse_l = false
             self.network:sendToServer("sv_response", 4)
         end
         
         if secondaryState == sm.tool.interactState.start then
+            sc.localInputState.mouse_r = true
             self.network:sendToServer("sv_response", 5)
         elseif secondaryState == sm.tool.interactState.stop then
+            sc.localInputState.mouse_r = false
             self.network:sendToServer("sv_response", 6)
         end
     end
