@@ -83,7 +83,7 @@ function GuiDisplay:server_onCreate()
 
 	self.interactable.publicData = {
 		sc_component = {
-			type = AnyDisplay.componentType,
+			type = GuiDisplay.componentType,
 			api = self.api,
             directList = directList
 		}
@@ -144,6 +144,34 @@ function GuiDisplay:server_onFixedUpdate()
 	end
 end
 
+function GuiDisplay:sv_dataRequest()
+    self.tryPacket = nil
+    self.dataTunnel.dataUpdated = true
+    self.dataTunnel.display_forceFlush = true
+    self.dataTunnel.display_forceForceFlush = true
+end
+
+function GuiDisplay:sv_recvPress(data)
+	self.touchscreen(data)
+end
+
+function GuiDisplay:sv_canvasRequest(_, caller)
+	self.width = self.api.getWidth()
+	self.height = self.api.getHeight()
+	self.mulSize = self.width * self.height
+
+	local data = {
+		width = self.width,
+		height = self.height
+	}
+
+	if caller then
+		self.network:sendToClient(caller, "cl_canvasResponse", data)
+	else
+		self.network:sendToClients("cl_canvasResponse", data)
+	end
+end
+
 function GuiDisplay:isAllow()
     if not sc.restrictions then return true end
     return self.width * self.height <= (sc.restrictions.maxDisplays * sc.restrictions.maxDisplays)
@@ -152,20 +180,66 @@ end
 ---------------------------------------------
 
 function GuiDisplay:client_onCreate()
-    self.canvasGUI = canvasGUI.createGuiCanvas(32, 32, 500, 500, 25)
+    self.drawer = canvasAPI.createDrawer(self.data.x, self.data.y, function(x, y, color)
+        
+    end, nil, nil, nil, nil, nil, true)
+    self.canvasGUI = canvasGUI.createGuiCanvas(self.data.x, self.data.y, 500, 500, 25)
 end
 
 function GuiDisplay:client_onInteract(_, state)
     if state then
-        self.canvasGUI:open()
+        self.canvasGUI.open()
     end
 end
 
 function GuiDisplay:client_onFixedUpdate(delta)
-    self.canvasGUI:update()
+    self.canvasGUI.update()
     self:canvasService(self.canvasGUI.isRendering())
 end
 
 function GuiDisplay:client_onDestroy()
-    self.canvasGUI:destroy()
+    self.canvasGUI.destroy()
+end
+
+function GuiDisplay:cl_canvasResponse(data)
+	if sm.isHost then return end
+	self.width, self.height = data.width, data.height
+end
+
+function GuiDisplay:cl_pushStack(stack)
+    if self.disableState or not sm.scomputers.isComputerConnected(self.interactable) then
+        return
+    end
+    
+    if self.sendedData_cl_pushStack then
+        if self.sendedData_cl_pushStack.force or needPushStack(self.canvas, self.c_dataTunnel, sc.deltaTime) then
+            local startTime = os.clock()
+            self.canvas.pushStack(self.sendedData_cl_pushStack)
+            self.canvas.flush(self.sendedData_cl_pushStack.forceForce)
+            self.sendedData_cl_pushStack = nil
+            self:lagDetector(os.clock() - startTime, sc.clockLagMul)
+        end
+        return
+    elseif self.stack then
+		for _, action in ipairs(stack) do
+			table.insert(self.stack, action)
+		end
+	else
+		self.stack = stack
+	end
+
+	if stack.flush and (stack.force or needPushStack(self.canvas, self.c_dataTunnel, sc.deltaTime)) then
+        local startTime = os.clock()
+		self.canvas.pushStack(self.stack)
+		self.canvas.flush(stack.forceForce)
+		self.stack = nil
+        self:lagDetector(os.clock() - startTime, sc.clockLagMul)
+	end
+end
+
+function GuiDisplay:cl_dataTunnel(data)
+	self.c_dataTunnel = data
+    self.drawer.pushDataTunnelParams(data)
+    if data.res_x ~= 
+    self.drawer.setDrawerResolution()
 end
