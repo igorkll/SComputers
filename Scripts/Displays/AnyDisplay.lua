@@ -675,11 +675,12 @@ function AnyDisplay:cl_pushStack(stack)
             local startTime = os.clock()
             self.canvas.pushStack(self.sendedData_cl_pushStack)
             self.canvas.flush(self.sendedData_cl_pushStack.forceForce)
-            self.sendedData_cl_pushStack = nil
             self:lagDetector(os.clock() - startTime, sc.clockLagMul)
         end
+        self.sendedData_cl_pushStack = nil
         return
-    elseif self.stack then
+    --elseif self.stack then
+    elseif self.stack and self.stack[1][1] ~= canvasAPI.draw.clear then --new small optimization
 		for _, action in ipairs(stack) do
 			table.insert(self.stack, action)
 		end

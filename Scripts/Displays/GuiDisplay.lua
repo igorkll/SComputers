@@ -230,15 +230,17 @@ function GuiDisplay:cl_pushStack(stack)
     end
     
     if self.sendedData_cl_pushStack then
-        if self.sendedData_cl_pushStack.force or needPushStack(self.canvas, self.c_dataTunnel, sc.deltaTime) then
+        if self.sendedData_cl_pushStack.force or needPushStack(self.canvasGUI, self.c_dataTunnel, sc.deltaTime) then
             local startTime = os.clock()
-            self.canvas.pushStack(self.sendedData_cl_pushStack)
-            self.canvas.flush(self.sendedData_cl_pushStack.forceForce)
+            self.drawer.pushStack(self.sendedData_cl_pushStack)
+            self.drawer.flush(self.sendedData_cl_pushStack.forceForce)
             self.sendedData_cl_pushStack = nil
             self:lagDetector(os.clock() - startTime, sc.clockLagMul)
         end
+        self.sendedData_cl_pushStack = nil
         return
-    elseif self.stack then
+    --elseif self.stack then
+    elseif self.stack and self.stack[1][1] ~= canvasAPI.draw.clear then
 		for _, action in ipairs(stack) do
 			table.insert(self.stack, action)
 		end
@@ -246,10 +248,10 @@ function GuiDisplay:cl_pushStack(stack)
 		self.stack = stack
 	end
 
-	if stack.flush and (stack.force or needPushStack(self.canvas, self.c_dataTunnel, sc.deltaTime)) then
+	if stack.flush and (stack.force or needPushStack(self.canvasGUI, self.c_dataTunnel, sc.deltaTime)) then
         local startTime = os.clock()
-		self.canvas.pushStack(self.stack)
-		self.canvas.flush(stack.forceForce)
+		self.drawer.pushStack(self.stack)
+		self.drawer.flush(stack.forceForce)
 		self.stack = nil
         self:lagDetector(os.clock() - startTime, sc.clockLagMul)
 	end
