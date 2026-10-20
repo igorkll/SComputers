@@ -36,12 +36,12 @@ function GuiDisplay:server_onCreate()
         self.lastComputer = sc.lastComputer
     end, {
         getRealBuffer = function(...)
-            if not self.canvas then return end
-            return self.canvas.getRealBuffer(...)
+            if not self.drawer then return end
+            return self.drawer.getRealBuffer(...)
         end,
         getNewBuffer = function(...)
-            if not self.canvas then return end
-            return self.canvas.getNewBuffer(...)
+            if not self.drawer then return end
+            return self.drawer.getNewBuffer(...)
         end
     }, (self.data.glass or self.data.unlockGlass) and canvasAPI.materialList or canvasAPI.materialListWithoutGlass, self.data.glass and 0 or 1, allowHoloAPI, allowSetResolution)
 	
@@ -186,8 +186,8 @@ function GuiDisplay:client_onCreate()
     self.canvasGUI = canvasGUI.createGuiCanvas(self.data.x, self.data.y, 500, 500, 25)
 
     self.drawer = canvasAPI.createDrawer(self.data.x, self.data.y, function(x, y, color)
-        
-        self.canvasGUI.setPixel(x, y, color)
+        local fColor = sc.formatColor(color)
+        self.canvasGUI.setPixel(x, y, fColor.r .. " " .. fColor.g .. " " .. fColor.b)
     end, nil, nil, nil, nil, nil, true)
 end
 
@@ -197,9 +197,22 @@ function GuiDisplay:client_onInteract(_, state)
     end
 end
 
-function GuiDisplay:client_onFixedUpdate(delta)
-    self.canvasGUI.update()
+function GuiDisplay:client_onFixedUpdate()
+    local computerConnected = sm.scomputers.isComputerConnected(self.interactable)
+    if not computerConnected and self.oldComputerConnected then
+        self.drawer.pushStack({canvasAPI.draw.clear, 0})
+        self.drawer.flush()
+    end
+    self.oldComputerConnected = computerConnected
+
+	self.canvasGUI.update()
     self:canvasService(self.canvasGUI.isRendering())
+
+	if self.dragging.interact then
+		--self:cl_onClick(1, "drag")
+	elseif self.dragging.tinker then
+		--self:cl_onClick(2, "drag")
+	end
 end
 
 function GuiDisplay:client_onDestroy()
@@ -246,7 +259,7 @@ function GuiDisplay:cl_dataTunnel(data)
 	self.c_dataTunnel = data
     self.drawer.pushDataTunnelParams(data)
     if data.res_x ~= self._old_res_x or data.res_y ~= self._old_res_y then
-        self.drawer.setDrawerResolution()
+        self.drawer.setDrawerResolution(data.res_x, data.res_y)
         self._old_res_x = data.res_x
         self._old_res_y = data.res_y
     end

@@ -65,7 +65,7 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding)
         destroy = function()
             api.close()
         end,
-        isOpened = function()
+        isRendering = function()
             if guiInstance and guiInstance:isActive() then
                 return true
             end
