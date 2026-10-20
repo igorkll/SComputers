@@ -4240,6 +4240,11 @@ function canvasAPI.createScriptableApi(width, height, dataTunnel, flushCallback,
                 stack[stackIndex] = tbl[i]
                 stackIndex = stackIndex + 1
             end
+
+            if pixelsCacheExists then
+                pixelsCache = {}
+                pixelsCacheExists = false
+            end
         end,
         setForceFrame = setForceFrame
     }
