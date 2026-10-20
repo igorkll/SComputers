@@ -3,10 +3,11 @@ canvasGUI.jsonGuiSetup = { isInteractive = true, needsCursor = true }
 canvasGUI.additionalPixelSize = 2
 
 local math_floor = math.floor
+local table_insert = table.insert
 
 local function lFormatColor(color)
     local r, g, b = math_floor(color / 256 / 256) / 255, (math_floor(color / 256) % 256) / 255, (color % 256) / 255
-    return r .. " " .. g .. " " .. b
+    return table.concat({r, " ", g, " ", b})
 end
 
 function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
@@ -31,44 +32,28 @@ function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
     local pixelSizeX = padWidth / rx
     local pixelSizeY = padHeight / ry
 
-    local index = 1
-    for iy = 0, ry - 1 do
-        for ix = 0, rx - 1 do
-            local addSizeX = canvasGUI.additionalPixelSize
-            local addSizeY = canvasGUI.additionalPixelSize
-            if ix == (rx - 1) then
-                addSizeX = 0
-            end
-            if iy == (ry - 1) then
-                addSizeY = 0
-            end
-            guiTable.Childs[index] = {
-                ["Skin"] = "WhiteSkin",
-                ["Type"] = "Widget",
-                ["Colour"] = "0 0 0",
-                ["x"] = (ix * pixelSizeX) + padding,
-                ["y"] = (iy * pixelSizeY) + padding,
-                ["width"] = pixelSizeX + addSizeX,
-                ["height"] = pixelSizeY + addSizeY
-            }
-            index = index + 1
-        end
-    end
+    guiTable.Childs[1] = {
+        ["Skin"] = "WhiteSkin",
+        ["Type"] = "Widget",
+        ["Colour"] = "0 0 0",
+        ["x"] = 0 + padding,
+        ["y"] = 0 + padding,
+        ["width"] = pixelSizeX * rx,
+        ["height"] = pixelSizeY * ry
+    }
 
-    if title then
-        table.insert(guiTable.Childs, {
-            ["Caption"] = title,
-            ["FontName"] = "SM_HeaderTiny",
-            ["Skin"] = "TextBox",
-            ["TextAlign"] = "Center",
-            ["TextColour"] = "1 1 1",
-            ["Type"] = "TextBox",
-            ["height"] = padding,
-            ["width"] = width,
-            ["x"] = 0,
-            ["y"] = 0
-        })
-    end
+    guiTable.Childs[2] = {
+        ["Caption"] = title,
+        ["FontName"] = "SM_HeaderTiny",
+        ["Skin"] = "TextBox",
+        ["TextAlign"] = "Center",
+        ["TextColour"] = "1 1 1",
+        ["Type"] = "TextBox",
+        ["height"] = padding,
+        ["width"] = width,
+        ["x"] = 0,
+        ["y"] = 0
+    }
 
     return guiTable
 end
@@ -78,7 +63,35 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
     local bufferBase = 0x000000
 
     local guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
+    local guiTableChildsMax = 2 + (rx * ry)
     local guiInstance
+
+    local function childInsert(tbl)
+        for i = 3, math.huge do
+            if guiTable.Childs[i] == nil then
+                guiTable.Childs[i] = tbl
+                return i
+            end
+        end
+    end
+
+    local function setDot(x, y, color)
+        local padWidth = width - (padding * 2)
+        local padHeight = height - (padding * 2)
+        local pixelSizeX = padWidth / rx
+        local pixelSizeY = padHeight / ry
+        
+        childInsert({
+            ["Skin"] = "WhiteSkin",
+            ["Type"] = "Widget",
+            ["Colour"] = lFormatColor(color),
+            ["x"] = (x * pixelSizeX) + padding,
+            ["y"] = (y * pixelSizeY) + padding,
+            ["width"] = pixelSizeX + canvasGUI.additionalPixelSize,
+            ["height"] = pixelSizeY + canvasGUI.additionalPixelSize
+        })
+        index = index + 1
+    end
 
     local api
     api = {
@@ -108,17 +121,22 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
 
         resize = function(nrx, nry)
             rx, ry = nrx, nry
-            buffer = {}
-            bufferBase = color
             guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
+            api.clear(0)
             api.flush()
         end,
         clear = function(color)
             buffer = {}
             bufferBase = color
+            guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
+            guiTable.Childs[1]["Colour"] = lFormatColor(color)
         end,
-        setPixel = function(x, y, str)
-            guiTable.Childs[x + (y * rx) + 1]["Colour"] = str
+        setPixel = function(x, y, color)
+            local idx = x + (y * rx)
+            if color ~= buffer[idx] then
+                setDot(x, y, color)
+                buffer[idx] = color
+            end
         end,
         flush = function()
             if api.isRendering() then
