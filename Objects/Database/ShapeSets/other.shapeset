@@ -813,7 +813,7 @@
 								"material" : "PoseAnimDifAsgNor",
 								"textureList" : 
 								[
-									"$SURVIVAL_DATA/Objects/Textures/shoprewards/obj_shoprewards_computer_dif.tga",
+									"$CONTENT_DATA/Objects/Textures/obj_shoprewards_computer_dif.tga",
 									"$SURVIVAL_DATA/Objects/Textures/shoprewards/obj_shoprewards_computer_asg.tga",
 									"$SURVIVAL_DATA/Objects/Textures/shoprewards/obj_shoprewards_computer_nor.tga"
 								]
@@ -823,7 +823,7 @@
 								"material" : "Glass",
 								"textureList" : 
 								[
-									"$SURVIVAL_DATA/Objects/Textures/shoprewards/obj_shoprewards_computer_dif.tga",
+									"$CONTENT_DATA/Objects/Textures/obj_shoprewards_computer_dif.tga",
 									"$SURVIVAL_DATA/Objects/Textures/shoprewards/obj_shoprewards_computer_asg.tga",
 									"$SURVIVAL_DATA/Objects/Textures/shoprewards/obj_shoprewards_computer_nor.tga"
 								]
