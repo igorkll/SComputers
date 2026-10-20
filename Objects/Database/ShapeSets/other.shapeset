@@ -475,7 +475,11 @@
          "rotationSet" : "PropYZ",
          "scripted" : {
             "classname" : "GuiDisplay",
-            "filename" : "$CONTENT_DATA/Scripts/Displays/GuiDisplay.lua"
+            "filename" : "$CONTENT_DATA/Scripts/Displays/GuiDisplay.lua",
+            "data" : {
+               "x" : 256,
+               "y" : 256
+            }
          },
          "showInInventory" : true,
          "stackSize" : 10,
