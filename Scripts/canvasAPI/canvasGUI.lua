@@ -1,5 +1,6 @@
 local canvasGUI = {}
 canvasGUI.jsonGuiSetup = { isInteractive = true, needsCursor = true }
+canvasGUI.additionalPixelSize = 50
 
 function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
     local guiTable = {
@@ -26,9 +27,13 @@ function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
     local index = 1
     for iy = 0, ry - 1 do
         for ix = 0, rx - 1 do
-            local addSize = 50
-            if ix == (width - 1) or iy == (height - 1) then
-                addSize = 50
+            local addSizeX = canvasGUI.additionalPixelSize
+            local addSizeY = canvasGUI.additionalPixelSize
+            if ix == (width - 1) then
+                addSizeX = 0
+            end
+            if iy == (height - 1) then
+                addSizeY = 0
             end
             guiTable.Childs[index] = {
                 ["Skin"] = "WhiteSkin",
@@ -36,8 +41,8 @@ function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
                 ["Colour"] = "0 0 0",
                 ["x"] = (ix * pixelSizeX) + padding,
                 ["y"] = (iy * pixelSizeY) + padding,
-                ["width"] = pixelSizeX + addSize,
-                ["height"] = pixelSizeY + addSize
+                ["width"] = pixelSizeX + addSizeX,
+                ["height"] = pixelSizeY + addSizeY
             }
             index = index + 1
         end
