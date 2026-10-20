@@ -477,8 +477,8 @@
             "classname" : "GuiDisplay",
             "filename" : "$CONTENT_DATA/Scripts/Displays/GuiDisplay.lua",
             "data" : {
-               "x" : 64,
-               "y" : 64
+               "x" : 256,
+               "y" : 256
             }
          },
          "showInInventory" : true,

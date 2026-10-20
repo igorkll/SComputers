@@ -1,11 +1,10 @@
 local canvasGUI = {}
 canvasGUI.jsonGuiSetup = { isInteractive = true, needsCursor = true }
 canvasGUI.additionalPixelSize = 2
-canvasGUI.debugCanvas = true  -- было захардкожено; вынесено в поле
+canvasGUI.debugCanvas = false
 
 local math_floor = math.floor
 
--- Кэш цвет -> "r g b". Ограничен по размеру, чтобы не течь на патологических палитрах.
 local colorStringCache = {}
 local colorStringCacheSize = 0
 local function lFormatColor(color)
@@ -65,11 +64,10 @@ function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
 end
 
 function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
-    local buffer = {}           -- sparse: index -> color (только не-фоновые пиксели)
+    local buffer = {}
     local bufferBase = 0x000000
     local bufferDirty = true
 
-    -- Геометрия считается один раз (и при resize), а не в каждом setPixel
     local pixelSizeX, pixelSizeY, pxExpand, pyExpand
     local function recalcGeometry()
         pixelSizeX = (width - padding * 2) / rx
@@ -88,7 +86,6 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
     local guiInstance
     local childsCount = 2
 
-    -- Пул виджетов
     local widgetPool = {}
     local widgetPoolCount = 0
     local function acquireWidget()
@@ -104,12 +101,9 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
         widgetPool[widgetPoolCount] = w
     end
 
-    -- Generation-counter вместо пересоздания массива visited
     local visited = {}
     local visitedGen = 0
 
-    -- Greedy 2D-декомпозиция буфера на прямоугольники.
-    -- Амортизированно O(rx*ry): каждый пиксель "посещается" ровно один раз.
     local function decompose(callback)
         visitedGen = visitedGen + 1
         local gen = visitedGen
@@ -123,7 +117,6 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
                     local color = buf[i]
                     if color == nil then color = base end
                     if color ~= base then
-                        -- тянем вправо, пока тот же цвет и не посещено
                         local w = 1
                         while x + w < rx do
                             local j = rowBase + x + w
@@ -134,7 +127,6 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
                             w = w + 1
                         end
 
-                        -- тянем вниз, пока вся полоса ширины w совпадает по цвету
                         local h = 1
                         while y + h < ry do
                             local nextRowBase = (y + h) * rx
@@ -150,7 +142,6 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
                             h = h + 1
                         end
 
-                        -- помечаем посещённым
                         for hh = 0, h - 1 do
                             local off = (y + hh) * rx + x
                             for ww = 0, w - 1 do
@@ -168,7 +159,6 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
     local function buildChilds()
         local childs = guiTable.Childs
 
-        -- освобождаем старые прямоугольники в пул
         for i = 3, childsCount do
             local w = childs[i]
             if w then
@@ -226,7 +216,6 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
         end,
 
         resize = function(nrx, nry)
-            -- старые прямоугольники — в пул
             local oldChilds = guiTable.Childs
             for i = 3, childsCount do
                 local w = oldChilds[i]
