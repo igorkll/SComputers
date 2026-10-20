@@ -1,6 +1,6 @@
 local canvasGUI = {}
 canvasGUI.jsonGuiSetup = { isInteractive = true, needsCursor = true }
-canvasGUI.additionalPixelSize = 2
+canvasGUI.additionalPixelSize = 1
 canvasGUI.debugCanvas = false
 
 local math_floor = math.floor
