@@ -1102,6 +1102,7 @@ end
 --dofile("$CONTENT_DATA/Scripts/basegraphic.lua")
 dofile("$CONTENT_DATA/Scripts/warnings.lua")
 dofile("$CONTENT_DATA/Scripts/canvasAPI/canvas.lua")
+dofile("$CONTENT_DATA/Scripts/canvasAPI/canvasGUI.lua")
 dofile("$CONTENT_DATA/Scripts/Displays/AnyDisplay.lua")
 dofile("$CONTENT_DATA/Scripts/internal_libs/xEngine.lua")
 --dofile("$CONTENT_DATA/Scripts/externAddonAPI.lua")

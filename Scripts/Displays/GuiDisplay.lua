@@ -1,3 +1,4 @@
+dofile("$CONTENT_DATA/Scripts/Config.lua")
 GuiDisplay = class()
 GuiDisplay.maxParentCount = 1
 GuiDisplay.maxChildCount = 0
@@ -35,11 +36,12 @@ function GuiDisplay:client_onFixedUpdate()
 end
 
 function GuiDisplay:getIndex(x, y)
-    return x + (y * 64)
+    return x + (y * 64) + 1
 end
 
-function GuiDisplay:setColor(x, y, color)
-    guiTable.Childs[self:getIndex(ix, iy)] = sc.formatColor(color)
+function GuiDisplay:setColor(guiTable, x, y, color)
+    local formattedColor = sc.formatColor(color)
+    guiTable.Childs[self:getIndex(x, y)]["Colour"] = (formattedColor.r) .. " " .. (formattedColor.g) .. " " .. (formattedColor.b)
 end
 
 function GuiDisplay:cl_createGuiTable(width, height, rx, ry)
@@ -57,17 +59,15 @@ function GuiDisplay:cl_createGuiTable(width, height, rx, ry)
                 ["Type"] = "Widget",
                 ["x"] = (ix * pixelSizeX) + padding,
                 ["y"] = (iy * pixelSizeY) + padding,
-                ["width"] = pixelSizeX,
-                ["height"] = pixelSizeY
+                ["width"] = pixelSizeX + 2,
+                ["height"] = pixelSizeY + 2
             }
-            self:setColor(ix, iy, (ix + iy) % 256)
+            self:setColor(guiTable, ix, iy, (ix + iy) % 256)
         end
     end
 
     guiTable.width = width
     guiTable.height = height
-    guiTable._rx = rx
-    guiTable._ry = ry
 
     return guiTable
 end
