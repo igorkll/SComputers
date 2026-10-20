@@ -26,14 +26,18 @@ function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
     local index = 1
     for iy = 0, ry - 1 do
         for ix = 0, rx - 1 do
+            local addSize = 50
+            if ix == (width - 1) or iy == (height - 1) then
+                addSize = 50
+            end
             guiTable.Childs[index] = {
                 ["Skin"] = "WhiteSkin",
                 ["Type"] = "Widget",
                 ["Colour"] = "0 0 0",
                 ["x"] = (ix * pixelSizeX) + padding,
                 ["y"] = (iy * pixelSizeY) + padding,
-                ["width"] = pixelSizeX,
-                ["height"] = pixelSizeY
+                ["width"] = pixelSizeX + addSize,
+                ["height"] = pixelSizeY + addSize
             }
             index = index + 1
         end
@@ -42,7 +46,7 @@ function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
     if title then
         table.insert(guiTable.Childs, {
             ["Caption"] = title,
-            ["FontName"] = "SM_Label",
+            ["FontName"] = "SM_HeaderTiny",
             ["Skin"] = "TextBox",
             ["TextAlign"] = "Center",
             ["TextColour"] = "1 1 1",
