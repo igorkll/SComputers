@@ -180,10 +180,15 @@ end
 ---------------------------------------------
 
 function GuiDisplay:client_onCreate()
+    self._old_res_x = self.data.x
+    self._old_res_y = self.data.y
+
+    self.canvasGUI = canvasGUI.createGuiCanvas(self.data.x, self.data.y, 500, 500, 25)
+
     self.drawer = canvasAPI.createDrawer(self.data.x, self.data.y, function(x, y, color)
         
+        self.canvasGUI.setPixel(x, y, color)
     end, nil, nil, nil, nil, nil, true)
-    self.canvasGUI = canvasGUI.createGuiCanvas(self.data.x, self.data.y, 500, 500, 25)
 end
 
 function GuiDisplay:client_onInteract(_, state)
@@ -240,6 +245,9 @@ end
 function GuiDisplay:cl_dataTunnel(data)
 	self.c_dataTunnel = data
     self.drawer.pushDataTunnelParams(data)
-    if data.res_x ~= 
-    self.drawer.setDrawerResolution()
+    if data.res_x ~= self._old_res_x or data.res_y ~= self._old_res_y then
+        self.drawer.setDrawerResolution()
+        self._old_res_x = data.res_x
+        self._old_res_y = data.res_y
+    end
 end
