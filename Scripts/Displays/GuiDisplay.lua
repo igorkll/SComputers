@@ -34,8 +34,31 @@ function GuiDisplay:client_onFixedUpdate()
     end
 end
 
-function GuiDisplay:cl_createGuiTable()
+function GuiDisplay:cl_createGuiTable(width, height, rx, ry)
+    local padding = 50
+    local pWidth = width - (padding * 2)
+    local pHeight = height - (padding * 2)
+    local pixelSizeX = pWidth / rx
+    local pixelSizeY = pHeight / ry
     local guiTable = sm.json.open("$CONTENT_DATA/Gui/JsonGuis/GuiDisplay.gui")
+
+    for ix = 0, rx - 1 do
+        for iy = 0, ry - 1 do
+            table.insert({
+                "Skin" : "WhiteSkin",
+                "Type" : "Widget",
+                "Colour": "1 0 0",
+                "height" : 3,
+                "width" : 3,
+                "x" : 2,
+                "y" : 2
+            })
+        end
+    end
+    
+
+    guiTable.width = width
+    guiTable.height = height
 
     return guiTable
 end

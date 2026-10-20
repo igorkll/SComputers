@@ -3,17 +3,13 @@
 	"Childs" : 
 	[
         {
-			"Childs" : [],
-			"ImageTexture" : "gui_inventory_icon_backpack.png",
-			"Name" : "BackpackIcon",
-			"NeedKey" : false,
-			"NeedMouse" : false,
-			"Skin" : "ImageBox",
-			"Type" : "ImageBox",
-			"height" : 100,
-			"width" : 100,
-			"x" : 0,
-			"y" : 0
+			"Skin" : "WhiteSkin",
+			"Type" : "Widget",
+            "Colour": "1 0 0",
+			"height" : 3,
+			"width" : 3,
+			"x" : 2,
+			"y" : 2
 		}
 	],
 	"InheritsPick" : true,
