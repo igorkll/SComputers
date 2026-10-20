@@ -72,12 +72,10 @@ function GuiDisplay:server_onCreate()
         return 0
     end
 
-    if not directList then
-        directList = {}
-        for name, obj in pairs(self.api) do
-            if type(obj) == "function" and name ~= "flush" and name ~= "forceFlush" and name ~= "update" then
-                directList[name] = true
-            end
+    local directList = {}
+    for name, obj in pairs(self.api) do
+        if type(obj) == "function" and name ~= "flush" and name ~= "forceFlush" and name ~= "update" then
+            directList[name] = true
         end
     end
 

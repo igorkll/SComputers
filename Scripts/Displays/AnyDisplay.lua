@@ -34,8 +34,6 @@ function AnyDisplay:isAllow()
     return self.width * self.height <= (sc.restrictions.maxDisplays * sc.restrictions.maxDisplays) --attempt to index field 'restrictions' (a nil value) on clients
 end
 
-local directList
-
 function AnyDisplay:server_onCreate()
     self.lastLagScore = 0
 	self.dataTunnel = {}
@@ -102,12 +100,10 @@ function AnyDisplay:server_onCreate()
         return 0
     end
 
-    if not directList then
-        directList = {}
-        for name, obj in pairs(self.api) do
-            if type(obj) == "function" and name ~= "flush" and name ~= "forceFlush" and name ~= "update" then
-                directList[name] = true
-            end
+    local directList = {}
+    for name, obj in pairs(self.api) do
+        if type(obj) == "function" and name ~= "flush" and name ~= "forceFlush" and name ~= "update" then
+            directList[name] = true
         end
     end
 
