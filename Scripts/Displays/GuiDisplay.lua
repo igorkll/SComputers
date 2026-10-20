@@ -14,77 +14,19 @@ end
 ---------------------------------------------
 
 function GuiDisplay:client_onCreate()
-    
+    self.canvasGUI = canvasGUI.createGuiCanvas(32, 32, 500, 500, 25)
 end
 
 function GuiDisplay:client_onInteract(_, state)
     if state then
-        self:cl_openGui()
+        self.canvasGUI:open()
     end
 end
 
-function GuiDisplay:client_onFixedUpdate()
-    if self.gui then
-        local active = self.gui:isActive()
-        if active then
-            self.gui_activated = true
-        elseif self.gui_activated then
-            self.gui:close()
-            self.gui = nil
-        end
-    end
-end
-
-function GuiDisplay:getIndex(x, y)
-    return x + (y * 64) + 1
-end
-
-function GuiDisplay:setColor(guiTable, x, y, color)
-    local formattedColor = sc.formatColor(color)
-    guiTable.Childs[self:getIndex(x, y)]["Colour"] = (formattedColor.r) .. " " .. (formattedColor.g) .. " " .. (formattedColor.b)
-end
-
-function GuiDisplay:cl_createGuiTable(width, height, rx, ry)
-    local padding = 50
-    local pWidth = width - (padding * 2)
-    local pHeight = height - (padding * 2)
-    local pixelSizeX = pWidth / rx
-    local pixelSizeY = pHeight / ry
-    local guiTable = sm.json.open("$CONTENT_DATA/Gui/JsonGuis/GuiDisplay.gui")
-
-    for ix = 0, rx - 1 do
-        for iy = 0, ry - 1 do
-            guiTable.Childs[self:getIndex(ix, iy)] = {
-                ["Skin"] = "WhiteSkin",
-                ["Type"] = "Widget",
-                ["x"] = (ix * pixelSizeX) + padding,
-                ["y"] = (iy * pixelSizeY) + padding,
-                ["width"] = pixelSizeX + 2,
-                ["height"] = pixelSizeY + 2
-            }
-            self:setColor(guiTable, ix, iy, (ix + iy) % 256)
-        end
-    end
-
-    guiTable.width = width
-    guiTable.height = height
-
-    return guiTable
-end
-
-function GuiDisplay:cl_openGui()
-    if self.gui then return end
-
-    self.gui_activated = false
-    self.gui_table = self:cl_createGuiTable(500, 500, 64, 64)
-
-    self.gui = sm.jsonGui.createGui({ isInteractive = true, needsCursor = true })
-    self.gui:render(self.gui_table)
+function GuiDisplay:client_onFixedUpdate(delta)
+    self.canvasGUI:update(delta)
 end
 
 function GuiDisplay:client_onDestroy()
-    if self.gui then
-        self.gui:close()
-        self.gui = nil
-    end
+    self.canvasGUI:destroy()
 end

@@ -1,4 +1,5 @@
 local canvasGUI = {}
+canvasGUI.jsonGuiSetup = { isInteractive = true, needsCursor = true }
 
 function canvasGUI.createGuiTable(rx, ry, width, height, padding)
     local guiTable = {
@@ -52,7 +53,7 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding)
         end,
         open = function()
             if not guiInstance then
-                guiInstance = sm.jsonGui.createGui({ isInteractive = true, needsCursor = true })
+                guiInstance = sm.jsonGui.createGui(canvasGUI.jsonGuiSetup)
             end
             guiInstance:render(guiTable)
         end,
@@ -63,6 +64,12 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding)
         end,
         destroy = function()
             api.close()
+        end,
+        isOpened = function()
+            if guiInstance and guiInstance:isActive() then
+                return true
+            end
+            return false
         end,
 
         resize = function(nrx, nry)
