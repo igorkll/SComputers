@@ -88,6 +88,8 @@ function GuiDisplay:server_onCreate()
             directList = directList
 		}
 	}
+
+    sc.componentsBackend[self.api] = self
 end
 
 function GuiDisplay:server_onFixedUpdate()
