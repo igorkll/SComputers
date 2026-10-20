@@ -189,6 +189,13 @@ function GuiDisplay:client_onCreate()
         local fColor = sc.formatColor(color)
         self.canvasGUI.setPixel(x, y, fColor.r .. " " .. fColor.g .. " " .. fColor.b)
     end, nil, nil, nil, nil, nil, true)
+
+    self.network:sendToServer("sv_dataRequest")
+
+	self.c_dataTunnel = {}
+	self.dragging = {interact=false, tinker=false, interactLastPos={x=-1, y=-1}, tinkerLastPos={x=-1, y=-1}}
+
+	self.network:sendToServer("sv_canvasRequest")
 end
 
 function GuiDisplay:client_onInteract(_, state)
