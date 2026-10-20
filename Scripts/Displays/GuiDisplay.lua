@@ -324,7 +324,7 @@ local function defaultDisplayTouchDetect(self, detect, localPoint)
     return false
 end
 
-function AnyDisplay:cl_onClick(type, action) -- type - 1:interact|2:tinker (e.g 1 or 2), action - pressed, released, drag
+function GuiDisplay:cl_onClick(type, action) -- type - 1:interact|2:tinker (e.g 1 or 2), action - pressed, released, drag
     if self.data and self.data.noTouch then
         return
     end

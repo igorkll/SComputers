@@ -57,6 +57,10 @@ local old_mouse_c_state = false
 local old_mouse_r_state = false
 
 function wasd_autotool:client_onFixedUpdate()
+    if not self.tool:isLocal() then
+        return
+    end
+
     if isBetter then
         local left = better.mouse.isLeft()
         local center = better.mouse.isCenter()
@@ -65,56 +69,56 @@ function wasd_autotool:client_onFixedUpdate()
         local q_state = better.keyboard.isKey(better.keyboard.keys.q)
         local r_state = better.keyboard.isKey(better.keyboard.keys.r)
 
-        if self.tool:getOwner().character:getLockingInteractable() then
-            if mouseApiAvailable then
-                if left ~= old_mouse_l_state then
-                    if left then
-                        sc.localInputState.mouse_l = true
-                        self.network:sendToServer("sv_response", 3)
-                    else
-                        sc.localInputState.mouse_l = false
-                        self.network:sendToServer("sv_response", 4)
-                    end
+        --if self.tool:getOwner().character:getLockingInteractable() then
+        if mouseApiAvailable then
+            if left ~= old_mouse_l_state then
+                if left then
+                    sc.localInputState.mouse_l = true
+                    self.network:sendToServer("sv_response", 3)
+                else
+                    sc.localInputState.mouse_l = false
+                    self.network:sendToServer("sv_response", 4)
                 end
-                old_mouse_l_state = left
-                
-                if center ~= old_mouse_c_state then
-                    if center then
-                        self.network:sendToServer("sv_response", 7)
-                    else
-                        self.network:sendToServer("sv_response", 8)
-                    end
-                end
-                old_mouse_c_state = center
-
-                if right ~= old_mouse_r_state then
-                    if right then
-                        sc.localInputState.mouse_r = true
-                        self.network:sendToServer("sv_response", 5)
-                    else
-                        sc.localInputState.mouse_r = false
-                        self.network:sendToServer("sv_response", 6)
-                    end
-                end
-                old_mouse_r_state = right
             end
-
-            if keyboardApiAvailable then
-                local q_pulse = q_state and not old_q_state
-                old_q_state = q_state
+            old_mouse_l_state = left
             
-                if q_pulse then
-                    self.network:sendToServer("sv_response", 1)
+            if center ~= old_mouse_c_state then
+                if center then
+                    self.network:sendToServer("sv_response", 7)
+                else
+                    self.network:sendToServer("sv_response", 8)
                 end
-                
-                local r_pulse = r_state and not old_r_state
-                old_r_state = r_state
+            end
+            old_mouse_c_state = center
 
-                if r_pulse then
-                    self.network:sendToServer("sv_response", 2)
+            if right ~= old_mouse_r_state then
+                if right then
+                    sc.localInputState.mouse_r = true
+                    self.network:sendToServer("sv_response", 5)
+                else
+                    sc.localInputState.mouse_r = false
+                    self.network:sendToServer("sv_response", 6)
                 end
+            end
+            old_mouse_r_state = right
+        end
+
+        if keyboardApiAvailable then
+            local q_pulse = q_state and not old_q_state
+            old_q_state = q_state
+        
+            if q_pulse then
+                self.network:sendToServer("sv_response", 1)
+            end
+            
+            local r_pulse = r_state and not old_r_state
+            old_r_state = r_state
+
+            if r_pulse then
+                self.network:sendToServer("sv_response", 2)
             end
         end
+        --end
     end
 end
 
@@ -149,7 +153,8 @@ function wasd_autotool:client_onToggle()
         return true
     end
 
-    if self.tool:getOwner().character:getLockingInteractable() then
+    if self.tool:isLocal() then
+    --if self.tool:getOwner().character:getLockingInteractable() then
         self.network:sendToServer("sv_response", 1)
     end
 
@@ -161,7 +166,8 @@ function wasd_autotool:client_onReload()
         return true
     end
 
-    if self.tool:getOwner().character:getLockingInteractable() then
+    if self.tool:isLocal() then
+    --if self.tool:getOwner().character:getLockingInteractable() then
         self.network:sendToServer("sv_response", 2)
     end
 
