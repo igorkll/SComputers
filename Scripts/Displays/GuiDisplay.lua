@@ -1,5 +1,6 @@
 dofile("$CONTENT_DATA/Scripts/Config.lua")
 dofile("$CONTENT_DATA/Scripts/Displays/modules/sendStack.lua")
+dofile("$CONTENT_DATA/Scripts/Displays/modules/lagCheck.lua")
 GuiDisplay = class(canvasAPI.canvasService)
 GuiDisplay.maxParentCount = 1
 GuiDisplay.maxChildCount = 0
@@ -11,6 +12,7 @@ GuiDisplay.componentType = "display"
 local stackChecksum = canvasAPI.stackChecksum
 local needPushStack = canvasAPI.needPushStack
 local sendStack = displays_sendStack
+local lagCheck = displays_lagCheck
 
 function GuiDisplay:server_onCreate()
     self.lastLagScore = 0
@@ -107,10 +109,11 @@ function GuiDisplay:server_onFixedUpdate()
         self.flushCallForce = nil
     end
 
+    lagCheck(self)
+
     self.dataTunnel.scriptableApi_update()
 
 	if self:isAllow() then
-        self.allow_send = true
 		if self.allow_send then
 			if self.dataTunnel.dataUpdated then
 				if self.dataTunnel.resolutionChanged then
