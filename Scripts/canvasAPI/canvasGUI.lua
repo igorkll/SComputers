@@ -48,7 +48,7 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding)
 
     local api
     api = {
-        update = function(delta)
+        update = function()
 
         end,
         open = function()
@@ -58,7 +58,7 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding)
             guiInstance:render(guiTable)
         end,
         close = function()
-            if guiInstance and guiInstance:isActive() then
+            if api.isOpened() then
                 guiInstance:close()
             end
         end,
@@ -75,7 +75,7 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding)
         resize = function(nrx, nry)
             rx, ry = nrx, nry
             guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding)
-            if guiInstance and guiInstance:isActive() then
+            if api.isOpened() then
                 guiInstance:render(guiTable)
             end
         end,

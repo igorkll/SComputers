@@ -1,5 +1,5 @@
 dofile("$CONTENT_DATA/Scripts/Config.lua")
-GuiDisplay = class()
+GuiDisplay = class(canvasAPI.canvasService)
 GuiDisplay.maxParentCount = 1
 GuiDisplay.maxChildCount = 0
 GuiDisplay.connectionInput = sm.interactable.connectionType.composite
@@ -24,7 +24,8 @@ function GuiDisplay:client_onInteract(_, state)
 end
 
 function GuiDisplay:client_onFixedUpdate(delta)
-    self.canvasGUI:update(delta)
+    self.canvasGUI:update()
+    self:canvasService(self.canvasGUI.isRendering())
 end
 
 function GuiDisplay:client_onDestroy()
