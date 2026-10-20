@@ -64,6 +64,7 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
 
     local guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
     local guiTableChildsMax = 2 + (rx * ry)
+    local guiTableInfo = {}
     local guiInstance
 
     local function childInsert(tbl)
@@ -80,17 +81,35 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
         local padHeight = height - (padding * 2)
         local pixelSizeX = padWidth / rx
         local pixelSizeY = padHeight / ry
-        
-        childInsert({
-            ["Skin"] = "WhiteSkin",
-            ["Type"] = "Widget",
-            ["Colour"] = lFormatColor(color),
-            ["x"] = (x * pixelSizeX) + padding,
-            ["y"] = (y * pixelSizeY) + padding,
-            ["width"] = pixelSizeX + canvasGUI.additionalPixelSize,
-            ["height"] = pixelSizeY + canvasGUI.additionalPixelSize
-        })
-        index = index + 1
+
+        local idx = x + (y * rx)
+        local currentRect = guiTableInfo[idx]
+
+        if currentRect then
+            if currentRect[3] > 1 or currentRect[4] > 1 then
+
+            end
+
+            if color == bufferBase then
+                guiTableInfo[idx] = nil
+                
+            else
+                currentRect[5] = color
+                guiTable.Childs[currentRect[6]]["Colour"] = lFormatColor(color)
+            end
+        else
+            local guiTableIdx = childInsert({
+                ["Skin"] = "WhiteSkin",
+                ["Type"] = "Widget",
+                ["Colour"] = lFormatColor(color),
+                ["x"] = (x * pixelSizeX) + padding,
+                ["y"] = (y * pixelSizeY) + padding,
+                ["width"] = pixelSizeX + canvasGUI.additionalPixelSize,
+                ["height"] = pixelSizeY + canvasGUI.additionalPixelSize
+            })
+
+            guiTableInfo[idx] = {x, y, 1, 1, color, guiTableIdx}
+        end
     end
 
     local api
@@ -122,6 +141,8 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
         resize = function(nrx, nry)
             rx, ry = nrx, nry
             guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
+            guiTableChildsMax = 2 + (rx * ry)
+            guiTableInfo = {}
             api.clear(0)
             api.flush()
         end,
