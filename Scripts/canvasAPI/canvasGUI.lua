@@ -2,8 +2,11 @@ local canvasGUI = {}
 canvasGUI.jsonGuiSetup = { isInteractive = true, needsCursor = true }
 canvasGUI.additionalPixelSize = 2
 
+local debugCanvas = true
+
 local math_floor = math.floor
 local table_insert = table.insert
+local table_remove = table.remove
 
 local function lFormatColor(color)
     local r, g, b = math_floor(color / 256 / 256) / 255, (math_floor(color / 256) % 256) / 255, (color % 256) / 255
@@ -82,6 +85,12 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
         local pixelSizeX = padWidth / rx
         local pixelSizeY = padHeight / ry
 
+        local psx, psy = pixelSizeX, pixelSizeY
+        if debugCanvas then
+            psx = psx - canvasGUI.additionalPixelSize - 2
+            psy = psy - canvasGUI.additionalPixelSize - 2
+        end
+
         local idx = x + (y * rx)
         local currentRect = guiTableInfo[idx]
 
@@ -91,8 +100,8 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
             end
 
             if color == bufferBase then
+                table_remove(guiTable.Childs, currentRect[6])
                 guiTableInfo[idx] = nil
-                
             else
                 currentRect[5] = color
                 guiTable.Childs[currentRect[6]]["Colour"] = lFormatColor(color)
@@ -104,8 +113,8 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
                 ["Colour"] = lFormatColor(color),
                 ["x"] = (x * pixelSizeX) + padding,
                 ["y"] = (y * pixelSizeY) + padding,
-                ["width"] = pixelSizeX + canvasGUI.additionalPixelSize,
-                ["height"] = pixelSizeY + canvasGUI.additionalPixelSize
+                ["width"] = psx + canvasGUI.additionalPixelSize,
+                ["height"] = psy + canvasGUI.additionalPixelSize
             })
 
             guiTableInfo[idx] = {x, y, 1, 1, color, guiTableIdx}
