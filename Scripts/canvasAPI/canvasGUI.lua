@@ -2,6 +2,13 @@ local canvasGUI = {}
 canvasGUI.jsonGuiSetup = { isInteractive = true, needsCursor = true }
 canvasGUI.additionalPixelSize = 2
 
+local math_floor = math.floor
+
+local function lFormatColor(color)
+    local r, g, b = math_floor(color / 256 / 256) / 255, (math_floor(color / 256) % 256) / 255, (color % 256) / 255
+    return r .. " " .. g .. " " .. b
+end
+
 function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
     local guiTable = {
         ["Anchor"] = "Center",
@@ -67,6 +74,9 @@ function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
 end
 
 function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
+    local buffer = {}
+    local bufferBase = 0x000000
+
     local guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
     local guiInstance
 
@@ -98,8 +108,14 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
 
         resize = function(nrx, nry)
             rx, ry = nrx, nry
+            buffer = {}
+            bufferBase = color
             guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
             api.flush()
+        end,
+        clear = function(color)
+            buffer = {}
+            bufferBase = color
         end,
         setPixel = function(x, y, str)
             guiTable.Childs[x + (y * rx) + 1]["Colour"] = str

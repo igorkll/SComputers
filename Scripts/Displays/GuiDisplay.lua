@@ -182,15 +182,22 @@ end
 
 ---------------------------------------------
 
+local formatColorToNumber = canvasAPI.formatColorToNumber
+
 function GuiDisplay:client_onCreate()
     self._old_res_x = self.data.x
     self._old_res_y = self.data.y
 
     self.canvasGUI = canvasGUI.createGuiCanvas(self.data.x, self.data.y, 500, 500, 25, "Gui Display - BETA (No touchscreen support, no optimization)")
 
-    self.drawer = canvasAPI.createDrawer(self.data.x, self.data.y, function(x, y, color)
-        local fColor = sc.formatColor(color)
-        self.canvasGUI.setPixel(x, y, fColor.r .. " " .. fColor.g .. " " .. fColor.b)
+    self.drawer = canvasAPI.createDrawer(self.data.x, self.data.y, function(x, y, color, background)
+        local fColor = formatColorToNumber(color)
+        local fBackground = formatColorToNumber(background)
+        if fBackground ~= self.oldBackground then
+            self.canvasGUI.clear(fBackground)
+            self.oldBackground = fBackground
+        end
+        self.canvasGUI.setPixel(x, y, fColor)
     end, nil, nil, nil, nil, nil, true)
 
     self.network:sendToServer("sv_dataRequest")

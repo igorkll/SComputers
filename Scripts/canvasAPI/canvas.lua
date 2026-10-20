@@ -46,7 +46,7 @@ canvasAPI.multi_layer[tostring(canvasAPI.material.classic)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.plastic)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.smoothed)] = true
 canvasAPI.multi_layer[tostring(canvasAPI.material.glowing)] = true
-canvasAPI.version = 64
+canvasAPI.version = 65
 
 canvasAPI.materialList = {
     [0] = canvasAPI.material.glass,
