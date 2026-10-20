@@ -2,15 +2,6 @@
 	"Anchor" : "Center",
 	"Childs" : 
 	[
-        {
-			"Skin" : "WhiteSkin",
-			"Type" : "Widget",
-            "Colour": "1 0 0",
-			"height" : 3,
-			"width" : 3,
-			"x" : 2,
-			"y" : 2
-		}
 	],
 	"InheritsPick" : true,
 	"Name" : "BackPanel",

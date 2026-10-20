@@ -34,6 +34,14 @@ function GuiDisplay:client_onFixedUpdate()
     end
 end
 
+function GuiDisplay:getIndex(x, y)
+    return x + (y * 64)
+end
+
+function GuiDisplay:setColor(x, y, color)
+    guiTable.Childs[self:getIndex(ix, iy)] = sc.formatColor(color)
+end
+
 function GuiDisplay:cl_createGuiTable(width, height, rx, ry)
     local padding = 50
     local pWidth = width - (padding * 2)
@@ -44,21 +52,22 @@ function GuiDisplay:cl_createGuiTable(width, height, rx, ry)
 
     for ix = 0, rx - 1 do
         for iy = 0, ry - 1 do
-            table.insert({
-                "Skin" : "WhiteSkin",
-                "Type" : "Widget",
-                "Colour": "1 0 0",
-                "height" : 3,
-                "width" : 3,
-                "x" : 2,
-                "y" : 2
-            })
+            guiTable.Childs[self:getIndex(ix, iy)] = {
+                ["Skin"] = "WhiteSkin",
+                ["Type"] = "Widget",
+                ["x"] = (ix * pixelSizeX) + padding,
+                ["y"] = (iy * pixelSizeY) + padding,
+                ["width"] = pixelSizeX,
+                ["height"] = pixelSizeY
+            }
+            self:setColor(ix, iy, (ix + iy) % 256)
         end
     end
-    
 
     guiTable.width = width
     guiTable.height = height
+    guiTable._rx = rx
+    guiTable._ry = ry
 
     return guiTable
 end
@@ -67,7 +76,7 @@ function GuiDisplay:cl_openGui()
     if self.gui then return end
 
     self.gui_activated = false
-    self.gui_table = self:cl_createGuiTable()
+    self.gui_table = self:cl_createGuiTable(500, 500, 64, 64)
 
     self.gui = sm.jsonGui.createGui({ isInteractive = true, needsCursor = true })
     self.gui:render(self.gui_table)
