@@ -1,7 +1,7 @@
 local canvasGUI = {}
 canvasGUI.jsonGuiSetup = { isInteractive = true, needsCursor = true }
 
-function canvasGUI.createGuiTable(rx, ry, width, height, padding)
+function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
     local guiTable = {
         ["Anchor"] = "Center",
         ["Childs"] = {},
@@ -32,18 +32,33 @@ function canvasGUI.createGuiTable(rx, ry, width, height, padding)
                 ["Colour"] = "0 0 0",
                 ["x"] = (ix * pixelSizeX) + padding,
                 ["y"] = (iy * pixelSizeY) + padding,
-                ["width"] = pixelSizeX + 2,
-                ["height"] = pixelSizeY + 2
+                ["width"] = pixelSizeX,
+                ["height"] = pixelSizeY
             }
             index = index + 1
         end
     end
 
+    if title then
+        table.insert(guiTable.Childs, {
+            ["Caption"] = title,
+            ["FontName"] = "SM_Label",
+            ["Skin"] = "TextBox",
+            ["TextAlign"] = "Center",
+            ["TextColour"] = "1 1 1",
+            ["Type"] = "TextBox",
+            ["height"] = padding,
+            ["width"] = width,
+            ["x"] = 0,
+            ["y"] = 0
+        })
+    end
+
     return guiTable
 end
 
-function canvasGUI.createGuiCanvas(rx, ry, width, height, padding)
-    local guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding)
+function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
+    local guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
     local guiInstance
 
     local api
@@ -74,7 +89,7 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding)
 
         resize = function(nrx, nry)
             rx, ry = nrx, nry
-            guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding)
+            guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
             api.flush()
         end,
         setPixel = function(x, y, str)

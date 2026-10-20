@@ -185,7 +185,7 @@ function GuiDisplay:client_onCreate()
     self._old_res_x = self.data.x
     self._old_res_y = self.data.y
 
-    self.canvasGUI = canvasGUI.createGuiCanvas(self.data.x, self.data.y, 500, 500, 25)
+    self.canvasGUI = canvasGUI.createGuiCanvas(self.data.x, self.data.y, 500, 500, 25, "Gui Display - BETA (No touchscreen support, no optimization)")
 
     self.drawer = canvasAPI.createDrawer(self.data.x, self.data.y, function(x, y, color)
         local fColor = sc.formatColor(color)

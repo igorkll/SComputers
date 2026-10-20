@@ -694,5 +694,11 @@
         "description" : "он работает как обычный радар, но видит только те цели, которые \"подсвечены\" обычным радаром. Он работает на мощности основного радара. если цель была подсвечена несколькими радарами то пассивный выберет самый мошный",
       "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
       "title" : "Пассивный радар"
+   },
+
+   "4427b780-9331-48cd-83eb-dc3646205cd6": {
+        "description" : "Экран, отображаемый в GUI. Вы можете установить его разрешение с помощью display.setResolution(x, y)",
+        "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+        "title" : "Gui дисплей"
    }
 }

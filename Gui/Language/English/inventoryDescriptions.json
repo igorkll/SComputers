@@ -712,6 +712,12 @@
         "description" : "DigitalSign from drilling thunder update, computer-controlled only",
         "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
         "title" : "Smart Sign"
+   },
+
+   "4427b780-9331-48cd-83eb-dc3646205cd6": {
+    "description" : "The display that is shown in GUI. You can set its resolution using display.setResolution(x, y)",
+        "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+        "title" : "Gui Display"
    }
 
    
