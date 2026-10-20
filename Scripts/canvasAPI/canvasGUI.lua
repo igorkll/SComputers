@@ -1,6 +1,6 @@
 local canvasGUI = {}
 canvasGUI.jsonGuiSetup = { isInteractive = true, needsCursor = true }
-canvasGUI.additionalPixelSize = 50
+canvasGUI.additionalPixelSize = 2
 
 function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
     local guiTable = {
@@ -29,10 +29,10 @@ function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
         for ix = 0, rx - 1 do
             local addSizeX = canvasGUI.additionalPixelSize
             local addSizeY = canvasGUI.additionalPixelSize
-            if ix == (width - 1) then
+            if ix == (rx - 1) then
                 addSizeX = 0
             end
-            if iy == (height - 1) then
+            if iy == (ry - 1) then
                 addSizeY = 0
             end
             guiTable.Childs[index] = {
