@@ -209,6 +209,7 @@ function GuiDisplay:client_onFixedUpdate()
     if not computerConnected and self.oldComputerConnected then
         self.drawer.pushStack({canvasAPI.draw.clear, 0})
         self.drawer.flush()
+        self.canvasGUI.flush()
     end
     self.oldComputerConnected = computerConnected
 
@@ -241,6 +242,7 @@ function GuiDisplay:cl_pushStack(stack)
             local startTime = os.clock()
             self.drawer.pushStack(self.sendedData_cl_pushStack)
             self.drawer.flush(self.sendedData_cl_pushStack.forceForce)
+            self.canvasGUI.flush()
             self.sendedData_cl_pushStack = nil
             self:lagDetector(os.clock() - startTime, sc.clockLagMul)
         end
@@ -259,6 +261,7 @@ function GuiDisplay:cl_pushStack(stack)
         local startTime = os.clock()
 		self.drawer.pushStack(self.stack)
 		self.drawer.flush(stack.forceForce)
+        self.canvasGUI.flush()
 		self.stack = nil
         self:lagDetector(os.clock() - startTime, sc.clockLagMul)
 	end
@@ -269,6 +272,7 @@ function GuiDisplay:cl_dataTunnel(data)
     self.drawer.pushDataTunnelParams(data)
     if data.res_x ~= self._old_res_x or data.res_y ~= self._old_res_y then
         self.drawer.setDrawerResolution(data.res_x, data.res_y)
+        self.canvasGUI.resize(data.res_x, data.res_y)
         self._old_res_x = data.res_x
         self._old_res_y = data.res_y
     end

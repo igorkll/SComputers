@@ -58,7 +58,7 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding)
             guiInstance:render(guiTable)
         end,
         close = function()
-            if api.isOpened() then
+            if api.isRendering() then
                 guiInstance:close()
             end
         end,
@@ -75,12 +75,15 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding)
         resize = function(nrx, nry)
             rx, ry = nrx, nry
             guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding)
-            if api.isOpened() then
-                guiInstance:render(guiTable)
-            end
+            api.flush()
         end,
         setPixel = function(x, y, str)
-            guiTable[x + (y * nrx) + 1] = str
+            guiTable.Childs[x + (y * rx) + 1]["Colour"] = str
+        end,
+        flush = function()
+            if api.isRendering() then
+                guiInstance:render(guiTable)
+            end
         end
     }
     return api
