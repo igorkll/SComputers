@@ -189,8 +189,8 @@ function GuiDisplay:client_onCreate()
     self._old_res_y = self.data.y
 
     self.canvasGUI = canvasGUI.createGuiCanvas(
-        self.data.guiX or 50,
-        self.data.guiY or 50,
+        self.data.guiX or 0,
+        self.data.guiY or 0,
         self.data.x,
         self.data.y,
         self.data.guiSx or 500,
@@ -235,6 +235,19 @@ function GuiDisplay:client_onFixedUpdate()
 
 	self.canvasGUI.update()
     self:canvasService(self.canvasGUI.isRendering())
+    self:cl_processTouchscreen()
+
+	if self.dragging.interact then
+		self:cl_onClick(1, "drag")
+	elseif self.dragging.tinker then
+		self:cl_onClick(2, "drag")
+	end
+end
+
+function GuiDisplay:cl_processTouchscreen()
+    if self.data and self.data.noTouch then
+        return
+    end
 
     local state1 = sc.localInputState.mouse_l
     if state1 ~= self.mouse_l then
@@ -247,12 +260,6 @@ function GuiDisplay:client_onFixedUpdate()
         self:cl_clk2(state2)
     end
     self.mouse_r = state2
-
-	if self.dragging.interact then
-		self:cl_onClick(1, "drag")
-	elseif self.dragging.tinker then
-		self:cl_onClick(2, "drag")
-	end
 end
 
 function GuiDisplay:client_onDestroy()
