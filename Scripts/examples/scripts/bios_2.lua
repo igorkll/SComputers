@@ -7,6 +7,7 @@ local auto_open_bootmenu = false
 local title_logo = "BIOS 2"
 local title_bootmenu = "BOOT MENU"
 local title_setupmenu = "SETUP"
+local prohibit_setup = false
 
 -----------------------------------------
 
@@ -86,12 +87,14 @@ local function bootmenu_buttons(scene_menu, refreshComponents, scene_setup)
         reboot()
     end
 
-    local settingsButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "SETUP", 0xffffff, 0x0000ff)
-    setupButton(settingsButton, rebootButton)
-    settingsButton:setBorderDown(2 + buttonSizeY + 2)
-    settingsButton:setBorderRight(2)
-    function settingsButton:onDropInZone()
-        scene_setup:select()
+    if not prohibit_setup then
+        local settingsButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "SETUP", 0xffffff, 0x0000ff)
+        setupButton(settingsButton, rebootButton)
+        settingsButton:setBorderDown(2 + buttonSizeY + 2)
+        settingsButton:setBorderRight(2)
+        function settingsButton:onDropInZone()
+            scene_setup:select()
+        end
     end
 end
 
@@ -289,6 +292,8 @@ local function userinterface_create_display(display)
     scene_menu = bootmenu(gui)
 
     local function openUi()
+        display.clearClicks()
+        display.setClicksAllowed(true)
         deleteBootTimer()
 
         for _, userInterface in ipairs(userInterfaces) do
@@ -644,8 +649,17 @@ function onTick()
 
     if not initProcess then
         if bootTimer and bootTimer:isTriggered() then
-            tryBoot()
-            deleteBootTimer()
+            local tryBootFlag = true
+
+            if auto_open_bootmenu and #userInterfaces > 0 then
+                tryBootFlag = false
+                userInterfaces[1].openUi()
+            end
+
+            if tryBootFlag then
+                tryBoot()
+                deleteBootTimer()
+            end
         elseif manualBoot then
             tryBoot()
             manualBoot = false
