@@ -9,8 +9,18 @@ local title_bootmenu = "BOOT MENU"
 local title_setupmenu = "SETUP"
 local prohibit_setup = false
 local defaultSetupTable = {}
+local setupTableKey = "BIOS_2"
 
 -----------------------------------------
+
+do
+    local dataTable = getTable()
+    if not dataTable[setupTableKey] then
+        defaultSetupTable[setupTableKey] = true
+        setTable(defaultSetupTable)
+    end
+end
+debug(getTable())
 
 local processlibrary = require("process")
 local timerlibrary = require("timer")
