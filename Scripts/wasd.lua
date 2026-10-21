@@ -23,7 +23,19 @@ local function getWasdInfo(self)
 	end
 end
 
+local function stickingProtect(self, state, key)
+    state = not not state
+    if not state then
+        self.stickingProtect[key] = true
+    end    
+    if not self.stickingProtect[key] then
+        state = false
+    end
+    return state
+end
+
 function wasd:server_onCreate()
+    self.stickingProtect = {}
     self.interactable.publicData = {
         sc_component = {
             type = wasd.componentType,
@@ -52,15 +64,15 @@ function wasd:server_onCreate()
 
 				isMouseL = function()
 					local wasdInfo = getWasdInfo(self)
-					return not not (wasdInfo and wasdInfo.mouse_l)
+					return stickingProtect(self, wasdInfo and wasdInfo.mouse_l, "mouse_l")
 				end,
 				isMouseC = function()
 					local wasdInfo = getWasdInfo(self)
-					return not not (wasdInfo and wasdInfo.mouse_c)
+					return stickingProtect(self, wasdInfo and wasdInfo.mouse_c, "mouse_c")
 				end,
 				isMouseR = function()
 					local wasdInfo = getWasdInfo(self)
-					return not not (wasdInfo and wasdInfo.mouse_r)
+					return stickingProtect(self, wasdInfo and wasdInfo.mouse_r, "mouse_r")
 				end,
 				isQ = function()
 					local wasdInfo = getWasdInfo(self)
@@ -95,6 +107,10 @@ function wasd:server_onFixedUpdate()
         end
     else
         self.seated = false
+    end
+
+    if not self.seated then
+        self.stickingProtect = {}
     end
 
     self.W = self.WS > 0
