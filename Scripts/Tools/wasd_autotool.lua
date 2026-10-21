@@ -4,20 +4,22 @@ function wasd_autotool:server_onFixedUpdate()
     local player = self.tool:getOwner()
     local seat = player.character:getLockingInteractable()
 
-    local seatedCharacter
+    local okay, seatedCharacter
     if seat then
-        seatedCharacter = seat:getSeatCharacter()
+        okay, seatedCharacter = pcall(seat.getSeatCharacter, seat)
     end
 
-    if seat and seatedCharacter and sm.exists(seatedCharacter) and player and sm.exists(player) and sm.exists(player.character) and seatedCharacter.id == player.character.id then
+    if seat and okay and seatedCharacter and sm.exists(seatedCharacter) and player and sm.exists(player) and sm.exists(player.character) and seatedCharacter.id == player.character.id then
         if not self.enabled then
-            self.network:sendToClient(player, "cl_enable")    
+            self.network:sendToClient(player, "cl_enable")
             self.enabled = true
         end
     elseif self.enabled then
-        self.network:sendToClient(player, "cl_disable")    
+        self.network:sendToClient(player, "cl_disable")
         self.enabled = false
     end
+
+    print(self.enabled)
 end
 
 function wasd_autotool:sv_response(info, player)
@@ -57,68 +59,64 @@ local old_mouse_c_state = false
 local old_mouse_r_state = false
 
 function wasd_autotool:client_onFixedUpdate()
-    if not self.tool:isLocal() then
+    if not isBetter or not self.tool:isLocal() then
         return
     end
 
-    if isBetter then
-        local left = better.mouse.isLeft()
-        local center = better.mouse.isCenter()
-        local right = better.mouse.isRight()
+    local left = better.mouse.isLeft()
+    local center = better.mouse.isCenter()
+    local right = better.mouse.isRight()
 
-        local q_state = better.keyboard.isKey(better.keyboard.keys.q)
-        local r_state = better.keyboard.isKey(better.keyboard.keys.r)
-
-        --if self.tool:getOwner().character:getLockingInteractable() then
-        if mouseApiAvailable then
-            if left ~= old_mouse_l_state then
-                if left then
-                    sc.localInputState.mouse_l = true
-                    self.network:sendToServer("sv_response", 3)
-                else
-                    sc.localInputState.mouse_l = false
-                    self.network:sendToServer("sv_response", 4)
-                end
+    if mouseApiAvailable then
+        if left ~= old_mouse_l_state then
+            if left then
+                sc.localInputState.mouse_l = true
+                self.network:sendToServer("sv_response", 3)
+            else
+                sc.localInputState.mouse_l = false
+                self.network:sendToServer("sv_response", 4)
             end
-            old_mouse_l_state = left
-            
-            if center ~= old_mouse_c_state then
-                if center then
-                    self.network:sendToServer("sv_response", 7)
-                else
-                    self.network:sendToServer("sv_response", 8)
-                end
-            end
-            old_mouse_c_state = center
-
-            if right ~= old_mouse_r_state then
-                if right then
-                    sc.localInputState.mouse_r = true
-                    self.network:sendToServer("sv_response", 5)
-                else
-                    sc.localInputState.mouse_r = false
-                    self.network:sendToServer("sv_response", 6)
-                end
-            end
-            old_mouse_r_state = right
         end
-
-        if keyboardApiAvailable then
-            local q_pulse = q_state and not old_q_state
-            old_q_state = q_state
+        old_mouse_l_state = left
         
-            if q_pulse then
-                self.network:sendToServer("sv_response", 1)
-            end
-            
-            local r_pulse = r_state and not old_r_state
-            old_r_state = r_state
-
-            if r_pulse then
-                self.network:sendToServer("sv_response", 2)
+        if center ~= old_mouse_c_state then
+            if center then
+                self.network:sendToServer("sv_response", 7)
+            else
+                self.network:sendToServer("sv_response", 8)
             end
         end
-        --end
+        old_mouse_c_state = center
+
+        if right ~= old_mouse_r_state then
+            if right then
+                sc.localInputState.mouse_r = true
+                self.network:sendToServer("sv_response", 5)
+            else
+                sc.localInputState.mouse_r = false
+                self.network:sendToServer("sv_response", 6)
+            end
+        end
+        old_mouse_r_state = right
+    end
+
+    local q_state = better.keyboard.isKey(better.keyboard.keys.q)
+    local r_state = better.keyboard.isKey(better.keyboard.keys.r)
+
+    if keyboardApiAvailable then
+        local q_pulse = q_state and not old_q_state
+        old_q_state = q_state
+    
+        if q_pulse then
+            self.network:sendToServer("sv_response", 1)
+        end
+        
+        local r_pulse = r_state and not old_r_state
+        old_r_state = r_state
+
+        if r_pulse then
+            self.network:sendToServer("sv_response", 2)
+        end
     end
 end
 
@@ -126,6 +124,8 @@ function wasd_autotool:client_onEquippedUpdate(primaryState, secondaryState)
     if mouseApiAvailable then
         return true, true
     end
+
+    print(primaryState, secondaryState)
 
     if self.tool:isLocal() then
         if primaryState == sm.tool.interactState.start then
@@ -154,7 +154,6 @@ function wasd_autotool:client_onToggle()
     end
 
     if self.tool:isLocal() then
-    --if self.tool:getOwner().character:getLockingInteractable() then
         self.network:sendToServer("sv_response", 1)
     end
 
@@ -167,7 +166,6 @@ function wasd_autotool:client_onReload()
     end
 
     if self.tool:isLocal() then
-    --if self.tool:getOwner().character:getLockingInteractable() then
         self.network:sendToServer("sv_response", 2)
     end
 
@@ -175,11 +173,9 @@ function wasd_autotool:client_onReload()
 end
 
 function wasd_autotool:cl_enable()
-    self.equipped = true
     sm.tool.forceTool(self.tool)
 end
 
 function wasd_autotool:cl_disable()
-    self.equipped = false
     sm.tool.forceTool(nil)
 end

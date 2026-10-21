@@ -67,7 +67,11 @@ function wasd:server_onCreate()
 				isR = function()
 					local wasdInfo = getWasdInfo(self)
 					return not not (wasdInfo and wasdInfo.button_r == sm.game.getCurrentTick())
-				end
+				end,
+
+                isSprint = function()
+                    return not not self.isSprint
+                end
             }
         }
     }
@@ -76,8 +80,12 @@ end
 function wasd:server_onFixedUpdate()
     local parent = self.interactable:getSingleParent()
     if parent then
-        self.WS = parent:getPower()
         self.seated = parent:isActive()
+
+        if self.seated then
+            self.WS = parent:getPower()
+            self.isSprint = parent:getSteeringSprint()
+        end
 
 		if not self.seated and self._oldSeated then
 			sc.wasdInfo[self._oldSeated] = {}
@@ -88,9 +96,12 @@ function wasd:server_onFixedUpdate()
     else
         self.seated = false
     end
+
     if not self.seated then
         self.WS = 0
+        self.isSprint = false
     end
+    
     self.W = self.WS > 0
     self.S = self.WS < 0
 
