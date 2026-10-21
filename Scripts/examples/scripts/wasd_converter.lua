@@ -39,8 +39,8 @@ function callback_loop()
     drawLabel(11, currentY, "R", wasd.isMouseR(), color)
     currentY = currentY + yStep * 2
 
-    drawLabel(-1, currentY, "Q", wasd.isMouseL(), color)
-    drawLabel(11, currentY, "R", wasd.isMouseR(), color)
+    drawLabel(-1, currentY, "Q", wasd.isQ(), color)
+    drawLabel(11, currentY, "R", wasd.isR(), color)
     currentY = currentY + yStep * 2
 
     drawLabel(-1, currentY, "SPRINT", wasd.isSprint(), color)
