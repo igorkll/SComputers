@@ -44,19 +44,41 @@ local manualBoot = false
 
 -----------------------------------------
 
+local function setupButton(button, oldButton)
+    button:setPbgColor(0x000000)
+    button:setPfgColor(0xffffff)
+end
+
 local function bootmenu_setup(gui, scene_menu)
     local buttonSizeY = 7
 
     local scene_setup = gui:createScene("0000ff")
     scene_setup:createLabel(1, 1, scene_setup.sizeX - 2, objHeight, title_setupmenu, 0xffffff, 0x0000ff)
 
-    local backButton = scene_setup:createButton(0, 0, nil, buttonSizeY, false, "< back", 0xffffff, 0x0000ff)
-    backButton:setPbgColor(0x000000)
-    backButton:setPfgColor(0xffffff)
-    backButton:setBorderDown(2)
-    backButton:setBorderLeft(2)
+    local backButton = scene_setup:createButton(0, 0, nil, buttonSizeY, false, "< BACK", 0xffffff, 0x0000ff)
+    setupButton(backButton)
+    backButton:setBorderDown(1)
+    backButton:setBorderLeft(1)
     function backButton:onDropInZone()
         scene_menu:select()
+    end
+
+    local posY = buttonSizeY + 2 + 1
+    local stepY = 7
+
+    scene_setup:createText(1, posY, "ADMIN PASSWD", 0xffffff, 0x0000ff)
+    posY = posY + stepY
+
+    local setAdminPasswdButton = scene_setup:createButton(1, posY, 16, buttonSizeY, false, "SET", 0xffffff, 0x0000ff)
+    setupButton(setAdminPasswdButton)
+    function setAdminPasswdButton:onDropInZone()
+        
+    end
+
+    local setAdminPasswdButton = scene_setup:createButton(1 + setAdminPasswdButton.sizeX + 1, posY, 32, buttonSizeY, false, "CLEAR", 0xffffff, 0x0000ff)
+    setupButton(setAdminPasswdButton)
+    function setAdminPasswdButton:onDropInZone()
+        
     end
 
     return scene_setup
@@ -65,11 +87,6 @@ end
 local function bootmenu_buttons(scene_menu, refreshComponents, scene_setup)
     local buttonSizeY = 7
     local buttonSizeX = (scene_menu.sizeX / 2) - 3
-
-    local function setupButton(button, oldButton)
-        button:setPbgColor(0x000000)
-        button:setPfgColor(0xffffff)
-    end
 
     local refreshButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "REFRESH", 0xffffff, 0x0000ff)
     setupButton(refreshButton)
