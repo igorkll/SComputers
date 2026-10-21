@@ -1,3 +1,42 @@
+sm.classhook = sm.classhook or {}
+sm.classhook.hook = sm.classhook.hook or {}
+sm.classhook.hook.class = sm.classhook.hook.class or {}
+sm.classhook.hook.class["*"] = sm.classhook.hook.class["*"] or {}
+
+local inputHandler
+
+table.insert(sm.classhook.hook.class["*"],
+function(class_tbl, class_name)
+    local old_client_onAction = class_tbl.client_onAction
+    if old_client_onAction then
+        function class_tbl.client_onAction(self, action, state)
+            inputHandler(self, action, state)
+            return old_client_onAction(self, action, state)
+        end
+    end
+end)
+
+local _HOOK_LEFT, _HOOK_RIGHT = false, false
+
+function inputHandler(self, action, state)
+    local consumeAction = true
+	if state == true then
+		if controllerAction == sm.interactable.actions.create then
+			_HOOK_LEFT = true
+		elseif controllerAction == sm.interactable.actions.attack then
+			_HOOK_RIGHT = true
+		end
+	else
+		if controllerAction == sm.interactable.actions.create then
+			_HOOK_LEFT = false
+		elseif controllerAction == sm.interactable.actions.attack then
+			_HOOK_RIGHT = false
+		end
+	end
+end
+
+------------------------------------------------------------------------
+
 wasd_autotool = class()
 wasd_autotool.equipWhileSeated = true
 
@@ -24,7 +63,7 @@ end
 function wasd_autotool:sv_response(info, player)
     sc.wasdInfo[player.character.id] = sc.wasdInfo[player.character.id] or {}
     local wasdInfo = sc.wasdInfo[player.character.id]
-    local tick = sm.game.getCurrentTick() + 1
+    local tick = sm.game.getCurrentTick()
 
     if info == 1 then
         wasdInfo.button_q = tick
@@ -57,24 +96,40 @@ local old_mouse_l_state = false
 local old_mouse_c_state = false
 local old_mouse_r_state = false
 
-function wasd_autotool:client_onFixedUpdate()
-    if not self.tool:isLocal() then
-        return
+function wasd_autotool:cl_process()
+
+end
+
+function wasd_autotool:cl_processWithoutBetterApi()
+    if _HOOK_LEFT ~= old_mouse_l_state then
+        if _HOOK_LEFT then
+            sc.localInputState.mouse_l = true
+            self.network:sendToServer("sv_response", 3)
+        else
+            sc.localInputState.mouse_l = false
+            self.network:sendToServer("sv_response", 4)
+        end
     end
+    old_mouse_l_state = _HOOK_LEFT
     
-    if self.forceToolEnabled then
-        sm.tool.forceTool(self.tool)
+    if _HOOK_RIGHT ~= old_mouse_r_state then
+        if _HOOK_RIGHT then
+            sc.localInputState.mouse_r = true
+            self.network:sendToServer("sv_response", 5)
+        else
+            sc.localInputState.mouse_r = false
+            self.network:sendToServer("sv_response", 6)
+        end
     end
+    old_mouse_r_state = _HOOK_RIGHT
+end
 
-    if not isBetter then
-        return
-    end
-
-    local left = better.mouse.isLeft()
-    local center = better.mouse.isCenter()
-    local right = better.mouse.isRight()
-
+function wasd_autotool:cl_processWithBetterApi()
     if mouseApiAvailable then
+        local left = better.mouse.isLeft()
+        local center = better.mouse.isCenter()
+        local right = better.mouse.isRight()
+        
         if left ~= old_mouse_l_state then
             if left then
                 sc.localInputState.mouse_l = true
@@ -107,10 +162,10 @@ function wasd_autotool:client_onFixedUpdate()
         old_mouse_r_state = right
     end
 
-    local q_state = better.keyboard.isKey(better.keyboard.keys.q)
-    local r_state = better.keyboard.isKey(better.keyboard.keys.r)
-
-    if keyboardApiAvailable then
+    if keyboardApiAvailable then    
+        local q_state = better.keyboard.isKey(better.keyboard.keys.q)
+        local r_state = better.keyboard.isKey(better.keyboard.keys.r)
+        
         local q_pulse = q_state and not old_q_state
         old_q_state = q_state
     
@@ -124,6 +179,24 @@ function wasd_autotool:client_onFixedUpdate()
         if r_pulse then
             self.network:sendToServer("sv_response", 2)
         end
+    end
+end
+
+function wasd_autotool:client_onFixedUpdate()
+    if not self.tool:isLocal() then
+        return
+    end
+    
+    if self.forceToolEnabled then
+        sm.tool.forceTool(self.tool)
+    end
+
+    self:cl_process()
+
+    if isBetter then
+        self:cl_processWithBetterApi()
+    else
+        self:cl_processWithoutBetterApi()
     end
 end
 
