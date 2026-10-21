@@ -19,20 +19,11 @@ end)
 local _HOOK_LEFT, _HOOK_RIGHT = false, false
 
 function inputHandler(self, action, state)
-    local consumeAction = true
-	if state == true then
-		if controllerAction == sm.interactable.actions.create then
-			_HOOK_LEFT = true
-		elseif controllerAction == sm.interactable.actions.attack then
-			_HOOK_RIGHT = true
-		end
-	else
-		if controllerAction == sm.interactable.actions.create then
-			_HOOK_LEFT = false
-		elseif controllerAction == sm.interactable.actions.attack then
-			_HOOK_RIGHT = false
-		end
-	end
+    if action == sm.interactable.actions.create then
+        _HOOK_LEFT = state
+    elseif action == sm.interactable.actions.attack then
+        _HOOK_RIGHT = state
+    end
 end
 
 ------------------------------------------------------------------------
@@ -101,6 +92,7 @@ function wasd_autotool:cl_process()
 end
 
 function wasd_autotool:cl_processWithoutBetterApi()
+    --print(_HOOK_LEFT, _HOOK_RIGHT)
     if _HOOK_LEFT ~= old_mouse_l_state then
         if _HOOK_LEFT then
             sc.localInputState.mouse_l = true
@@ -201,7 +193,7 @@ function wasd_autotool:client_onFixedUpdate()
 end
 
 function wasd_autotool:client_onEquippedUpdate(primaryState, secondaryState)
-    if mouseApiAvailable then
+    if isBetter then
         return true, true
     end
 
@@ -227,7 +219,7 @@ function wasd_autotool:client_onEquippedUpdate(primaryState, secondaryState)
 end
 
 function wasd_autotool:client_onToggle()
-    if keyboardApiAvailable then
+    if isBetter then
         return true
     end
 
@@ -239,7 +231,7 @@ function wasd_autotool:client_onToggle()
 end
 
 function wasd_autotool:client_onReload()
-    if keyboardApiAvailable then
+    if isBetter then
         return true
     end
 
@@ -251,11 +243,19 @@ function wasd_autotool:client_onReload()
 end
 
 function wasd_autotool:cl_enable()
+    if isBetter then
+        return
+    end
+
     sm.tool.forceTool(self.tool)
     self.forceToolEnabled = true
 end
 
 function wasd_autotool:cl_disable()
+    if isBetter then
+        return
+    end
+
     sm.tool.forceTool(nil)
     self.forceToolEnabled = false
 end
