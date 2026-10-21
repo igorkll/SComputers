@@ -32,11 +32,20 @@ local manualBoot = false
 
 -----------------------------------------
 
-local function bootmenu_setup(gui)
+local function bootmenu_setup(gui, scene_menu)
+    local buttonSizeY = 7
+
     local scene_setup = gui:createScene("0000ff")
     scene_setup:createLabel(1, 1, scene_setup.sizeX - 2, objHeight, title_setupmenu, 0xffffff, 0x0000ff)
 
-
+    local backButton = scene_setup:createButton(0, 0, nil, buttonSizeY, false, "< back", 0xffffff, 0x0000ff)
+    backButton:setPbgColor(0x000000)
+    backButton:setPfgColor(0xffffff)
+    backButton:setBorderDown(2)
+    backButton:setBorderLeft(2)
+    function backButton:onDropInZone()
+        scene_menu:select()
+    end
 
     return scene_setup
 end
