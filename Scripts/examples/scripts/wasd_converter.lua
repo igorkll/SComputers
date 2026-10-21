@@ -4,7 +4,7 @@ display.reset()
 display.clear()
 
 function drawLabel(x, y, char, state, color)
-    display.fillRect(x, y, 6, 7, state and color or "000000")
+    display.fillRect(x, y, (#char * 5) + 1, 7, state and color or "000000")
     display.drawText(x + 1, y + 1, char, state and "000000" or color)
 end
 
@@ -18,24 +18,32 @@ function callback_loop()
     local color = wasd.isSeated() and "00ff00" or "ff0000"
     display.clear()
 
-    drawLabel(5,  1, "W", wasd.isW(), color)
-    drawLabel(5,  8, "S", wasd.isS(), color)
-    drawLabel(-1, 8, "A", wasd.isA(), color)
-    drawLabel(11, 8, "D", wasd.isD(), color)
+    local currentY = 1
+    local yStep = 7
 
-    drawLabel(-1, 8 + 8, "W-D: " .. wasd.getWSvalue(), wasd.isW() or wasd.isS(), color)
-    drawLabel(-1, 8 + 8 + 7, "A-D: " .. wasd.getADvalue(), wasd.isA() or wasd.isS(), color)
+    drawLabel(5,  currentY, "W", wasd.isW(), color)
+    currentY = currentY + yStep
 
-    local mouseY = 8 + 8 + 7 + 8
-    drawLabel(-1, mouseY, "L", wasd.isMouseL(), color)
-    drawLabel(5, mouseY, "C", wasd.isMouseC(), color)
-    drawLabel(11, mouseY, "R", wasd.isMouseR(), color)
+    drawLabel(5,  currentY, "S", wasd.isS(), color)
+    drawLabel(-1, currentY, "A", wasd.isA(), color)
+    drawLabel(11, currentY, "D", wasd.isD(), color)
+    currentY = currentY + yStep * 2
 
-    local qrY = 8 + 8 + 7 + 8 + 8
-    drawLabel(-1, qrY, "Q", wasd.isMouseL(), color)
-    drawLabel(11, qrY, "R", wasd.isMouseR(), color)
+    drawLabel(-1, currentY, "W-S: " .. wasd.getWSvalue(), wasd.getWSvalue() ~= 0, color)
+    currentY = currentY + yStep
+    drawLabel(-1, currentY, "A-D: " .. wasd.getADvalue(), wasd.getADvalue() ~= 0, color)
+    currentY = currentY + yStep * 2
 
-    drawLabel(-1, 8 + 8 + 7 + 8 + 8 + 8, "SPRINT", wasd.isSprint(), color)
+    drawLabel(-1, currentY, "L", wasd.isMouseL(), color)
+    drawLabel(5, currentY, "C", wasd.isMouseC(), color)
+    drawLabel(11, currentY, "R", wasd.isMouseR(), color)
+    currentY = currentY + yStep * 2
+
+    drawLabel(-1, currentY, "Q", wasd.isMouseL(), color)
+    drawLabel(11, currentY, "R", wasd.isMouseR(), color)
+    currentY = currentY + yStep * 2
+
+    drawLabel(-1, currentY, "SPRINT", wasd.isSprint(), color)
 
     display.flush()
 end

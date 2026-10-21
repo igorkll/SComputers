@@ -18,8 +18,6 @@ function wasd_autotool:server_onFixedUpdate()
         self.network:sendToClient(player, "cl_disable")
         self.enabled = false
     end
-
-    print(self.enabled)
 end
 
 function wasd_autotool:sv_response(info, player)
