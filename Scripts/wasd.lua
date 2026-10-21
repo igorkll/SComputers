@@ -8,6 +8,8 @@ wasd.colorNormal = sm.color.new("#007355")
 wasd.colorHighlight = sm.color.new("#00e4aa")
 wasd.componentType = "wasd"
 
+local tickTriggerButtonsDelay = 2
+
 local function getWasdInfo(self)
 	local parent = self.interactable:getSingleParent()
 	if parent then
@@ -62,11 +64,13 @@ function wasd:server_onCreate()
 				end,
 				isQ = function()
 					local wasdInfo = getWasdInfo(self)
-					return not not (wasdInfo and wasdInfo.button_q == sm.game.getCurrentTick())
+                    local delayTick = sm.game.getCurrentTick() - tickTriggerButtonsDelay
+					return not not (wasdInfo and wasdInfo.button_q == delayTick)
 				end,
 				isR = function()
 					local wasdInfo = getWasdInfo(self)
-					return not not (wasdInfo and wasdInfo.button_r == sm.game.getCurrentTick())
+                    local delayTick = sm.game.getCurrentTick() - tickTriggerButtonsDelay
+					return not not (wasdInfo and wasdInfo.button_r == delayTick)
 				end,
 
                 isSprint = function()
@@ -78,6 +82,9 @@ function wasd:server_onCreate()
 end
 
 function wasd:server_onFixedUpdate()
+    self.WS = 0
+    self.isSprint = false
+
     local parent = self.interactable:getSingleParent()
     if parent then
         self.seated = parent:isActive()
@@ -86,22 +93,10 @@ function wasd:server_onFixedUpdate()
             self.WS = parent:getPower()
             self.isSprint = parent:getSteeringSprint()
         end
-
-		if not self.seated and self._oldSeated then
-			sc.wasdInfo[self._oldSeated] = {}
-		end
-
-		local seated = parent:getSeatCharacter()
-		self._oldSeated = seated and seated.id or self._oldSeated
     else
         self.seated = false
     end
 
-    if not self.seated then
-        self.WS = 0
-        self.isSprint = false
-    end
-    
     self.W = self.WS > 0
     self.S = self.WS < 0
 

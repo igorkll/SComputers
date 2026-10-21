@@ -49,8 +49,8 @@ end
 ----------------------------------------------------------
 
 local isBetter = better and better.isAvailable()
-local mouseApiAvailable = isBetter and pcall(better.mouse.isLeft)
-local keyboardApiAvailable = isBetter and pcall(better.keyboard.isKey, 0)
+local mouseApiAvailable = isBetter and better.mouse and pcall(better.mouse.isLeft)
+local keyboardApiAvailable = isBetter and better.keyboard and pcall(better.keyboard.isKey, 0)
 
 local old_q_state = false
 local old_r_state = false
@@ -59,7 +59,15 @@ local old_mouse_c_state = false
 local old_mouse_r_state = false
 
 function wasd_autotool:client_onFixedUpdate()
-    if not isBetter or not self.tool:isLocal() then
+    if not self.tool:isLocal() then
+        return
+    end
+    
+    if self.forceToolEnabled then
+        sm.tool.forceTool(self.tool)
+    end
+
+    if not isBetter then
         return
     end
 
@@ -125,8 +133,6 @@ function wasd_autotool:client_onEquippedUpdate(primaryState, secondaryState)
         return true, true
     end
 
-    print(primaryState, secondaryState)
-
     if self.tool:isLocal() then
         if primaryState == sm.tool.interactState.start then
             sc.localInputState.mouse_l = true
@@ -174,8 +180,10 @@ end
 
 function wasd_autotool:cl_enable()
     sm.tool.forceTool(self.tool)
+    self.forceToolEnabled = true
 end
 
 function wasd_autotool:cl_disable()
     sm.tool.forceTool(nil)
+    self.forceToolEnabled = false
 end
