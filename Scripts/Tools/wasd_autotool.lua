@@ -1,4 +1,5 @@
 wasd_autotool = class()
+wasd_autotool.equipWhileSeated = true
 
 function wasd_autotool:server_onFixedUpdate()
     local player = self.tool:getOwner()
