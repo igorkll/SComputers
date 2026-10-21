@@ -23,12 +23,12 @@ local function lFormatColor(color)
     return s
 end
 
-function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
+function canvasGUI.createGuiTable(x, y, rx, ry, width, height, padding, title, anchor)
     local pixelSizeX = (width - padding * 2) / rx
     local pixelSizeY = (height - padding * 2) / ry
 
     return {
-        Anchor = "Center",
+        Anchor = anchor,
         Childs = {
             [1] = {
                 Skin = "WhiteSkin",
@@ -58,12 +58,16 @@ function canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
         NeedMouse = false,
         Skin = "BackgroundInteractableWide",
         Type = "Widget",
-        x = 0, y = 0,
+        x = x, y = y,
         width = width, height = height,
     }
 end
 
-function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
+function canvasGUI.createGuiCanvas(x, y, rx, ry, width, height, padding, title, anchor, jsonGuiSetup)
+    title = title or ""
+    anchor = anchor or "Center"
+    jsonGuiSetup = jsonGuiSetup or canvasGUI.jsonGuiSetup
+
     local buffer = {}
     local bufferBase = 0x000000
     local bufferDirty = true
@@ -82,9 +86,15 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
     end
     recalcGeometry()
 
-    local guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
+    local guiTable
     local guiInstance
     local childsCount = 2
+
+    local function createGuiTable()
+        guiTable = canvasGUI.createGuiTable(x, y, rx, ry, width, height, padding, title, anchor)
+    end
+
+    createGuiTable()
 
     local widgetPool = {}
     local widgetPoolCount = 0
@@ -191,7 +201,7 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
 
         open = function()
             if not guiInstance then
-                guiInstance = sm.jsonGui.createGui(canvasGUI.jsonGuiSetup)
+                guiInstance = sm.jsonGui.createGui(jsonGuiSetup)
             end
             if bufferDirty then buildChilds() end
             guiInstance:render(guiTable)
@@ -227,7 +237,7 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
             buffer = {}
             bufferBase = 0x000000
             bufferDirty = true
-            guiTable = canvasGUI.createGuiTable(rx, ry, width, height, padding, title)
+            createGuiTable()
             childsCount = 2
 
             if api.isRendering() then
@@ -265,7 +275,7 @@ function canvasGUI.createGuiCanvas(rx, ry, width, height, padding, title)
                 buildChilds()
                 guiInstance:render(guiTable)
             end
-        end,
+        end
     }
 
     return api
