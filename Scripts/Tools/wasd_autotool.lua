@@ -3,7 +3,15 @@ sm.classhook.hook = sm.classhook.hook or {}
 sm.classhook.hook.class = sm.classhook.hook.class or {}
 sm.classhook.hook.class["*"] = sm.classhook.hook.class["*"] or {}
 
-local inputHandler
+local _HOOK_LEFT, _HOOK_RIGHT = false, false
+
+local function inputHandler(self, action, state)
+    if action == sm.interactable.actions.create then
+        _HOOK_LEFT = state
+    elseif action == sm.interactable.actions.attack then
+        _HOOK_RIGHT = state
+    end
+end
 
 table.insert(sm.classhook.hook.class["*"],
 function(class_tbl, class_name)
@@ -15,16 +23,6 @@ function(class_tbl, class_name)
         end
     end
 end)
-
-local _HOOK_LEFT, _HOOK_RIGHT = false, false
-
-function inputHandler(self, action, state)
-    if action == sm.interactable.actions.create then
-        _HOOK_LEFT = state
-    elseif action == sm.interactable.actions.attack then
-        _HOOK_RIGHT = state
-    end
-end
 
 ------------------------------------------------------------------------
 
