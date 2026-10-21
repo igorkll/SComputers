@@ -8,6 +8,7 @@ local title_logo = "BIOS 2"
 local title_bootmenu = "BOOT MENU"
 local title_setupmenu = "SETUP"
 local prohibit_setup = false
+local defaultSetupTable = {}
 
 -----------------------------------------
 
