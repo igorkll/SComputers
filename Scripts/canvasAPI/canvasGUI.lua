@@ -1,5 +1,6 @@
 local canvasGUI = {}
 canvasGUI.jsonGuiSetup = { isInteractive = true, needsCursor = true }
+canvasGUI.jsonGuiSetup_hud = { isHud = true, isInteractive = false, needsCursor = false }
 canvasGUI.additionalPixelSize = 1
 canvasGUI.debugCanvas = false
 

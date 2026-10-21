@@ -486,6 +486,38 @@
          "sticky" : "-X+X-Y+Y-Z+Z",
          "uuid" : "4427b780-9331-48cd-83eb-dc3646205cd6"
       },
+       {
+         "box" : {
+            "x" : 1,
+            "y" : 1,
+            "z" : 1
+         },
+         "color" : "ffffff",
+         "physicsMaterial" : "Mechanical",
+         "renderable" : "$CONTENT_DATA/Objects/Renderables/guidisplay.rend",
+         "rotationSet" : "PropYZ",
+         "scripted" : {
+            "classname" : "GuiDisplay",
+            "filename" : "$CONTENT_DATA/Scripts/Displays/GuiDisplay.lua",
+            "data" : {
+                "x" : 128,
+                "y" : 128,
+                "hud" : true,
+                "noTouch" : true,
+                "title" : "",
+                "pad" : 10,
+                "guiX" : 10,
+                "guiY" : 10,
+                "guiSx" : 200,
+                "guiSy" : 200,
+                "anchor" : "Top Left"
+            }
+         },
+         "showInInventory" : true,
+         "stackSize" : 10,
+         "sticky" : "-X+X-Y+Y-Z+Z",
+         "uuid" : "a7d5075b-8140-454a-b8ca-9b24b192d72e"
+      },
 
       {
          "box" : {

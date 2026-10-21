@@ -188,6 +188,11 @@ function GuiDisplay:client_onCreate()
     self._old_res_x = self.data.x
     self._old_res_y = self.data.y
 
+    local jsonGuiSetup = canvasGUI.jsonGuiSetup
+    if self.data.hud then
+        jsonGuiSetup = canvasGUI.jsonGuiSetup_hud
+    end
+
     self.canvasGUI = canvasGUI.createGuiCanvas(
         self.data.guiX or 0,
         self.data.guiY or 0,
@@ -197,7 +202,8 @@ function GuiDisplay:client_onCreate()
         self.data.guiSy or 500,
         self.data.pad or 25,
         self.data.title or "Gui Display - BETA (No touchscreen support)",
-        self.data.anchor or "Center"
+        self.data.anchor or "Center",
+        jsonGuiSetup
     )
 
     self.drawer = canvasAPI.createDrawer(self.data.x, self.data.y, function(x, y, color, background)
