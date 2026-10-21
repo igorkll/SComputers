@@ -2,6 +2,11 @@
 
 local autoboot_timer = 40 * 4
 local min_res = 64
+local prohibit_manual_open_bootmenu = false
+local auto_open_bootmenu = false
+local title_logo = "BIOS 2"
+local title_bootmenu = "BOOT MENU"
+local title_setupmenu = "SETUP"
 
 -----------------------------------------
 
@@ -27,7 +32,16 @@ local manualBoot = false
 
 -----------------------------------------
 
-local function bootmenu_buttons(scene_menu, refreshComponents)
+local function bootmenu_setup(gui)
+    local scene_setup = gui:createScene("0000ff")
+    scene_setup:createLabel(1, 1, scene_setup.sizeX - 2, objHeight, title_setupmenu, 0xffffff, 0x0000ff)
+
+
+
+    return scene_setup
+end
+
+local function bootmenu_buttons(scene_menu, refreshComponents, scene_setup)
     local buttonSizeY = 7
     local buttonSizeX = (scene_menu.sizeX / 2) - 3
 
@@ -68,11 +82,14 @@ local function bootmenu_buttons(scene_menu, refreshComponents)
     settingsButton:setBorderDown(2 + buttonSizeY + 2)
     settingsButton:setBorderRight(2)
     function settingsButton:onDropInZone()
-        
+        scene_setup:select()
     end
 end
 
-local function bootmenu_menu(scene_menu)
+local function bootmenu_menu(gui)
+    local scene_menu = gui:createScene("0000ff")
+    scene_menu:createLabel(1, 1, scene_menu.sizeX - 2, objHeight, title_bootmenu, 0xffffff, 0x0000ff)
+
     local buttonSizeY = 7
     local posY = buttonSizeY + 2 + 1
     local arrowButtonsSize = 25
@@ -197,18 +214,16 @@ local function bootmenu_menu(scene_menu)
         end
     end
 
-    return refreshComponents
+    return scene_menu, refreshComponents
 end
 
 local function bootmenu(gui)
-    local scene_menu = gui:createScene("0000ff")
-    scene_menu:createLabel(1, 1, scene_menu.sizeX - 2, objHeight, "BOOT MENU", 0xffffff, 0x0000ff)
-
-    local refreshComponents = bootmenu_menu(scene_menu)
+    local scene_menu, refreshComponents = bootmenu_menu(gui)
+    local scene_setup = bootmenu_setup(gui, scene_menu)
 
     refreshComponents()
 
-    bootmenu_buttons(scene_menu, refreshComponents)
+    bootmenu_buttons(scene_menu, refreshComponents, scene_setup)
 
     return scene_menu
 end
@@ -218,7 +233,7 @@ local function userinterface_create_display(display)
 
     display.reset()
     display.clearClicks()
-    display.setClicksAllowed(true)
+    display.setClicksAllowed(not prohibit_manual_open_bootmenu)
     display.setUtf8Support(true)
     local rx, ry = display.getWidth(), display.getHeight()
 
@@ -226,7 +241,7 @@ local function userinterface_create_display(display)
     local scene_logo, scene_ignore, scene_menu
 
     local function addLogo(scene)
-        local logo = scene:createLabel(0, 0, math.round(rx * 0.9), ry / 4, "BIOS 2", 0xffffff, 0xff00ff)
+        local logo = scene:createLabel(0, 0, math.round(rx * 0.9), ry / 4, title_logo, 0xffffff, 0xff00ff)
         local mulSize = math.round(rx / 64)
         logo:setFontParameters(fonts.oc_16x8, math.max(12, 8 * mulSize), math.max(16, 10 * mulSize), 3 * mulSize)
         logo:setCenter()
@@ -237,17 +252,21 @@ local function userinterface_create_display(display)
 
         function scene_logo:onTick(click)
             if click and click.state == "pressed" then
-                selfTbl.openUi()
+                if not prohibit_manual_open_bootmenu then
+                    selfTbl.openUi()
+                end
             end
         end
 
-        local label = scene_logo:createText(0, 0, "TAP TO OPEN")
-        label:setBorderDown(2 + 6)
-        label:setBorderLeft(2)
+        if not prohibit_manual_open_bootmenu then
+            local label = scene_logo:createText(0, 0, "TAP TO OPEN")
+            label:setBorderDown(2 + 6)
+            label:setBorderLeft(2)
 
-        local label2 = scene_logo:createText(0, 0, "BOOT MENU")
-        label2:setBorderDown(2)
-        label2:setBorderLeft(2)
+            local label2 = scene_logo:createText(0, 0, "BOOT MENU")
+            label2:setBorderDown(2)
+            label2:setBorderLeft(2)
+        end
 
         addLogo(scene_logo)
     end
@@ -261,8 +280,7 @@ local function userinterface_create_display(display)
     scene_menu = bootmenu(gui)
 
     local function openUi()
-        bootTimer:setEnabled(false)
-        bootTimer:reset()
+        deleteBootTimer()
 
         for _, userInterface in ipairs(userInterfaces) do
             if userInterface ~= selfTbl then
@@ -621,7 +639,6 @@ function onTick()
             deleteBootTimer()
         elseif manualBoot then
             tryBoot()
-            deleteBootTimer()
             manualBoot = false
         end
     end
