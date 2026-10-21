@@ -57,8 +57,8 @@ local function bootmenu_setup(gui, scene_menu)
 
     local backButton = scene_setup:createButton(0, 0, nil, buttonSizeY, false, "< BACK", 0xffffff, 0x0000ff)
     setupButton(backButton)
-    backButton:setBorderDown(1)
-    backButton:setBorderLeft(1)
+    backButton:setBorderDown(2)
+    backButton:setBorderLeft(2)
     function backButton:onDropInZone()
         scene_menu:select()
     end
@@ -66,18 +66,35 @@ local function bootmenu_setup(gui, scene_menu)
     local posY = buttonSizeY + 2 + 1
     local stepY = 7
 
-    scene_setup:createText(1, posY, "ADMIN PASSWD", 0xffffff, 0x0000ff)
+    scene_setup:createText(2, posY, "ADMIN PASSWD", 0xffffff, 0x0000ff)
     posY = posY + stepY
 
-    local setAdminPasswdButton = scene_setup:createButton(1, posY, 16, buttonSizeY, false, "SET", 0xffffff, 0x0000ff)
+    local setAdminPasswdButton = scene_setup:createButton(2, posY, 16, buttonSizeY, false, "SET", 0xffffff, 0x0000ff)
     setupButton(setAdminPasswdButton)
     function setAdminPasswdButton:onDropInZone()
         
     end
 
-    local setAdminPasswdButton = scene_setup:createButton(1 + setAdminPasswdButton.sizeX + 1, posY, 32, buttonSizeY, false, "CLEAR", 0xffffff, 0x0000ff)
-    setupButton(setAdminPasswdButton)
-    function setAdminPasswdButton:onDropInZone()
+    local clearAdminPasswdButton = scene_setup:createButton(2 + setAdminPasswdButton.sizeX + 2, posY, 32, buttonSizeY, false, "CLEAR", 0xffffff, 0x0000ff)
+    setupButton(clearAdminPasswdButton)
+    function clearAdminPasswdButton:onDropInZone()
+        
+    end
+
+    posY = posY + stepY + 2
+
+    scene_setup:createText(2, posY, "BOOT PASSWD", 0xffffff, 0x0000ff)
+    posY = posY + stepY
+
+    local setBootPasswdButton = scene_setup:createButton(2, posY, 16, buttonSizeY, false, "SET", 0xffffff, 0x0000ff)
+    setupButton(setBootPasswdButton)
+    function setBootPasswdButton:onDropInZone()
+        
+    end
+
+    local clearBootPasswdButton = scene_setup:createButton(2 + setAdminPasswdButton.sizeX + 2, posY, 32, buttonSizeY, false, "CLEAR", 0xffffff, 0x0000ff)
+    setupButton(clearBootPasswdButton)
+    function clearBootPasswdButton:onDropInZone()
         
     end
 
