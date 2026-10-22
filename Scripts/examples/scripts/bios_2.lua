@@ -85,7 +85,7 @@ local function bootmenu_setup(gui, scene_menu)
                 if hash then
                     dataTable[hashKey] = hash
                     setTable(dataTable)
-                    scene_menu.scene_status.showStatus("PASSWORD SETTED", 0x00ff00, backToSceneCallback)
+                    scene_menu.scene_status.showStatus("PASSWORD\nSETTED", 0x00ff00, backToSceneCallback)
                     return
                 end
 
@@ -115,11 +115,11 @@ local function bootmenu_setup(gui, scene_menu)
                 if ok then
                     dataTable[hashKey] = nil
                     setTable(dataTable)
-                    scene_menu.scene_status.showStatus("PASSWORD CLEARED", 0x00ff00, backToSceneCallback)
+                    scene_menu.scene_status.showStatus("PASSWORD\nCLEARED", 0x00ff00, backToSceneCallback)
                 end
             end)
         else
-            scene_menu.scene_status.showStatus("PASSWORD NOT SETTED", 0xffAA00, backToSceneCallback)
+            scene_menu.scene_status.showStatus("PASSWORD\nNOT SETTED", 0xffAA00, backToSceneCallback)
         end
     end
 
@@ -345,6 +345,7 @@ local function create_scene_password(gui)
     function scene_password.createPassword(title, callback)
         titleLabel:setText(title)
         subtitleLabel:setText("SET")
+        scene_password:select()
     end
 
     function scene_password.checkPassword(title, hash, callback)
