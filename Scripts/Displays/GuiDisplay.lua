@@ -184,13 +184,12 @@ end
 
 local formatColorToSmallNumber = canvasAPI.formatColorToSmallNumber
 
-function GuiDisplay:client_onCreate()
-    self._old_res_x = self.data.x
-    self._old_res_y = self.data.y
+function GuiDisplay:cl_recreateGui()
+    local isRendering = false
 
-    local jsonGuiSetup = canvasGUI.jsonGuiSetup
-    if self.data.hud then
-        jsonGuiSetup = canvasGUI.jsonGuiSetup_hud
+    if self.canvasGUI then
+        isRendering = self.canvasGUI.isRendering()
+        self.canvasGUI.destroy()
     end
 
     self.canvasGUI = canvasGUI.createGuiCanvas(
@@ -205,6 +204,22 @@ function GuiDisplay:client_onCreate()
         self.data.anchor or "Center",
         jsonGuiSetup
     )
+
+    if isRendering then
+        self.canvasGUI.open()
+    end
+end
+
+function GuiDisplay:client_onCreate()
+    self._old_res_x = self.data.x
+    self._old_res_y = self.data.y
+
+    local jsonGuiSetup = canvasGUI.jsonGuiSetup
+    if self.data.hud then
+        jsonGuiSetup = canvasGUI.jsonGuiSetup_hud
+    end
+
+    self:cl_recreateGui()
 
     if self.data.setupGUI then
         self.setupGUI = sm.jsonGui.createGui({ isInteractive = true, needsCursor = true })
