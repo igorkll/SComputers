@@ -510,7 +510,8 @@
                 "guiY" : 10,
                 "guiSx" : 200,
                 "guiSy" : 200,
-                "anchor" : "Top Left"
+                "anchor" : "Top Left",
+                "setupUI: true
             }
          },
          "showInInventory" : true,
