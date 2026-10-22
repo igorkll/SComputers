@@ -350,6 +350,7 @@ local function create_scene_password(gui)
     local current_callback
     local check_hash = nil
     local check_two = false
+    local old_hash = nil
 
     local rx, ry = scene_password.sizeX, scene_password.sizeY
     local btnSideY = math.floor((math.min(rx, ry) / 6) - 3)
@@ -392,7 +393,21 @@ local function create_scene_password(gui)
                             end)
                         end
                     else
-                        current_callback(hash)
+                        if check_two then
+                            if hash == old_hash then
+                                current_callback(hash)
+                            else
+                                scene_password.scene_menu.scene_status.showStatus("PASSWORDS\nDO NOT MATCH", 0xffAA00, function()
+                                    scene_password.createPassword(titleLabel.text, current_callback)
+                                end)
+                            end
+                        else
+                            currentPassword = ""
+                            updateCurrentLabel()
+                            subtitleLabel:setText("SET CHECK")
+                            check_two = true
+                            old_hash = hash
+                        end
                     end
                 end
             elseif char == "<" then
