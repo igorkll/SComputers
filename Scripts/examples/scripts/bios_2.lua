@@ -11,6 +11,7 @@ local prohibit_setup = false
 local defaultSetupTable = {}
 local setupTableKey = "BIOS_2"
 local passwordSalt = "SM_SC_BIOS_2"
+local maxPasswordLen = 8
 
 -----------------------------------------
 
@@ -341,16 +342,37 @@ local function create_scene_password(gui)
     local scene_password = gui:createScene("0000ff")
     local titleLabel = scene_password:createLabel(1, 1, scene_password.sizeX - 2, buttonSizeY, "", 0xffffff, 0x0000ff)
     local subtitleLabel = scene_password:createLabel(1, 1 + buttonSizeY + 1, scene_password.sizeX - 2, buttonSizeY, "", 0xffffff, 0x0000ff)
+    local currentLabel = scene_password:createLabel(1, 1 + buttonSizeY + 1 + buttonSizeY + 1, scene_password.sizeX - 2, buttonSizeY, "", 0xffffff, 0x0000ff)
+    local currentPassword = ""
+
+    local btnSide = (math.min(width, height) / 3) - 2
+
+    local function createPasswdButton(x, y, num)
+        local btn = scene_password:createButton(x, y, btnSide, btnSide, false, num, 0xffffff, 0x000000)
+    end
+
+    createPasswdButton(1, 3, 0)
+    for i = 0, 8 do
+        createPasswdButton(i % 3, math.floor(i / 3), i + 1)
+    end
     
     function scene_password.createPassword(title, callback)
+        currentPassword = ""
+
         titleLabel:setText(title)
         subtitleLabel:setText("SET")
+        currentLabel:setText(currentPassword)
+
         scene_password:select()
     end
 
     function scene_password.checkPassword(title, hash, callback)
+        currentPassword = ""
+
         titleLabel:setText(title)
         subtitleLabel:setText("CHECK")
+        currentLabel:setText(currentPassword)
+
         scene_password:select()
     end
 
