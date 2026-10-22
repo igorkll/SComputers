@@ -104,10 +104,8 @@ function GuiDisplay:server_onFixedUpdate()
     if self.data.autoOpenOnSeat then
         local parents = self.interactable:getParents()
         local seated = false
-        print(parents)
         for _, parent in ipairs(parents) do
             if not scomputers.isComputer(parent) then
-                print(parent.id)
                 seated = parent:isActive()
                 break
             end
