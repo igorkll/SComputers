@@ -45,6 +45,9 @@ local bootTimer
 local manualBoot = false
 local buttonSizeY = 7
 
+local adminTitle, adminHaskKey = "ADMIN PASSWD", "adminPasswordHash"
+local bootTitle, bootHaskKey = "BOOT PASSWD", "bootPasswordHash"
+
 -----------------------------------------
 
 local function calcPasswordHash(password)
@@ -131,9 +134,6 @@ local function bootmenu_setup(gui, scene_menu)
             scene_menu.scene_status.showStatus("PASSWORD\nNOT SETTED", 0xffAA00, backToScene)
         end
     end
-
-    local adminTitle, adminHaskKey = "ADMIN PASSWD", "adminPasswordHash"
-    local bootTitle, bootHaskKey = "BOOT PASSWD", "bootPasswordHash"
 
     scene_setup:createText(2, posY, adminTitle, 0xffffff, 0x0000ff)
     posY = posY + stepY
@@ -561,8 +561,8 @@ local function userinterface_create_display(display)
         end
 
         local dataTable = getTable()
-        if dataTable.adminPasswordHash then
-            scene_menu.scene_password.checkPassword("ADMIN PASSWD", dataTable.adminPasswordHash, function(ok)
+        if dataTable[adminHaskKey] then
+            scene_menu.scene_password.checkPassword(adminTitle, dataTable[adminHaskKey], function(ok)
                 if ok then
                     scene_menu:select()
                 else
@@ -889,6 +889,16 @@ function tryBoot()
     end
 end
 
+function bootStart()
+    if #userInterfaces == 0 then
+        tryBoot()
+    else
+        bootTimer = timerhost:createTimer(autoboot_timer, false)
+        bootTimer:setEnabled(true)
+        bootTimer:reset()
+    end
+end
+
 function onStart()
     userinterface_clear()
 
@@ -898,12 +908,16 @@ function onStart()
         end
     end
 
-    if #userInterfaces == 0 then
-        tryBoot()
+    if dataTable[bootPasswordHash] then
+        scene_menu.scene_password.checkPassword(bootTitle, dataTable[bootHaskKey], function(ok)
+            if ok then
+                bootStart()
+            else
+                reboot()
+            end
+        end)
     else
-        bootTimer = timerhost:createTimer(autoboot_timer, false)
-        bootTimer:setEnabled(true)
-        bootTimer:reset()
+        bootStart()
     end
 end
 
