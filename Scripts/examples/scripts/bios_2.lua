@@ -350,20 +350,22 @@ local function create_scene_password(gui)
     local current_callback
 
     local rx, ry = scene_password.sizeX, scene_password.sizeY
-    local btnSide = (math.min(rx, ry) / 4) - 2
-    local btnOffset = btnSide + 2
+    local btnSide = math.floor((math.min(rx, ry) / 6) - 2)
+    local btnGap = 2
 
     local function updateCurrentLabel()
         currentLabel:setText(string.rep("*", #currentPassword))
     end
 
+    local maxBtnsX = 2
+    local maxBtnsY = 3
+
     local function createPasswdButton(x, y, char, bg, fg)
-        local px, py = (rx / 2) - (btnSide / 2), (ry / 2) - (btnSide / 2)
-        local btn = scene_password:createButton(px, py, btnSide, btnSide, false, char, bg, fg)
+        local btn = scene_password:createButton(x * (btnSide + btnGap), y * (btnSide + btnGap), btnSide, btnSide, false, char, bg, fg)
         btn:setPbgColor(bg)
         btn:setPfgColor(fg)
 
-        function btn:onClick()
+        function btn:onDropInZone()
             if char == "<" then
                 currentPassword = currentPassword:sub(1, #currentPassword - 1)
                 updateCurrentLabel()
