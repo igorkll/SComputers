@@ -216,6 +216,11 @@ function GuiDisplay:cl_recreateGui()
         self.canvasGUI.destroy()
     end
 
+    local jsonGuiSetup = canvasGUI.jsonGuiSetup
+    if self.data.hud then
+        jsonGuiSetup = canvasGUI.jsonGuiSetup_hud
+    end
+
     self.canvasGUI = canvasGUI.createGuiCanvas(
         self.data.guiX or 0,
         self.data.guiY or 0,
@@ -237,11 +242,6 @@ end
 function GuiDisplay:client_onCreate()
     self._old_res_x = self.data.x
     self._old_res_y = self.data.y
-
-    local jsonGuiSetup = canvasGUI.jsonGuiSetup
-    if self.data.hud then
-        jsonGuiSetup = canvasGUI.jsonGuiSetup_hud
-    end
 
     self:cl_recreateGui()
 
@@ -290,16 +290,10 @@ function GuiDisplay:client_onFixedUpdate()
 	self.canvasGUI.update()
     self:canvasService(self.canvasGUI.isRendering())
     self:cl_processTouchscreen()
-
-	if self.dragging.interact then
-		self:cl_onClick(1, "drag")
-	elseif self.dragging.tinker then
-		self:cl_onClick(2, "drag")
-	end
 end
 
 function GuiDisplay:cl_processTouchscreen()
-    if self.data and self.data.noTouch then
+    if (self.data and self.data.noTouch) or (self.c_dataTunnel and not self.c_dataTunnel.clicksAllowed) then
         return
     end
 
@@ -314,6 +308,12 @@ function GuiDisplay:cl_processTouchscreen()
         self:cl_clk2(state2)
     end
     self.mouse_r = state2
+
+    if self.dragging.interact then
+		self:cl_onClick(1, "drag")
+	elseif self.dragging.tinker then
+		self:cl_onClick(2, "drag")
+	end
 end
 
 function GuiDisplay:client_onDestroy()
@@ -399,10 +399,6 @@ local function defaultDisplayTouchDetect(self, detect, localPoint)
 end
 
 function GuiDisplay:cl_onClick(type, action) -- type - 1:interact|2:tinker (e.g 1 or 2), action - pressed, released, drag
-    if self.data and self.data.noTouch then
-        return
-    end
-
     local function detect(pointX, pointY)
         pointX = math.floor(pointX + 0.5)
         pointY = math.floor(pointY + 0.5)
