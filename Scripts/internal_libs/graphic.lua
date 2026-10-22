@@ -20,7 +20,8 @@ function sc_reglib_graphic()
         local lines = {}
         local customColors = {}
         local fontX, fontY = display.getFontWidth(), display.getFontHeight() + (spacingY or 1)
-        local maxLines = height / fontY
+        local spacing = display.getTextSpacing()
+        local maxLines = math.floor(height / fontY)
         local customColor
         for _, line in ipairs(strSplit(tool, text, "\n")) do
             if myGuiColorPrefixSupport and tool.sub(line, 1, 1) == "#" and tool.sub(line, 2, 2) ~= "#" then
@@ -46,7 +47,7 @@ function sc_reglib_graphic()
                 end
                 ]]
                 if display.isMonospacedFont() then
-                    maxSize = math.floor(width / fontX)
+                    maxSize = math.floor((width + spacing) / (fontX + spacing))
                 else
                     local lens = display.calcDecreasingTextSizes(line)
                     local lineLen = display.getUtf8Support() and utf8.len(line) or #line
@@ -67,7 +68,7 @@ function sc_reglib_graphic()
                             customColors[#lines] = customColor
                         end
                         maxLines = maxLines - 1
-                        if maxLines == 0 then break end
+                        if maxLines <= 0 then break end
                     end
                 else
                     sc.yield()
@@ -78,7 +79,7 @@ function sc_reglib_graphic()
                     maxLines = maxLines - 1
                 end
             end
-            if maxLines == 0 then break end
+            if maxLines <= 0 then break end
         end
         local addY = math.floor((height / 2) - (((fontY * #lines) - 1) / 2))
         for i, line in ipairs(lines) do

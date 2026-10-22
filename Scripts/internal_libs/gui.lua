@@ -1232,7 +1232,7 @@ function objinstance:_draw(force, twoStep)
         
         local graphic = sc.lib_require("graphic")
         if self.textBox then
-            graphic.textBox(self.display, self.x + 1, self.y + 1, self.sizeX - 1, self.sizeY, self.text, fg, self.centerX, self.centerY, self.spacingY, self.autoNewline, self.tool)
+            graphic.textBox(self.display, self.x + self.padding, self.y + self.padding, self.sizeX - (self.padding * 2), self.sizeY - (self.padding * 2), self.text, fg, self.centerX, self.centerY, self.spacingY, self.autoNewline, self.tool)
         else
             graphic.textBox(self.display, self.x, self.y, self.sizeX, self.sizeY, self.text, fg, true, true, nil, false)
         end
@@ -1853,7 +1853,7 @@ function sceneinstance:createLabel(x, y, sizeX, sizeY, text, bg, fg)
     return obj
 end
 
-function sceneinstance:createTextBox(x, y, sizeX, sizeY, text, bg, fg, centerX, centerY, spacingY, autoNewline, tool)
+function sceneinstance:createTextBox(x, y, sizeX, sizeY, text, bg, fg, centerX, centerY, spacingY, autoNewline, tool, padding)
     text = tostring(text or "")
     bg = bg and formatColor(bg)
     fg = formatColor(fg, true)
@@ -1882,6 +1882,8 @@ function sceneinstance:createTextBox(x, y, sizeX, sizeY, text, bg, fg, centerX, 
         setIfgColor = objinstance.setIfgColor,
         setStColor = objinstance.setStColor,
         setIstColor = objinstance.setIstColor,
+
+        padding = padding or 1,
 
         textBox = true,
         disable = true
