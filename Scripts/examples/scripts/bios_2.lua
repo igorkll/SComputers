@@ -10,6 +10,7 @@ local title_setupmenu = "SETUP"
 local prohibit_setup = false
 local defaultSetupTable = {}
 local setupTableKey = "BIOS_2"
+local passwordSalt = "SM_SC_BIOS_2"
 
 -----------------------------------------
 
@@ -43,6 +44,10 @@ local bootTimer
 local manualBoot = false
 
 -----------------------------------------
+
+local function calcPasswordHash(password)
+    return utils.sha256bin(password .. passwordSalt)
+end
 
 local function setupButton(button, oldButton)
     button:setPbgColor(0x000000)
@@ -285,6 +290,16 @@ local function bootmenu(gui)
     return scene_menu
 end
 
+local function create_scene_password()
+    local scene_password = gui:createScene("0000ff")
+
+    function scene_password.createPassword()
+        calcPasswordHash
+    end
+
+    return scene_password
+end
+
 local function userinterface_create_display(display)
     local selfTbl
 
@@ -295,7 +310,7 @@ local function userinterface_create_display(display)
     local rx, ry = display.getWidth(), display.getHeight()
 
     local gui = guilib.new(display)
-    local scene_logo, scene_ignore, scene_menu
+    local scene_password, scene_logo, scene_ignore, scene_menu
 
     local function addLogo(scene)
         local logo = scene:createLabel(0, 0, math.round(rx * 0.9), ry / 4, title_logo, 0xffffff, 0xff00ff)
@@ -303,6 +318,8 @@ local function userinterface_create_display(display)
         logo:setFontParameters(fonts.oc_16x8, math.max(12, 8 * mulSize), math.max(16, 10 * mulSize), 3 * mulSize)
         logo:setCenter()
     end
+
+    scene_password = create_scene_password()
 
     do
         scene_logo = gui:createScene("000000")
@@ -347,7 +364,12 @@ local function userinterface_create_display(display)
             end
         end
 
-        scene_menu:select()
+        local dataTable = getTable()
+        if dataTable.bootPasswordHash then
+            scene_password:select()
+        else
+            scene_menu:select()
+        end
     end
 
     local function ignoreUi()
