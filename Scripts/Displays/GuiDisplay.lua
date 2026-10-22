@@ -206,6 +206,11 @@ function GuiDisplay:client_onCreate()
         jsonGuiSetup
     )
 
+    if self.data.setupGUI then
+        self.setupGUI = sm.jsonGui.createGui({ isInteractive = true, needsCursor = true })
+        self.setupGUI_guiTable = sm.json.open("")
+    end
+
     self.drawer = canvasAPI.createDrawer(self.data.x, self.data.y, function(x, y, color, background)
         local fColor = formatColorToSmallNumber(color)
         local fBackground = formatColorToSmallNumber(background)
@@ -226,7 +231,11 @@ end
 
 function GuiDisplay:client_onInteract(_, state)
     if state then
-        self.canvasGUI.open()
+        if self.data.setupGUI then
+            self.setupGUI:render(self.setupGUI_guiTable)
+        else
+            self.canvasGUI.open()
+        end
     end
 end
 
@@ -269,6 +278,9 @@ function GuiDisplay:cl_processTouchscreen()
 end
 
 function GuiDisplay:client_onDestroy()
+    if self.setupGUI then
+        self.setupGUI:close()
+    end
     self.canvasGUI.destroy()
 end
 

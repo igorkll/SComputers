@@ -511,7 +511,7 @@
                 "guiSx" : 200,
                 "guiSy" : 200,
                 "anchor" : "Top Left",
-                "setupUI: true
+                "setupGUI": true
             }
          },
          "showInInventory" : true,
