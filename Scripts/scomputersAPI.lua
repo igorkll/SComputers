@@ -165,6 +165,10 @@ function scomputers.addChaffObject(position, id, mass, timeLimit)
     end
 end
 
+function scomputers.isComputer(interactable)
+    return not not sc.allComputersIds[interactable.id]
+end
+
 function scomputers.base64_encode(data)
     return base64.encode(data, true)
 end

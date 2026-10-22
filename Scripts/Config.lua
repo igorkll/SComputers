@@ -69,6 +69,7 @@ local sc = {
 
 	wasdInfo = {},
     localInputState = {},
+    computersIds = {},
 	
     gpstags = {},
     antennasApis = {},
