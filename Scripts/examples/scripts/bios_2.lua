@@ -42,6 +42,7 @@ local timerhost = timerlibrary.createHost()
 local userInterfaces = {}
 local bootTimer
 local manualBoot = false
+local buttonSizeY = 7
 
 -----------------------------------------
 
@@ -55,10 +56,8 @@ local function setupButton(button, oldButton)
 end
 
 local function bootmenu_setup(gui, scene_menu)
-    local buttonSizeY = 7
-
     local scene_setup = gui:createScene("0000ff")
-    scene_setup:createLabel(1, 1, scene_setup.sizeX - 2, objHeight, title_setupmenu, 0xffffff, 0x0000ff)
+    scene_setup:createLabel(1, 1, scene_setup.sizeX - 2, buttonSizeY, title_setupmenu, 0xffffff, 0x0000ff)
 
     local backButton = scene_setup:createButton(0, 0, nil, buttonSizeY, false, "< BACK", 0xffffff, 0x0000ff)
     setupButton(backButton)
@@ -107,7 +106,6 @@ local function bootmenu_setup(gui, scene_menu)
 end
 
 local function bootmenu_buttons(scene_menu, refreshComponents, scene_setup)
-    local buttonSizeY = 7
     local buttonSizeX = (scene_menu.sizeX / 2) - 3
 
     local refreshButton = scene_menu:createButton(0, 0, buttonSizeX, buttonSizeY, false, "REFRESH", 0xffffff, 0x0000ff)
@@ -150,9 +148,8 @@ end
 
 local function bootmenu_menu(gui)
     local scene_menu = gui:createScene("0000ff")
-    scene_menu:createLabel(1, 1, scene_menu.sizeX - 2, objHeight, title_bootmenu, 0xffffff, 0x0000ff)
+    scene_menu:createLabel(1, 1, scene_menu.sizeX - 2, buttonSizeY, title_bootmenu, 0xffffff, 0x0000ff)
 
-    local buttonSizeY = 7
     local posY = buttonSizeY + 2 + 1
     local arrowButtonsSize = 25
     local arrowButtonsFontSize = 30
@@ -290,11 +287,18 @@ local function bootmenu(gui)
     return scene_menu
 end
 
-local function create_scene_password()
+local function create_scene_password(gui)
     local scene_password = gui:createScene("0000ff")
+    local titleLabel = scene_password:createLabel(1, 1, scene_password.sizeX - 2, buttonSizeY, "", 0xffffff, 0x0000ff)
+    
+    function scene_password.createPassword(title, callback)
+        
+    end
 
-    function scene_password.createPassword()
-        calcPasswordHash
+    function scene_password.checkPassword(title, hash, callback)
+        titleLabel:setText(title)
+
+        scene_password:select()
     end
 
     return scene_password
@@ -319,7 +323,7 @@ local function userinterface_create_display(display)
         logo:setCenter()
     end
 
-    scene_password = create_scene_password()
+    scene_password = create_scene_password(gui)
 
     do
         scene_logo = gui:createScene("000000")
@@ -365,8 +369,14 @@ local function userinterface_create_display(display)
         end
 
         local dataTable = getTable()
-        if dataTable.bootPasswordHash then
-            scene_password:select()
+        if dataTable.adminPasswordHash then
+            scene_password.checkPassword("ADMIN PASSWD", dataTable.adminPasswordHash, function(ok)
+                if ok then
+                    scene_menu:select()
+                else
+                    reboot()
+                end
+            end)
         else
             scene_menu:select()
         end
