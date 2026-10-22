@@ -247,7 +247,7 @@ function GuiDisplay:client_onCreate()
 
     if self.data.setupGUI then
         self.setupGUI = sm.jsonGui.createGui({ isInteractive = true, needsCursor = true })
-        self.setupGUI_guiTable = sm.json.open("")
+        self.setupGUI_guiTable = sm.json.open("$CONTENT_DATA/Gui/JsonGuis/HudDisplay.gui")
     end
 
     self.drawer = canvasAPI.createDrawer(self.data.x, self.data.y, function(x, y, color, background)
