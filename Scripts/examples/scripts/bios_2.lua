@@ -344,45 +344,57 @@ local function create_scene_password(gui)
     local subtitleLabel = scene_password:createLabel(1, 1 + buttonSizeY + 1, scene_password.sizeX - 2, buttonSizeY, "", 0xffffff, 0x0000ff)
     local currentLabel = scene_password:createLabel(1, 1 + buttonSizeY + 1 + buttonSizeY + 1, scene_password.sizeX - 2, buttonSizeY, "", 0xffffff, 0x0000ff)
     local currentPassword = ""
+    local current_callback
 
     local btnSide = (math.min(width, height) / 3) - 2
 
-    local function createPasswdButton(x, y, num, bg, fg)
-        local btn = scene_password:createButton(x, y, btnSide, btnSide, false, num, bg, fg)
+    local function updateCurrentLabel()
+        currentLabel:setText(string.rep("*", #currentPassword))
+    end
+
+    local function createPasswdButton(x, y, char, bg, fg)
+        local btn = scene_password:createButton(x, y, btnSide, btnSide, false, char, bg, fg)
         bootButton:setPbgColor(bg)
         bootButton:setPfgColor(fg)
 
         function btn:onClick()
-            if num == "<" then
+            if char == "<" then
                 currentPassword = currentPassword:sub(1, #currentPassword - 1)
+                updateCurrentLabel()
+            elseif char == "X" then
+                
             else
-                currentPassword = currentPassword .. num
+                currentPassword = currentPassword .. char
+                updateCurrentLabel()
             end
         end
     end
 
-    createPasswdButton(1, 3, 0, 0xffffff, 0x000000)
     for i = 0, 8 do
-        createPasswdButton(i % 3, math.floor(i / 3), i + 1, 0xffffff, 0x000000)
+        createPasswdButton(i % 3, math.floor(i / 3), tostring(i + 1), 0xffffff, 0x000000)
     end
+    createPasswdButton(0, 3, "X", 0xffffff, 0x000000)
+    createPasswdButton(1, 3, "0", 0xffffff, 0x000000)
     createPasswdButton(2, 3, "<", 0xffffff, 0x000000)
     
     function scene_password.createPassword(title, callback)
         currentPassword = ""
+        current_callback = callback
 
         titleLabel:setText(title)
         subtitleLabel:setText("SET")
-        currentLabel:setText(currentPassword)
+        updateCurrentLabel()
 
         scene_password:select()
     end
 
     function scene_password.checkPassword(title, hash, callback)
         currentPassword = ""
+        current_callback = callback
 
         titleLabel:setText(title)
         subtitleLabel:setText("CHECK")
-        currentLabel:setText(currentPassword)
+        updateCurrentLabel()
 
         scene_password:select()
     end
