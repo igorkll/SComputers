@@ -73,6 +73,10 @@ local function bootmenu_setup(gui, scene_menu)
     scene_setup:createText(2, posY, "ADMIN PASSWD", 0xffffff, 0x0000ff)
     posY = posY + stepY
 
+    local function backToSceneCallback()
+        scene_setup:select()
+    end
+
     local function openSetPasswdWindow(title, hashKey)
         local dataTable = getTable()
 
@@ -109,10 +113,12 @@ local function bootmenu_setup(gui, scene_menu)
                 if ok then
                     dataTable[hashKey] = nil
                     setTable(dataTable)
+                else
+                    scene_menu.scene_status.showStatus("")
                 end
-
-                scene_setup:select()
             end)
+        else
+            scene_menu.scene_status.showStatus("PASSWORD NOT SETTED", 0xffAA00, backToSceneCallback)
         end
     end
 
@@ -336,12 +342,33 @@ local function create_scene_password(gui)
     local subtitleLabel = scene_password:createLabel(1, 1 + buttonSizeY + 1, scene_password.sizeX - 2, buttonSizeY, "", 0xffffff, 0x0000ff)
     
     function scene_password.createPassword(title, callback)
-        
+        titleLabel:setText(title)
+        subtitleLabel:setText("SET")
     end
 
     function scene_password.checkPassword(title, hash, callback)
         titleLabel:setText(title)
+        subtitleLabel:setText("CHECK")
         scene_password:select()
+    end
+
+    return scene_password
+end
+
+local function create_scene_status(gui)
+    local scene_status
+    scene_status = gui:createScene(nil, function(_, click)
+        if click and click.state == "pressed" then
+            scene_status.status_exit_callback()
+        end
+    end)
+    local label = scene_status:createTextBox(2, 2, scene_password.sizeX - 4, scene_password.sizeY - 4, "", 0xffffff, 0x000000, true, true, nil, true)
+    
+    function scene_status.showStatus(text, color, callback)
+        label:setText(text)
+        scene_status.color = color
+        scene_status.status_exit_callback = callback
+        scene_status:select()
     end
 
     return scene_password
@@ -398,6 +425,7 @@ local function userinterface_create_display(display)
 
     scene_menu = bootmenu(gui)
     scene_menu.scene_password = create_scene_password(gui)
+    scene_menu.scene_status = create_scene_status(gui)
 
     local function openUi()
         display.clearClicks()
