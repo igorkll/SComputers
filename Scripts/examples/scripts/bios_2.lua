@@ -580,6 +580,10 @@ local function userinterface_create_display(display)
         scene_ignore:select()
     end
 
+    local function openLogo()
+        scene_logo:select()
+    end
+
     scene_logo:select()
 
     selfTbl = {
@@ -592,6 +596,7 @@ local function userinterface_create_display(display)
         end,
         openUi = openUi,
         ignoreUi = ignoreUi,
+        openLogo = openLogo,
         scene_menu = scene_menu
     }
 
@@ -914,13 +919,14 @@ function onStart()
         if #userInterfaces > 0 then
             userInterfaces[1].scene_menu.scene_password.checkPassword(bootTitle, dataTable[bootHaskKey], function(ok)
                 if ok then
+                    for _, userInterface in ipairs(userInterfaces) do
+                        userInterface.openLogo()
+                    end
                     bootStart()
                 else
                     reboot()
                 end
             end)
-        else
-            reboot()
         end
     else
         bootStart()
