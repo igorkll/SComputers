@@ -91,7 +91,7 @@ local function bootmenu_setup(gui, scene_menu)
             end)
         end
 
-        if dataTable[hashKey] then
+        if dataTable[adminHaskKey] then
             scene_menu.scene_password.checkPassword(adminTitle, dataTable[adminHaskKey], function(ok)
                 if ok then
                     setPasswdWindow()
@@ -434,6 +434,9 @@ local function create_scene_password(gui)
     createPasswdButton(3, 3, "O", 0xffffff, 0x00ff00)
     
     function scene_password.createPassword(title, callback)
+        checkArg(1, title, "string")
+        checkArg(2, callback, "function")
+            
         currentPassword = ""
         current_callback = callback
         check_hash = nil
@@ -447,6 +450,10 @@ local function create_scene_password(gui)
     end
 
     function scene_password.checkPassword(title, hash, callback)
+        checkArg(1, title, "string")
+        checkArg(2, hash, "string")
+        checkArg(3, callback, "function")
+
         currentPassword = ""
         current_callback = callback
         check_hash = hash
