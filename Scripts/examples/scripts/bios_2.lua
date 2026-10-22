@@ -2,7 +2,7 @@
 
 local autoboot_timer = 40 * 4
 local min_res = 64
-local prohibit_manual_open_bootmenu = false
+local prohibit_manual_open_bootmenu = true
 local auto_open_bootmenu = false
 local title_logo = "BIOS 2"
 local title_bootmenu = "BOOT MENU"
@@ -518,25 +518,32 @@ local function userinterface_create_display(display, local_prohibit_manual_open_
         logo:setCenter()
     end
 
+    local updateLogoLabelsVisible
+
     do
         scene_logo = gui:createScene("000000")
 
+        local label = scene_logo:createText(0, 0, "TAP TO OPEN")
+        label:setBorderDown(2 + 6)
+        label:setBorderLeft(2)
+
+        local label2 = scene_logo:createText(0, 0, "BOOT MENU")
+        label2:setBorderDown(2)
+        label2:setBorderLeft(2)
+
+        function updateLogoLabelsVisible()
+            label:setInvisible(local_prohibit_manual_open_bootmenu)
+            label2:setInvisible(local_prohibit_manual_open_bootmenu)
+        end
+
+        updateLogoLabelsVisible()
+
         function scene_logo:onTick(click)
             if click and click.state == "pressed" then
-                if not prohibit_manual_open_bootmenu then
+                if not local_prohibit_manual_open_bootmenu then
                     selfTbl.openUi()
                 end
             end
-        end
-
-        if not prohibit_manual_open_bootmenu then
-            local label = scene_logo:createText(0, 0, "TAP TO OPEN")
-            label:setBorderDown(2 + 6)
-            label:setBorderLeft(2)
-
-            local label2 = scene_logo:createText(0, 0, "BOOT MENU")
-            label2:setBorderDown(2)
-            label2:setBorderLeft(2)
         end
 
         addLogo(scene_logo)
@@ -585,6 +592,13 @@ local function userinterface_create_display(display, local_prohibit_manual_open_
     end
 
     local function openLogo()
+        if prohibit_manual_open_bootmenu then
+            display.setClicksAllowed(false)
+        else
+            local_prohibit_manual_open_bootmenu = false
+            display.setClicksAllowed(true)
+            updateLogoLabelsVisible()
+        end
         scene_logo:select()
     end
 
@@ -601,7 +615,8 @@ local function userinterface_create_display(display, local_prohibit_manual_open_
         openUi = openUi,
         ignoreUi = ignoreUi,
         openLogo = openLogo,
-        scene_menu = scene_menu
+        scene_menu = scene_menu,
+        display = display
     }
 
     table.insert(userInterfaces, selfTbl)
@@ -921,6 +936,7 @@ function onStart()
     local dataTable = getTable()
     if dataTable[bootHaskKey] then
         if #userInterfaces > 0 then
+            userInterfaces[1].display.setClicksAllowed(true)
             userInterfaces[1].scene_menu.scene_password.checkPassword(bootTitle, dataTable[bootHaskKey], function(ok)
                 if ok then
                     for _, userInterface in ipairs(userInterfaces) do
