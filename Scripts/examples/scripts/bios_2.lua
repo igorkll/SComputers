@@ -350,9 +350,11 @@ local function create_scene_password(gui)
     local current_callback
 
     local rx, ry = scene_password.sizeX, scene_password.sizeY
-    local btnSide = math.floor((math.min(rx, ry) / 6) - 2)
+    local btnSideY = math.floor((math.min(rx, ry) / 6) - 3)
+    local btnSideX = btnSideY
     local btnGap = 2
-    local btnOffset = btnSide + btnGap
+    local btnOffsetX = btnSideX + btnGap
+    local btnOffsetY = btnSideY + btnGap
 
     local function updateCurrentLabel()
         currentLabel:setText(string.rep("*", #currentPassword))
@@ -361,16 +363,16 @@ local function create_scene_password(gui)
     local maxBtnsX = 3
     local maxBtnsY = 4
 
-    local inputPanelSizeX = (maxBtnsX * btnOffset) - btnGap
-    local inputPanelSizeY = (maxBtnsY * btnOffset) - btnGap
+    local inputPanelSizeX = (maxBtnsX * btnOffsetX) - btnGap
+    local inputPanelSizeY = (maxBtnsY * btnOffsetY) - btnGap
 
     local offsetX = (rx / 2) - (inputPanelSizeX / 2)
     local offsetY = (ry / 2) - (inputPanelSizeY / 2)
 
-    offsetY = math.max(offsetY, currentLabel.y + buttonSizeY + 1)
+    offsetY = math.max(offsetY, currentLabel.y + buttonSizeY + 2)
 
     local function createPasswdButton(x, y, char, bg, fg)
-        local btn = scene_password:createButton(offsetX + (x * btnOffset), offsetY + (y * btnOffset), btnSide, btnSide, false, char, bg, fg)
+        local btn = scene_password:createButton(offsetX + (x * btnOffsetX), offsetY + (y * btnOffsetY), btnSideX, btnSideY, false, char, bg, fg)
         btn:setPbgColor(bg)
         btn:setPfgColor(fg)
 
@@ -390,9 +392,10 @@ local function create_scene_password(gui)
     for i = 0, 8 do
         createPasswdButton(i % 3, math.floor(i / 3), tostring(i + 1), 0xffffff, 0x000000)
     end
-    createPasswdButton(0, 3, "X", 0xffffff, 0x000000)
+    createPasswdButton(0, 3, "X", 0xffffff, 0xff0000)
     createPasswdButton(1, 3, "0", 0xffffff, 0x000000)
-    createPasswdButton(2, 3, "<", 0xffffff, 0x000000)
+    createPasswdButton(2, 3, "<", 0xffffff, 0xffcc00)
+    createPasswdButton(3, 3, "O", 0xffffff, 0x00ff00)
     
     function scene_password.createPassword(title, callback)
         currentPassword = ""
