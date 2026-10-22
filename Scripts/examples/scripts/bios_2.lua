@@ -73,16 +73,72 @@ local function bootmenu_setup(gui, scene_menu)
     scene_setup:createText(2, posY, "ADMIN PASSWD", 0xffffff, 0x0000ff)
     posY = posY + stepY
 
+    local function openSetPasswdWindow(title, hashKey)
+        local dataTable = getTable()
+
+        local function setPasswd()
+            scene_menu.scene_password.createPassword(title, function(hash)
+                if hash then
+                    dataTable[hashKey] = hash
+                    setTable(dataTable)
+                end
+
+                scene_setup:select()
+            end)
+        end
+
+        if dataTable[hashKey] then
+            scene_menu.scene_password.checkPassword(title, dataTable[hashKey], function(ok)
+                if ok then
+                    setPasswdWindow()
+                    return
+                end
+
+                scene_setup:select()
+            end)
+        else
+            setPasswdWindow()
+        end
+    end
+
+    local function openClearPasswdWindow(title, hashKey)
+        local dataTable = getTable()
+
+        local function setPasswd()
+            scene_menu.scene_password.createPassword(title, function(hash)
+                if hash then
+                    dataTable[hashKey] = hash
+                    setTable(dataTable)
+                end
+
+                scene_setup:select()
+            end)
+        end
+
+        if dataTable[hashKey] then
+            scene_menu.scene_password.checkPassword(title, dataTable[hashKey], function(ok)
+                if ok then
+                    setPasswdWindow()
+                    return
+                end
+
+                scene_setup:select()
+            end)
+        else
+            setPasswdWindow()
+        end
+    end
+
     local setAdminPasswdButton = scene_setup:createButton(2, posY, 16, buttonSizeY, false, "SET", 0xffffff, 0x0000ff)
     setupButton(setAdminPasswdButton)
     function setAdminPasswdButton:onDropInZone()
-        
+        openSetPasswdWindow("ADMIN PASSWD", "adminPasswordHash")
     end
 
     local clearAdminPasswdButton = scene_setup:createButton(2 + setAdminPasswdButton.sizeX + 2, posY, 32, buttonSizeY, false, "CLEAR", 0xffffff, 0x0000ff)
     setupButton(clearAdminPasswdButton)
     function clearAdminPasswdButton:onDropInZone()
-        
+        openClearPasswdWindow("ADMIN PASSWD", "adminPasswordHash")
     end
 
     posY = posY + stepY + 2
@@ -93,13 +149,13 @@ local function bootmenu_setup(gui, scene_menu)
     local setBootPasswdButton = scene_setup:createButton(2, posY, 16, buttonSizeY, false, "SET", 0xffffff, 0x0000ff)
     setupButton(setBootPasswdButton)
     function setBootPasswdButton:onDropInZone()
-        
+        openSetPasswdWindow("BOOT PASSWD", "bootPasswordHash")
     end
 
     local clearBootPasswdButton = scene_setup:createButton(2 + setAdminPasswdButton.sizeX + 2, posY, 32, buttonSizeY, false, "CLEAR", 0xffffff, 0x0000ff)
     setupButton(clearBootPasswdButton)
     function clearBootPasswdButton:onDropInZone()
-        
+        openClearPasswdWindow("BOOT PASSWD", "bootPasswordHash")
     end
 
     return scene_setup
@@ -290,6 +346,7 @@ end
 local function create_scene_password(gui)
     local scene_password = gui:createScene("0000ff")
     local titleLabel = scene_password:createLabel(1, 1, scene_password.sizeX - 2, buttonSizeY, "", 0xffffff, 0x0000ff)
+    local subtitleLabel = scene_password:createLabel(1, 1 + buttonSizeY + 1, scene_password.sizeX - 2, buttonSizeY, "", 0xffffff, 0x0000ff)
     
     function scene_password.createPassword(title, callback)
         
@@ -297,7 +354,6 @@ local function create_scene_password(gui)
 
     function scene_password.checkPassword(title, hash, callback)
         titleLabel:setText(title)
-
         scene_password:select()
     end
 
@@ -322,8 +378,6 @@ local function userinterface_create_display(display)
         logo:setFontParameters(fonts.oc_16x8, math.max(12, 8 * mulSize), math.max(16, 10 * mulSize), 3 * mulSize)
         logo:setCenter()
     end
-
-    scene_password = create_scene_password(gui)
 
     do
         scene_logo = gui:createScene("000000")
@@ -356,6 +410,7 @@ local function userinterface_create_display(display)
     end
 
     scene_menu = bootmenu(gui)
+    scene_menu.scene_password = create_scene_password(gui)
 
     local function openUi()
         display.clearClicks()
@@ -370,7 +425,7 @@ local function userinterface_create_display(display)
 
         local dataTable = getTable()
         if dataTable.adminPasswordHash then
-            scene_password.checkPassword("ADMIN PASSWD", dataTable.adminPasswordHash, function(ok)
+            scene_menu.scene_password.checkPassword("ADMIN PASSWD", dataTable.adminPasswordHash, function(ok)
                 if ok then
                     scene_menu:select()
                 else
@@ -387,6 +442,8 @@ local function userinterface_create_display(display)
         display.setClicksAllowed(false)
         scene_ignore:select()
     end
+
+    scene_logo:select()
 
     selfTbl = {
         onTick = function()
