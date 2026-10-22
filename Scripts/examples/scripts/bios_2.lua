@@ -76,7 +76,7 @@ local function bootmenu_setup(gui, scene_menu)
     local function openSetPasswdWindow(title, hashKey)
         local dataTable = getTable()
 
-        local function setPasswd()
+        local function setPasswdWindow()
             scene_menu.scene_password.createPassword(title, function(hash)
                 if hash then
                     dataTable[hashKey] = hash
@@ -104,28 +104,15 @@ local function bootmenu_setup(gui, scene_menu)
     local function openClearPasswdWindow(title, hashKey)
         local dataTable = getTable()
 
-        local function setPasswd()
-            scene_menu.scene_password.createPassword(title, function(hash)
-                if hash then
-                    dataTable[hashKey] = hash
+        if dataTable[hashKey] then
+            scene_menu.scene_password.checkPassword(title, dataTable[hashKey], function(ok)
+                if ok then
+                    dataTable[hashKey] = nil
                     setTable(dataTable)
                 end
 
                 scene_setup:select()
             end)
-        end
-
-        if dataTable[hashKey] then
-            scene_menu.scene_password.checkPassword(title, dataTable[hashKey], function(ok)
-                if ok then
-                    setPasswdWindow()
-                    return
-                end
-
-                scene_setup:select()
-            end)
-        else
-            setPasswdWindow()
         end
     end
 
