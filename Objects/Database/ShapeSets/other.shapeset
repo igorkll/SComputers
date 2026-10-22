@@ -497,8 +497,8 @@
          "renderable" : "$CONTENT_DATA/Objects/Renderables/guidisplay.rend",
          "rotationSet" : "PropYZ",
          "scripted" : {
-            "classname" : "GuiDisplay",
-            "filename" : "$CONTENT_DATA/Scripts/Displays/GuiDisplay.lua",
+            "classname" : "HudDisplay",
+            "filename" : "$CONTENT_DATA/Scripts/Displays/HudDisplay.lua",
             "data" : {
                 "x" : 128,
                 "y" : 128,
@@ -511,7 +511,8 @@
                 "guiSx" : 200,
                 "guiSy" : 200,
                 "anchor" : "Top Left",
-                "setupGUI": true
+                "setupGUI": true,
+                "autoOpenOnSeat": true
             }
          },
          "showInInventory" : true,

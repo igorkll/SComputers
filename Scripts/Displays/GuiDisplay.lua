@@ -89,6 +89,8 @@ function GuiDisplay:server_onCreate()
 		}
 	}
 
+    self.oldSeated = false
+
     sc.componentsBackend[self.api] = self
 end
 
@@ -98,6 +100,26 @@ function GuiDisplay:server_onFixedUpdate()
         self.internalApi.setForceFrame()
     end
     self.sv_oldComputerConnected = computerConnected
+
+    if self.data.autoOpenOnSeat then
+        local parents = self.interactable:getParents(sm.interactable.connectionType.seated)
+        local seated = false
+        print(parents)
+        for _, parent in ipairs(parents) do
+            if parent:isActive() then
+                seated = true
+            end
+        end
+
+        if seated ~= self.oldSeated then
+            if seated then
+                self.canvasGUI.open()
+            else
+                self.canvasGUI.close()
+            end
+            self.oldSeated = seated
+        end
+    end
     
     if self.flushCallFlag then
         if self.flushCallForce then
