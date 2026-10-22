@@ -347,14 +347,25 @@ local function create_scene_password(gui)
 
     local btnSide = (math.min(width, height) / 3) - 2
 
-    local function createPasswdButton(x, y, num)
-        local btn = scene_password:createButton(x, y, btnSide, btnSide, false, num, 0xffffff, 0x000000)
+    local function createPasswdButton(x, y, num, bg, fg)
+        local btn = scene_password:createButton(x, y, btnSide, btnSide, false, num, bg, fg)
+        bootButton:setPbgColor(bg)
+        bootButton:setPfgColor(fg)
+
+        function btn:onClick()
+            if num == "<" then
+                currentPassword = currentPassword:sub(1, #currentPassword - 1)
+            else
+                currentPassword = currentPassword .. num
+            end
+        end
     end
 
-    createPasswdButton(1, 3, 0)
+    createPasswdButton(1, 3, 0, 0xffffff, 0x000000)
     for i = 0, 8 do
-        createPasswdButton(i % 3, math.floor(i / 3), i + 1)
+        createPasswdButton(i % 3, math.floor(i / 3), i + 1, 0xffffff, 0x000000)
     end
+    createPasswdButton(2, 3, "<", 0xffffff, 0x000000)
     
     function scene_password.createPassword(title, callback)
         currentPassword = ""
