@@ -74,7 +74,7 @@ local function bootmenu_setup(gui, scene_menu)
     scene_setup:createText(2, posY, "ADMIN PASSWD", 0xffffff, 0x0000ff)
     posY = posY + stepY
 
-    local function backToSceneCallback()
+    local function backToScene()
         scene_setup:select()
     end
 
@@ -86,11 +86,11 @@ local function bootmenu_setup(gui, scene_menu)
                 if hash then
                     dataTable[hashKey] = hash
                     setTable(dataTable)
-                    scene_menu.scene_status.showStatus("PASSWORD\nSETTED", 0x00ff00, backToSceneCallback)
+                    scene_menu.scene_status.showStatus("PASSWORD\nSETTED", 0x00ff00, backToScene)
                     return
                 end
 
-                scene_setup:select()
+                backToScene()
             end)
         end
 
@@ -101,7 +101,7 @@ local function bootmenu_setup(gui, scene_menu)
                     return
                 end
 
-                scene_setup:select()
+                backToScene()
             end)
         else
             setPasswdWindow()
@@ -116,11 +116,14 @@ local function bootmenu_setup(gui, scene_menu)
                 if ok then
                     dataTable[hashKey] = nil
                     setTable(dataTable)
-                    scene_menu.scene_status.showStatus("PASSWORD\nCLEARED", 0x00ff00, backToSceneCallback)
+                    scene_menu.scene_status.showStatus("PASSWORD\nCLEARED", 0x00ff00, backToScene)
+                    return
                 end
+
+                backToScene()
             end)
         else
-            scene_menu.scene_status.showStatus("PASSWORD\nNOT SETTED", 0xffAA00, backToSceneCallback)
+            scene_menu.scene_status.showStatus("PASSWORD\nNOT SETTED", 0xffAA00, backToScene)
         end
     end
 
@@ -362,7 +365,7 @@ local function create_scene_password(gui)
                 currentPassword = currentPassword:sub(1, #currentPassword - 1)
                 updateCurrentLabel()
             elseif char == "X" then
-                
+                current_callback(nil)
             else
                 currentPassword = currentPassword .. char
                 updateCurrentLabel()
