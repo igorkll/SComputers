@@ -71,14 +71,11 @@ local function bootmenu_setup(gui, scene_menu)
     local posY = buttonSizeY + 2 + 1
     local stepY = 7
 
-    scene_setup:createText(2, posY, "ADMIN PASSWD", 0xffffff, 0x0000ff)
-    posY = posY + stepY
-
     local function backToScene()
         scene_setup:select()
     end
 
-    local function openSetPasswdWindow(title, hashKey)
+    local function openSetPasswdWindow(title, hashKey, adminTitle, adminHaskKey)
         local dataTable = getTable()
 
         local function setPasswdWindow()
@@ -95,7 +92,7 @@ local function bootmenu_setup(gui, scene_menu)
         end
 
         if dataTable[hashKey] then
-            scene_menu.scene_password.checkPassword(title, dataTable[hashKey], function(ok)
+            scene_menu.scene_password.checkPassword(adminTitle, dataTable[adminHaskKey], function(ok)
                 if ok then
                     setPasswdWindow()
                     return
@@ -108,11 +105,11 @@ local function bootmenu_setup(gui, scene_menu)
         end
     end
 
-    local function openClearPasswdWindow(title, hashKey)
+    local function openClearPasswdWindow(hashKey, adminTitle, adminHaskKey)
         local dataTable = getTable()
 
         if dataTable[hashKey] then
-            scene_menu.scene_password.checkPassword(title, dataTable[hashKey], function(ok)
+            scene_menu.scene_password.checkPassword(adminTitle, dataTable[adminHaskKey], function(ok)
                 if ok then
                     dataTable[hashKey] = nil
                     setTable(dataTable)
@@ -127,33 +124,39 @@ local function bootmenu_setup(gui, scene_menu)
         end
     end
 
+    local adminTitle, adminHaskKey = "ADMIN PASSWD", "adminPasswordHash"
+    local bootTitle, bootHaskKey = "BOOT PASSWD", "bootPasswordHash"
+
+    scene_setup:createText(2, posY, adminTitle, 0xffffff, 0x0000ff)
+    posY = posY + stepY
+
     local setAdminPasswdButton = scene_setup:createButton(2, posY, 16, buttonSizeY, false, "SET", 0xffffff, 0x0000ff)
     setupButton(setAdminPasswdButton)
     function setAdminPasswdButton:onDropInZone()
-        openSetPasswdWindow("ADMIN PASSWD", "adminPasswordHash")
+        openSetPasswdWindow(adminTitle, adminHaskKey, adminTitle, adminHaskKey)
     end
 
     local clearAdminPasswdButton = scene_setup:createButton(2 + setAdminPasswdButton.sizeX + 2, posY, 32, buttonSizeY, false, "CLEAR", 0xffffff, 0x0000ff)
     setupButton(clearAdminPasswdButton)
     function clearAdminPasswdButton:onDropInZone()
-        openClearPasswdWindow("ADMIN PASSWD", "adminPasswordHash")
+        openClearPasswdWindow(adminHaskKey, adminTitle, adminHaskKey)
     end
 
     posY = posY + stepY + 2
 
-    scene_setup:createText(2, posY, "BOOT PASSWD", 0xffffff, 0x0000ff)
+    scene_setup:createText(2, posY, bootTitle, 0xffffff, 0x0000ff)
     posY = posY + stepY
 
     local setBootPasswdButton = scene_setup:createButton(2, posY, 16, buttonSizeY, false, "SET", 0xffffff, 0x0000ff)
     setupButton(setBootPasswdButton)
     function setBootPasswdButton:onDropInZone()
-        openSetPasswdWindow("BOOT PASSWD", "bootPasswordHash")
+        openSetPasswdWindow(bootTitle, bootHaskKey, adminTitle, adminHaskKey)
     end
 
     local clearBootPasswdButton = scene_setup:createButton(2 + setAdminPasswdButton.sizeX + 2, posY, 32, buttonSizeY, false, "CLEAR", 0xffffff, 0x0000ff)
     setupButton(clearBootPasswdButton)
     function clearBootPasswdButton:onDropInZone()
-        openClearPasswdWindow("BOOT PASSWD", "bootPasswordHash")
+        openClearPasswdWindow(bootHaskKey, adminTitle, adminHaskKey)
     end
 
     return scene_setup
