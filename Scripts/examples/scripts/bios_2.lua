@@ -349,6 +349,7 @@ local function create_scene_password(gui)
     local currentPassword = ""
     local current_callback
     local check_hash = nil
+    local check_two = false
 
     local rx, ry = scene_password.sizeX, scene_password.sizeY
     local btnSideY = math.floor((math.min(rx, ry) / 6) - 3)
@@ -380,17 +381,18 @@ local function create_scene_password(gui)
         function btn:onDropInZone()
             if char == "O" then
                 if #currentPassword > 0 then
+                    local hash = calcPasswordHash(currentPassword)
                     if check_hash then
-                        local correct = calcPasswordHash(currentPassword) == check_hash
+                        local correct = hash == check_hash
                         if correct then
                             current_callback(true)
                         else
-                            scene_password.scene_menu.showStatus("INVALID\nPASSWORD", 0xff0000, function()
+                            scene_password.scene_menu.scene_status.showStatus("INVALID\nPASSWORD", 0xff0000, function()
                                 scene_password.checkPassword(titleLabel.text, check_hash, current_callback)
                             end)
                         end
                     else
-                        
+                        current_callback(hash)
                     end
                 end
             elseif char == "<" then
@@ -417,6 +419,7 @@ local function create_scene_password(gui)
         currentPassword = ""
         current_callback = callback
         check_hash = nil
+        check_two = false
 
         titleLabel:setText(title)
         subtitleLabel:setText("SET")
@@ -511,7 +514,7 @@ local function userinterface_create_display(display)
     scene_menu = bootmenu(gui)
     scene_menu.scene_password = create_scene_password(gui)
     scene_menu.scene_status = create_scene_status(gui)
-    scene_password.scene_menu = scene_menu
+    scene_menu.scene_password.scene_menu = scene_menu
 
     local function openUi()
         display.clearClicks()
