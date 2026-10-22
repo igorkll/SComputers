@@ -352,16 +352,25 @@ local function create_scene_password(gui)
     local rx, ry = scene_password.sizeX, scene_password.sizeY
     local btnSide = math.floor((math.min(rx, ry) / 6) - 2)
     local btnGap = 2
+    local btnOffset = btnSide + btnGap
 
     local function updateCurrentLabel()
         currentLabel:setText(string.rep("*", #currentPassword))
     end
 
-    local maxBtnsX = 2
-    local maxBtnsY = 3
+    local maxBtnsX = 3
+    local maxBtnsY = 4
+
+    local inputPanelSizeX = (maxBtnsX * btnOffset) - btnGap
+    local inputPanelSizeY = (maxBtnsY * btnOffset) - btnGap
+
+    local offsetX = (rx / 2) - (inputPanelSizeX / 2)
+    local offsetY = (ry / 2) - (inputPanelSizeY / 2)
+
+    offsetY = math.max(offsetY, currentLabel.y + buttonSizeY + 1)
 
     local function createPasswdButton(x, y, char, bg, fg)
-        local btn = scene_password:createButton(x * (btnSide + btnGap), y * (btnSide + btnGap), btnSide, btnSide, false, char, bg, fg)
+        local btn = scene_password:createButton(offsetX + (x * btnOffset), offsetY + (y * btnOffset), btnSide, btnSide, false, char, bg, fg)
         btn:setPbgColor(bg)
         btn:setPfgColor(fg)
 
