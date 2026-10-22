@@ -495,12 +495,16 @@ local function create_scene_status(gui)
     return scene_status
 end
 
-local function userinterface_create_display(display)
+local function userinterface_create_display(display, local_prohibit_manual_open_bootmenu)
+    if prohibit_manual_open_bootmenu then
+        local_prohibit_manual_open_bootmenu = true
+    end
+
     local selfTbl
 
     display.reset()
     display.clearClicks()
-    display.setClicksAllowed(not prohibit_manual_open_bootmenu)
+    display.setClicksAllowed(not local_prohibit_manual_open_bootmenu)
     display.setUtf8Support(true)
     local rx, ry = display.getWidth(), display.getHeight()
 
