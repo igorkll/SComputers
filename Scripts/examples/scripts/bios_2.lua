@@ -348,6 +348,7 @@ local function create_scene_password(gui)
     local currentLabel = scene_password:createLabel(1, 1 + buttonSizeY + 1 + buttonSizeY + 1, scene_password.sizeX - 2, buttonSizeY, "", 0xffffff, 0x0000ff)
     local currentPassword = ""
     local current_callback
+    local check_hash = nil
 
     local rx, ry = scene_password.sizeX, scene_password.sizeY
     local btnSideY = math.floor((math.min(rx, ry) / 6) - 3)
@@ -377,12 +378,27 @@ local function create_scene_password(gui)
         btn:setPfgColor(fg)
 
         function btn:onDropInZone()
-            if char == "<" then
+            if char == "O" then
+                if #currentPassword > 0 then
+                    if check_hash then
+                        local correct = calcPasswordHash(currentPassword) == check_hash
+                        if correct then
+                            current_callback(true)
+                        else
+                            scene_password.scene_menu.showStatus("INVALID\nPASSWORD", 0xff0000, function()
+                                scene_password.checkPassword(titleLabel.text, check_hash, current_callback)
+                            end)
+                        end
+                    else
+                        
+                    end
+                end
+            elseif char == "<" then
                 currentPassword = currentPassword:sub(1, #currentPassword - 1)
                 updateCurrentLabel()
             elseif char == "X" then
                 current_callback(nil)
-            else
+            elseif #currentPassword < maxPasswordLen then
                 currentPassword = currentPassword .. char
                 updateCurrentLabel()
             end
@@ -400,6 +416,7 @@ local function create_scene_password(gui)
     function scene_password.createPassword(title, callback)
         currentPassword = ""
         current_callback = callback
+        check_hash = nil
 
         titleLabel:setText(title)
         subtitleLabel:setText("SET")
@@ -411,6 +428,7 @@ local function create_scene_password(gui)
     function scene_password.checkPassword(title, hash, callback)
         currentPassword = ""
         current_callback = callback
+        check_hash = hash
 
         titleLabel:setText(title)
         subtitleLabel:setText("CHECK")
@@ -493,6 +511,7 @@ local function userinterface_create_display(display)
     scene_menu = bootmenu(gui)
     scene_menu.scene_password = create_scene_password(gui)
     scene_menu.scene_status = create_scene_status(gui)
+    scene_password.scene_menu = scene_menu
 
     local function openUi()
         display.clearClicks()
