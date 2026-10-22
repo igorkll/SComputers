@@ -79,11 +79,10 @@ local function bootmenu_setup(gui, scene_menu)
     end
 
     local function openSetPasswdWindow(title, hashKey, adminTitle, adminHaskKey)
-        local dataTable = getTable()
-
         local function setPasswdWindow()
             scene_menu.scene_password.createPassword(title, function(hash)
                 if hash then
+                    local dataTable = getTable()
                     dataTable[hashKey] = hash
                     setTable(dataTable)
                     scene_menu.scene_status.showStatus("PASSWORD\nSETTED", 0x00ff00, backToScene)
@@ -94,6 +93,7 @@ local function bootmenu_setup(gui, scene_menu)
             end)
         end
 
+        local dataTable = getTable()
         if dataTable[adminHaskKey] then
             scene_menu.scene_password.checkPassword(adminTitle, dataTable[adminHaskKey], function(ok)
                 if ok then
@@ -110,9 +110,9 @@ local function bootmenu_setup(gui, scene_menu)
 
     local function openClearPasswdWindow(hashKey, adminTitle, adminHaskKey)
         local dataTable = getTable()
-
         if dataTable[hashKey] then
             local function clearPasswd()
+                local dataTable = getTable()
                 dataTable[hashKey] = nil
                 setTable(dataTable)
                 scene_menu.scene_status.showStatus("PASSWORD\nCLEARED", 0x00ff00, backToScene)
@@ -591,7 +591,8 @@ local function userinterface_create_display(display)
             end
         end,
         openUi = openUi,
-        ignoreUi = ignoreUi
+        ignoreUi = ignoreUi,
+        scene_menu = scene_menu
     }
 
     table.insert(userInterfaces, selfTbl)
@@ -908,14 +909,19 @@ function onStart()
         end
     end
 
-    if dataTable[bootPasswordHash] then
-        scene_menu.scene_password.checkPassword(bootTitle, dataTable[bootHaskKey], function(ok)
-            if ok then
-                bootStart()
-            else
-                reboot()
-            end
-        end)
+    local dataTable = getTable()
+    if dataTable[bootHaskKey] then
+        if #userInterfaces > 0 then
+            userInterfaces[1].scene_menu.scene_password.checkPassword(bootTitle, dataTable[bootHaskKey], function(ok)
+                if ok then
+                    bootStart()
+                else
+                    reboot()
+                end
+            end)
+        else
+            reboot()
+        end
     else
         bootStart()
     end
