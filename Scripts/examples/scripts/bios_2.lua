@@ -109,16 +109,24 @@ local function bootmenu_setup(gui, scene_menu)
         local dataTable = getTable()
 
         if dataTable[hashKey] then
-            scene_menu.scene_password.checkPassword(adminTitle, dataTable[adminHaskKey], function(ok)
-                if ok then
-                    dataTable[hashKey] = nil
-                    setTable(dataTable)
-                    scene_menu.scene_status.showStatus("PASSWORD\nCLEARED", 0x00ff00, backToScene)
-                    return
-                end
+            local function clearPasswd()
+                dataTable[hashKey] = nil
+                setTable(dataTable)
+                scene_menu.scene_status.showStatus("PASSWORD\nCLEARED", 0x00ff00, backToScene)
+            end
 
-                backToScene()
-            end)
+            if dataTable[adminHaskKey] then
+                scene_menu.scene_password.checkPassword(adminTitle, dataTable[adminHaskKey], function(ok)
+                    if ok then
+                        clearPasswd()
+                        return
+                    end
+
+                    backToScene()
+                end)
+            else
+                clearPasswd()
+            end
         else
             scene_menu.scene_status.showStatus("PASSWORD\nNOT SETTED", 0xffAA00, backToScene)
         end
