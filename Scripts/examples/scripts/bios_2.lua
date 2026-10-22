@@ -2,7 +2,7 @@
 
 local autoboot_timer = 40 * 4
 local min_res = 64
-local prohibit_manual_open_bootmenu = true
+local prohibit_manual_open_bootmenu = false
 local auto_open_bootmenu = false
 local title_logo = "BIOS 2"
 local title_bootmenu = "BOOT MENU"
@@ -927,13 +927,15 @@ end
 function onStart()
     userinterface_clear()
 
+    local dataTable = getTable()
+    local local_prohibit_manual_open_bootmenu = not not dataTable[bootHaskKey]
+
     for _, display in ipairs(getComponents("display")) do
         if display.getWidth() >= min_res or display.getHeight() >= min_res then
-            userinterface_create_display(display)
+            userinterface_create_display(display, local_prohibit_manual_open_bootmenu)
         end
     end
-
-    local dataTable = getTable()
+    
     if dataTable[bootHaskKey] then
         if #userInterfaces > 0 then
             userInterfaces[1].display.setClicksAllowed(true)
