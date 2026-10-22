@@ -741,7 +741,6 @@ end</code>
         <h2 class="text">example of large fonts (world cleaner code):</h2>
         <pre>
             <code class="language-lua" style="width: fit-content;">--example for a 256x256 display
-
 local fonts = require("fonts")
 local display = getComponent("display")
 
@@ -836,7 +835,7 @@ end)
 ------------------------------------------
 
 local needUnsafeMode = gui:createScene(sm.color.new("#ff9d03"))
-needUnsafeMode:createLabel(4, 4, width - 8, height - 8, "to use it, you need to activate unsafe mode", 0x000000, 0xffffff)
+needUnsafeMode:createTextBox(4, 4, width - 8, height - 8, "to use it, you need to activate unsafe mode", 0x000000, 0xffffff, true, true, nil, true)
 
 local _globalState
 local function checkUnsafeMode()
