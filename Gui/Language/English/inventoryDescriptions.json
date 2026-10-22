@@ -702,23 +702,29 @@
         "description" : "DigitalSign from drilling thunder update, computer-controlled only",
         "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
         "title" : "Smart Sign"
-   },
-       "311eea5f-dab1-49e5-927e-e24f33c95b1b" : {
-        "description" : "DigitalSign from drilling thunder update, computer-controlled only",
-        "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
-        "title" : "Smart Sign"
-   },
-       "bc979264-1c28-4260-bcb6-7bd8640abdc0" : {
-        "description" : "DigitalSign from drilling thunder update, computer-controlled only",
-        "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
-        "title" : "Smart Sign"
-   },
+    },
 
-   "4427b780-9331-48cd-83eb-dc3646205cd6": {
-    "description" : "The display that is shown in GUI. You can set its resolution using display.setResolution(x, y)",
+    "311eea5f-dab1-49e5-927e-e24f33c95b1b" : {
+        "description" : "DigitalSign from drilling thunder update, computer-controlled only",
+        "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+        "title" : "Smart Sign"
+    },
+    
+    "bc979264-1c28-4260-bcb6-7bd8640abdc0" : {
+        "description" : "DigitalSign from drilling thunder update, computer-controlled only",
+        "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+        "title" : "Smart Sign"
+    },
+
+    "4427b780-9331-48cd-83eb-dc3646205cd6": {
+        "description" : "The display that is shown in GUI. You can set its resolution using display.setResolution(x, y). Max resolution: 256x256",
         "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
         "title" : "Gui Display"
-   }
+    },
 
-   
+    "a7d5075b-8140-454a-b8ca-9b24b192d72e" : {
+        "description" : "Adjust the position on the screen and connect it to the seat so that it displays when you sit down. You can set its resolution using display.setResolution(x, y). Max resolution: 128x128",
+        "keywords" : ["scomputers", "scomputer", "computers", "computer", "script", "lua", "scripted", "program", "programs"],
+        "title" : "Hud Display"
+    }
 }
