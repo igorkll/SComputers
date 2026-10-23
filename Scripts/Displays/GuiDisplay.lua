@@ -100,26 +100,6 @@ function GuiDisplay:server_onFixedUpdate()
         self.internalApi.setForceFrame()
     end
     self.sv_oldComputerConnected = computerConnected
-
-    if self.data.autoOpenOnSeat then
-        local parents = self.interactable:getParents()
-        local seated = false
-        for _, parent in ipairs(parents) do
-            if not scomputers.isComputer(parent) then
-                seated = parent:isActive()
-                break
-            end
-        end
-
-        if seated ~= self.oldSeated then
-            if seated then
-                self.canvasGUI.open()
-            else
-                self.canvasGUI.close()
-            end
-            self.oldSeated = seated
-        end
-    end
     
     if self.flushCallFlag then
         if self.flushCallForce then
@@ -264,6 +244,8 @@ function GuiDisplay:client_onCreate()
 	self.dragging = {interact=false, tinker=false, interactLastPos={x=-1, y=-1}, tinkerLastPos={x=-1, y=-1}}
 
 	self.network:sendToServer("sv_canvasRequest")
+
+    self.startTick = sm.game.getCurrentTick()
 end
 
 function GuiDisplay:client_onInteract(_, state)
@@ -284,6 +266,26 @@ function GuiDisplay:client_onFixedUpdate()
         self.canvasGUI.flush()
     end
     self.oldComputerConnected = computerConnected
+
+    if self.data.autoOpenOnSeat and sm.game.getCurrentTick() - self.startTick > 40 then
+        local parents = self.interactable:getParents()
+        local seated = false
+        for _, parent in ipairs(parents) do
+            if not scomputers.isComputer(parent) then
+                seated = parent:isActive()
+                break
+            end
+        end
+
+        if seated ~= self.oldSeated then
+            if seated then
+                self.canvasGUI.open()
+            else
+                self.canvasGUI.close()
+            end
+            self.oldSeated = seated
+        end
+    end
 
 	self.canvasGUI.update()
     self:canvasService(self.canvasGUI.isRendering())
