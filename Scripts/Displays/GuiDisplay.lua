@@ -29,6 +29,12 @@ local modesTable = {
     "Bottom_Right"
 }
 
+local modesTableIdx = {}
+
+for k, v in pairs(modesTable) do
+    modesTableIdx[v] = k
+end
+
 local modeMulTable = {
     {1, 1},
     {0, 1},
@@ -252,9 +258,12 @@ function GuiDisplay:cl_recreateGui()
         jsonGuiSetup = canvasGUI.jsonGuiSetup_hud
     end
 
+    local x, y = mergedData.guiX or 0, mergedData.guiY or 0
+    local mulTbl = modeMulTable[modesTableIdx[self.cl_storageData.mode]]
+
     self.canvasGUI = canvasGUI.createGuiCanvas(
-        mergedData.guiX or 0,
-        mergedData.guiY or 0,
+        x * mulTbl[1],
+        y * mulTbl[2],
         mergedData.x,
         mergedData.y,
         mergedData.guiSx or 500,
