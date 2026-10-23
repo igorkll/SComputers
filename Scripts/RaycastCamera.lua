@@ -1680,7 +1680,18 @@ function RaycastCamera:rays(resolutionX, resolutionY, currentPixel, stepM, dista
         self.netdata.isometricSizeX ~= self.raysCache.isometricSizeX or
         self.netdata.isometricSizeY ~= self.raysCache.isometricSizeY or
         self.netdata.ray_mask ~= self.raysCache.ray_mask or
+        self.netdata.currentHeight ~= self.raysCache.currentHeight or
+        self.netdata.offsetX ~= self.raysCache.offsetX or
+        self.netdata.offsetY ~= self.raysCache.offsetY or
+        self.netdata.rotateSync ~= self.raysCache.rotateSync or
+        self.netdata.worldMode ~= self.raysCache.worldMode or
+        self.netdata.currentRotation ~= self.raysCache.currentRotation or
+        self.netdata.customWorldPosition ~= self.raysCache.customWorldPosition or
+        self.netdata.customLocalPosition ~= self.raysCache.customLocalPosition or
+        self.netdata.customLocalAfterPosition ~= self.raysCache.customLocalAfterPosition or
+        self.netdata.customWorldRotation ~= self.raysCache.customWorldRotation or
         distance ~= self.raysCache.distance then
+        
         self.raysCache = {}
         self.raysCache.downscale = downscale
         self.raysCache.fovX = fovX
@@ -1693,6 +1704,16 @@ function RaycastCamera:rays(resolutionX, resolutionY, currentPixel, stepM, dista
         self.raysCache.isometricSizeX = self.netdata.isometricSizeX
         self.raysCache.isometricSizeY = self.netdata.isometricSizeY
         self.raysCache.ray_mask = self.netdata.ray_mask
+        self.raysCache.currentHeight = self.netdata.currentHeight
+        self.raysCache.offsetX = self.netdata.offsetX
+        self.raysCache.offsetY = self.netdata.offsetY
+        self.raysCache.rotateSync = self.netdata.rotateSync
+        self.raysCache.worldMode = self.netdata.worldMode
+        self.raysCache.currentRotation = self.netdata.currentRotation
+        self.raysCache.customWorldPosition = self.netdata.customWorldPosition
+        self.raysCache.customLocalPosition = self.netdata.customLocalPosition
+        self.raysCache.customLocalAfterPosition = self.netdata.customLocalAfterPosition
+        self.raysCache.customWorldRotation = self.netdata.customWorldRotation
     end
 
     if self.raysCache[currentPixel] then
@@ -2510,7 +2531,7 @@ function RaycastCamera:server_onCreate()
     self.distance = 1024
     self.fovX = rad_60
     self.fovY = rad_60
-    self.raysCache = {}
+    self.raysCache = self.raysCache or {}
 end
 
 local function simpleQuatDif(q1, q2)
@@ -2565,7 +2586,7 @@ function RaycastCamera:client_onCreate()
 
     clientCameras[self.interactable.id] = self
     self.time = sm.render.getOutdoorLighting()
-    self.raysCache = {}
+    self.raysCache = self.raysCache or {}
     self.netdata = self.netdata or {}
 
     self.network:sendToServer("sv_dataRequest")
