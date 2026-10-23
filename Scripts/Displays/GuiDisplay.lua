@@ -5,7 +5,7 @@ dofile( "$SURVIVAL_DATA/Scripts/util.lua" )
 GuiDisplay = class(canvasAPI.canvasService)
 GuiDisplay.maxParentCount = 1
 GuiDisplay.maxChildCount = 0
-GuiDisplay.connectionInput = sm.interactable.connectionType.composite
+GuiDisplay.connectionInput = sm.interactable.connectionType.seated + sm.interactable.connectionType.composite
 GuiDisplay.colorNormal = sm.color.new(0xbbbb1aff)
 GuiDisplay.colorHighlight = sm.color.new(0xecec1fff)
 GuiDisplay.componentType = "display"
