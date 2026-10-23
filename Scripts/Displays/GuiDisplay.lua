@@ -1,6 +1,7 @@
 dofile("$CONTENT_DATA/Scripts/Config.lua")
 dofile("$CONTENT_DATA/Scripts/Displays/modules/sendStack.lua")
 dofile("$CONTENT_DATA/Scripts/Displays/modules/lagCheck.lua")
+dofile( "$SURVIVAL_DATA/Scripts/util.lua" )
 GuiDisplay = class(canvasAPI.canvasService)
 GuiDisplay.maxParentCount = 1
 GuiDisplay.maxChildCount = 0
@@ -240,6 +241,41 @@ function GuiDisplay:cl_recreateGui()
     end
 end
 
+function GuiDisplay:cl_selectMode(mode)
+    self.cl_storageData.mode = mode
+    self.cl_storageData.canvas_override.anchor = mode:gsub("_", " ")
+    self.storage:sendToServer("sv_appleStorageDataSettings", self.cl_storageData)
+    self:cl_updateGui()
+end
+
+local modesTable = {
+    "Top_Left",
+    "Top",
+    "Top_Right",
+
+    "Left",
+    "Center",
+    "Right",
+
+    "Bottom_Left",
+    "Bottom",
+    "Bottom_Right"
+}
+
+function GuiDisplay:cl_updateGui()
+    if not self.setupGUI then
+        return
+    end
+
+    for _, modeName in ipairs(modesTable) do
+        self.setupGUI_index[v]["StateSelected"] = modeName == self.cl_storageData.mode
+    end
+
+    if self.setupGUI:isActive() then
+        self.setupGUI:render(self.setupGUI_guiTable)
+    end
+end
+
 function GuiDisplay:client_onCreate()
     self._old_res_x = self.data.x
     self._old_res_y = self.data.y
@@ -251,6 +287,8 @@ function GuiDisplay:client_onCreate()
     if self.data.setupGUI then
         self.setupGUI = sm.jsonGui.createGui({ isInteractive = true, needsCursor = true })
         self.setupGUI_guiTable = sm.json.open("$CONTENT_DATA/Gui/JsonGuis/HudDisplay.gui")
+        self.setupGUI_index = IndexWidgets(self.setupGUI_guiTable)
+        self:cl_updateGui()
     end
 
     self.drawer = canvasAPI.createDrawer(self.data.x, self.data.y, function(x, y, color, background)
@@ -356,6 +394,7 @@ function GuiDisplay:cl_canvasResponse(data)
     local tblsum = tableChecksum(self.cl_storageData.canvas_override)
     if tblsum ~= self.canvas_datatbl_checksum then
         self:cl_recreateGui()
+        self:cl_updateGui()
         self.canvas_datatbl_checksum = tblsum
     end
 end
