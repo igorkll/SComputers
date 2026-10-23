@@ -14,7 +14,14 @@ local needPushStack = canvasAPI.needPushStack
 local sendStack = displays_sendStack
 local lagCheck = displays_lagCheck
 
+local function createBaseData(self, key)
+    self[key] = self.storage:load() or {}
+    self[key].canvas_override = self[key].canvas_override or {}
+end
+
 function GuiDisplay:server_onCreate()
+    createBaseData(self, "storageData")
+
     self.lastLagScore = 0
 	self.dataTunnel = {}
 	self.width = self.data.x
@@ -167,7 +174,8 @@ function GuiDisplay:sv_canvasRequest(_, caller)
 
 	local data = {
 		width = self.width,
-		height = self.height
+		height = self.height,
+        storageData = self.storageData
 	}
 
 	if caller then
@@ -175,6 +183,11 @@ function GuiDisplay:sv_canvasRequest(_, caller)
 	else
 		self.network:sendToClients("cl_canvasResponse", data)
 	end
+end
+
+function GuiDisplay:sv_appleStorageDataSettings(newData)
+    self.storageData = newData
+    self.storage:save(self.storageData)
 end
 
 function GuiDisplay:isAllow()
@@ -194,21 +207,31 @@ function GuiDisplay:cl_recreateGui()
         self.canvasGUI.destroy()
     end
 
+    local mergedData = {}
+
+    for k, v in pairs(self.data) do
+        mergedData[k] = v
+    end
+
+    for k, v in pairs(self.cl_storageData.canvas_override) do
+        mergedData[k] = v
+    end
+
     local jsonGuiSetup = canvasGUI.jsonGuiSetup
-    if self.data.hud then
+    if mergedData.hud then
         jsonGuiSetup = canvasGUI.jsonGuiSetup_hud
     end
 
     self.canvasGUI = canvasGUI.createGuiCanvas(
-        self.data.guiX or 0,
-        self.data.guiY or 0,
-        self.data.x,
-        self.data.y,
-        self.data.guiSx or 500,
-        self.data.guiSy or 500,
-        self.data.pad or 25,
-        self.data.title or "Gui Display - BETA (No touchscreen support)",
-        self.data.anchor or "Center",
+        mergedData.guiX or 0,
+        mergedData.guiY or 0,
+        mergedData.x,
+        mergedData.y,
+        mergedData.guiSx or 500,
+        mergedData.guiSy or 500,
+        mergedData.pad or 25,
+        mergedData.title or "Gui Display - BETA (No touchscreen support)",
+        mergedData.anchor or "Center",
         jsonGuiSetup
     )
 
@@ -221,7 +244,9 @@ function GuiDisplay:client_onCreate()
     self._old_res_x = self.data.x
     self._old_res_y = self.data.y
 
+    createBaseData(self, "cl_storageData")
     self:cl_recreateGui()
+    self.canvas_datatbl_checksum = tableChecksum(self.cl_storageData.canvas_override)
 
     if self.data.setupGUI then
         self.setupGUI = sm.jsonGui.createGui({ isInteractive = true, needsCursor = true })
@@ -326,6 +351,13 @@ end
 function GuiDisplay:cl_canvasResponse(data)
 	if sm.isHost then return end
 	self.width, self.height = data.width, data.height
+    self.cl_storageData = data.storageData
+    
+    local tblsum = tableChecksum(self.cl_storageData.canvas_override)
+    if tblsum ~= self.canvas_datatbl_checksum then
+        self:cl_recreateGui()
+        self.canvas_datatbl_checksum = tblsum
+    end
 end
 
 function GuiDisplay:cl_pushStack(stack)
@@ -482,4 +514,8 @@ function GuiDisplay:cl_clk2(state)
         t.y = -1
     end
     self:cl_onClick(2, state and "pressed" or "released")
+end
+
+function GuiDisplay:cl_g_selectMode(a, b, c)
+    print(a, b, c)
 end
