@@ -15,9 +15,24 @@ local needPushStack = canvasAPI.needPushStack
 local sendStack = displays_sendStack
 local lagCheck = displays_lagCheck
 
+local modesTable = {
+    "Top_Left",
+    "Top",
+    "Top_Right",
+
+    "Left",
+    "Center",
+    "Right",
+
+    "Bottom_Left",
+    "Bottom",
+    "Bottom_Right"
+}
+
 local function createBaseData(self, base, key)
     self[key] = base
     self[key].canvas_override = self[key].canvas_override or {}
+    self[key].mode = self[key].mode or modesTable[1]
 end
 
 function GuiDisplay:server_onCreate()
@@ -244,23 +259,9 @@ end
 function GuiDisplay:cl_selectMode(mode)
     self.cl_storageData.mode = mode
     self.cl_storageData.canvas_override.anchor = mode:gsub("_", " ")
-    self.storage:sendToServer("sv_appleStorageDataSettings", self.cl_storageData)
+    self.network:sendToServer("sv_appleStorageDataSettings", self.cl_storageData)
     self:cl_updateGui()
 end
-
-local modesTable = {
-    "Top_Left",
-    "Top",
-    "Top_Right",
-
-    "Left",
-    "Center",
-    "Right",
-
-    "Bottom_Left",
-    "Bottom",
-    "Bottom_Right"
-}
 
 function GuiDisplay:cl_updateGui()
     if not self.setupGUI then
@@ -268,7 +269,7 @@ function GuiDisplay:cl_updateGui()
     end
 
     for _, modeName in ipairs(modesTable) do
-        self.setupGUI_index[v]["StateSelected"] = modeName == self.cl_storageData.mode
+        self.setupGUI_index[modeName]["StateSelected"] = modeName == self.cl_storageData.mode
     end
 
     if self.setupGUI:isActive() then
@@ -387,8 +388,6 @@ function GuiDisplay:client_onDestroy()
 end
 
 function GuiDisplay:cl_canvasResponse(data)
-	if sm.isHost then return end
-	self.width, self.height = data.width, data.height
     self.cl_storageData = data.storageData
     
     local tblsum = tableChecksum(self.cl_storageData.canvas_override)
@@ -397,6 +396,9 @@ function GuiDisplay:cl_canvasResponse(data)
         self:cl_updateGui()
         self.canvas_datatbl_checksum = tblsum
     end
+
+	if sm.isHost then return end
+	self.width, self.height = data.width, data.height
 end
 
 function GuiDisplay:cl_pushStack(stack)
@@ -557,4 +559,5 @@ end
 
 function GuiDisplay:cl_g_selectMode(newMode)
     self:cl_selectMode(newMode)
+    self:cl_recreateGui()
 end
