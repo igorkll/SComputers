@@ -230,9 +230,15 @@ function GuiDisplay:sv_canvasRequest(_, caller)
 	end
 end
 
-function GuiDisplay:sv_appleStorageDataSettings(newData)
+function GuiDisplay:sv_appleStorageDataSettings(newData, caller)
     self.storageData = newData
     self.storage:save(self.storageData)
+
+    for _, player in ipairs(sm.game.getAllPlayers()) do
+        if player.id ~= caller.id then
+            self.network:sendToClient(player, "cl_canvasResponse", newData)
+        end
+    end
 end
 
 function GuiDisplay:isAllow()
