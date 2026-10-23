@@ -2,15 +2,426 @@
 	"Anchor" : "Center",
 	"Childs" : 
 	[
+		{
+			"Childs" : 
+			[
+				{
+					"Caption" : "Hud display",
+					"Childs" : [],
+					"FontName" : "SM_GameName",
+					"Name" : "Title",
+					"NeedKey" : false,
+					"NeedMouse" : false,
+					"Skin" : "TextBox",
+					"TextAlign" : "Center",
+					"Type" : "TextBox",
+					"height" : 24,
+					"width" : 380,
+					"x" : 0,
+					"y" : 0
+				},
+				{
+					"Caption" : "Select anchor",
+					"Childs" : [],
+					"FontName" : "SM_Header",
+					"Name" : "SubTitle",
+					"NeedKey" : false,
+					"NeedMouse" : false,
+					"Skin" : "TextBox",
+					"TextAlign" : "Center",
+					"Type" : "TextBox",
+					"height" : 24,
+					"width" : 380,
+					"x" : 0,
+					"y" : 0
+				},
+				{
+					"Childs" : [],
+					"Name" : "VerticalPadding",
+					"NeedKey" : false,
+					"NeedMouse" : false,
+					"Skin" : "PanelEmpty",
+					"Type" : "Widget",
+					"height" : 4,
+					"width" : 460,
+					"x" : 0,
+					"y" : 0
+				},
+				{
+					"Childs" : 
+					[
+						{
+							"Childs" : 
+							[
+								{
+									"Caption" : "Top Left",
+									"Childs" : [],
+									"FontName" : "SM_HeaderTiny",
+									"Name" : "TextBox",
+									"NeedKey" : false,
+									"NeedMouse" : false,
+									"Skin" : "TextBox",
+									"TextAlign" : "Center",
+									"TextColour" : "0.341176 0.984314 1 1",
+									"Type" : "TextBox",
+									"height" : 40,
+									"width" : 72,
+									"x" : 0,
+									"y" : 0
+								}
+							],
+							"Colour" : "1 1 1 1",
+							"FontName" : "SM_HeaderTiny",
+							"Name" : "Button1",
+							"NeedKey" : false,
+							"NeedMouse" : true,
+							"Skin" : "DigitalSignButtonOption1",
+							"StateSelected" : false,
+							"TextAlign" : "Center",
+							"TextColour" : "1 0 0 1",
+							"Type" : "Button",
+							"height" : 24,
+							"onClick" : "cl_g_selectMode",
+							"width" : 80,
+							"x" : 0,
+							"y" : 0
+						},
+
+                        {
+							"Childs" : 
+							[
+								{
+									"Caption" : "Top",
+									"Childs" : [],
+									"FontName" : "SM_HeaderTiny",
+									"Name" : "TextBox",
+									"NeedKey" : false,
+									"NeedMouse" : false,
+									"Skin" : "TextBox",
+									"TextAlign" : "Center",
+									"TextColour" : "0.341176 0.984314 1 1",
+									"Type" : "TextBox",
+									"height" : 40,
+									"width" : 72,
+									"x" : 0,
+									"y" : 0
+								}
+							],
+							"Colour" : "1 1 1 1",
+							"FontName" : "SM_HeaderTiny",
+							"Name" : "Button1",
+							"NeedKey" : false,
+							"NeedMouse" : true,
+							"Skin" : "DigitalSignButtonOption1",
+							"StateSelected" : false,
+							"TextAlign" : "Center",
+							"TextColour" : "1 0 0 1",
+							"Type" : "Button",
+							"height" : 24,
+							"onClick" : "cl_g_selectMode",
+							"width" : 80,
+							"x" : 0,
+							"y" : 0
+						},
+
+                        {
+							"Childs" : 
+							[
+								{
+									"Caption" : "Top Right",
+									"Childs" : [],
+									"FontName" : "SM_HeaderTiny",
+									"Name" : "TextBox",
+									"NeedKey" : false,
+									"NeedMouse" : false,
+									"Skin" : "TextBox",
+									"TextAlign" : "Center",
+									"TextColour" : "0.341176 0.984314 1 1",
+									"Type" : "TextBox",
+									"height" : 40,
+									"width" : 72,
+									"x" : 0,
+									"y" : 0
+								}
+							],
+							"Colour" : "1 1 1 1",
+							"FontName" : "SM_HeaderTiny",
+							"Name" : "Button1",
+							"NeedKey" : false,
+							"NeedMouse" : true,
+							"Skin" : "DigitalSignButtonOption1",
+							"StateSelected" : false,
+							"TextAlign" : "Center",
+							"TextColour" : "1 0 0 1",
+							"Type" : "Button",
+							"height" : 24,
+							"onClick" : "cl_g_selectMode",
+							"width" : 80,
+							"x" : 0,
+							"y" : 0
+						},
+
+                        {
+							"Childs" : 
+							[
+								{
+									"Caption" : "Left",
+									"Childs" : [],
+									"FontName" : "SM_HeaderTiny",
+									"Name" : "TextBox",
+									"NeedKey" : false,
+									"NeedMouse" : false,
+									"Skin" : "TextBox",
+									"TextAlign" : "Center",
+									"TextColour" : "0.341176 0.984314 1 1",
+									"Type" : "TextBox",
+									"height" : 40,
+									"width" : 72,
+									"x" : 0,
+									"y" : 0
+								}
+							],
+							"Colour" : "1 1 1 1",
+							"FontName" : "SM_HeaderTiny",
+							"Name" : "Button1",
+							"NeedKey" : false,
+							"NeedMouse" : true,
+							"Skin" : "DigitalSignButtonOption1",
+							"StateSelected" : false,
+							"TextAlign" : "Center",
+							"TextColour" : "1 0 0 1",
+							"Type" : "Button",
+							"height" : 24,
+							"onClick" : "cl_g_selectMode",
+							"width" : 80,
+							"x" : 0,
+							"y" : 0
+						},
+
+                        {
+							"Childs" : 
+							[
+								{
+									"Caption" : "Center",
+									"Childs" : [],
+									"FontName" : "SM_HeaderTiny",
+									"Name" : "TextBox",
+									"NeedKey" : false,
+									"NeedMouse" : false,
+									"Skin" : "TextBox",
+									"TextAlign" : "Center",
+									"TextColour" : "0.341176 0.984314 1 1",
+									"Type" : "TextBox",
+									"height" : 40,
+									"width" : 72,
+									"x" : 0,
+									"y" : 0
+								}
+							],
+							"Colour" : "1 1 1 1",
+							"FontName" : "SM_HeaderTiny",
+							"Name" : "Button1",
+							"NeedKey" : false,
+							"NeedMouse" : true,
+							"Skin" : "DigitalSignButtonOption1",
+							"StateSelected" : false,
+							"TextAlign" : "Center",
+							"TextColour" : "1 0 0 1",
+							"Type" : "Button",
+							"height" : 24,
+							"onClick" : "cl_g_selectMode",
+							"width" : 80,
+							"x" : 0,
+							"y" : 0
+						},
+
+                        {
+							"Childs" : 
+							[
+								{
+									"Caption" : "Right",
+									"Childs" : [],
+									"FontName" : "SM_HeaderTiny",
+									"Name" : "TextBox",
+									"NeedKey" : false,
+									"NeedMouse" : false,
+									"Skin" : "TextBox",
+									"TextAlign" : "Center",
+									"TextColour" : "0.341176 0.984314 1 1",
+									"Type" : "TextBox",
+									"height" : 40,
+									"width" : 72,
+									"x" : 0,
+									"y" : 0
+								}
+							],
+							"Colour" : "1 1 1 1",
+							"FontName" : "SM_HeaderTiny",
+							"Name" : "Button1",
+							"NeedKey" : false,
+							"NeedMouse" : true,
+							"Skin" : "DigitalSignButtonOption1",
+							"StateSelected" : false,
+							"TextAlign" : "Center",
+							"TextColour" : "1 0 0 1",
+							"Type" : "Button",
+							"height" : 24,
+							"onClick" : "cl_g_selectMode",
+							"width" : 80,
+							"x" : 0,
+							"y" : 0
+						},
+
+                        {
+							"Childs" : 
+							[
+								{
+									"Caption" : "Bottom Left",
+									"Childs" : [],
+									"FontName" : "SM_HeaderTiny",
+									"Name" : "TextBox",
+									"NeedKey" : false,
+									"NeedMouse" : false,
+									"Skin" : "TextBox",
+									"TextAlign" : "Center",
+									"TextColour" : "0.341176 0.984314 1 1",
+									"Type" : "TextBox",
+									"height" : 40,
+									"width" : 72,
+									"x" : 0,
+									"y" : 0
+								}
+							],
+							"Colour" : "1 1 1 1",
+							"FontName" : "SM_HeaderTiny",
+							"Name" : "Button1",
+							"NeedKey" : false,
+							"NeedMouse" : true,
+							"Skin" : "DigitalSignButtonOption1",
+							"StateSelected" : false,
+							"TextAlign" : "Center",
+							"TextColour" : "1 0 0 1",
+							"Type" : "Button",
+							"height" : 24,
+							"onClick" : "cl_g_selectMode",
+							"width" : 80,
+							"x" : 0,
+							"y" : 0
+						},
+
+                        {
+							"Childs" : 
+							[
+								{
+									"Caption" : "Bottom",
+									"Childs" : [],
+									"FontName" : "SM_HeaderTiny",
+									"Name" : "TextBox",
+									"NeedKey" : false,
+									"NeedMouse" : false,
+									"Skin" : "TextBox",
+									"TextAlign" : "Center",
+									"TextColour" : "0.341176 0.984314 1 1",
+									"Type" : "TextBox",
+									"height" : 40,
+									"width" : 72,
+									"x" : 0,
+									"y" : 0
+								}
+							],
+							"Colour" : "1 1 1 1",
+							"FontName" : "SM_HeaderTiny",
+							"Name" : "Button1",
+							"NeedKey" : false,
+							"NeedMouse" : true,
+							"Skin" : "DigitalSignButtonOption1",
+							"StateSelected" : false,
+							"TextAlign" : "Center",
+							"TextColour" : "1 0 0 1",
+							"Type" : "Button",
+							"height" : 24,
+							"onClick" : "cl_g_selectMode",
+							"width" : 80,
+							"x" : 0,
+							"y" : 0
+						},
+
+                        {
+							"Childs" : 
+							[
+								{
+									"Caption" : "Bottom Right",
+									"Childs" : [],
+									"FontName" : "SM_HeaderTiny",
+									"Name" : "TextBox",
+									"NeedKey" : false,
+									"NeedMouse" : false,
+									"Skin" : "TextBox",
+									"TextAlign" : "Center",
+									"TextColour" : "0.341176 0.984314 1 1",
+									"Type" : "TextBox",
+									"height" : 40,
+									"width" : 72,
+									"x" : 0,
+									"y" : 0
+								}
+							],
+							"Colour" : "1 1 1 1",
+							"FontName" : "SM_HeaderTiny",
+							"Name" : "Button1",
+							"NeedKey" : false,
+							"NeedMouse" : true,
+							"Skin" : "DigitalSignButtonOption1",
+							"StateSelected" : false,
+							"TextAlign" : "Center",
+							"TextColour" : "1 0 0 1",
+							"Type" : "Button",
+							"height" : 24,
+							"onClick" : "cl_g_selectMode",
+							"width" : 80,
+							"x" : 0,
+							"y" : 0
+						}
+					],
+					"GridItemSize" : 
+					{
+						"height" : 40,
+						"width" : 72
+					},
+					"LayoutRule" : "Grid",
+					"Name" : "ButtonGrid",
+					"NeedKey" : false,
+					"NeedMouse" : true,
+					"Skin" : "PanelEmpty",
+					"Type" : "Widget",
+					"height" : 100,
+					"width" : 230,
+					"x" : 80,
+					"y" : 0
+				}
+			],
+			"InheritsPick" : true,
+			"LayoutRule" : "Vertical",
+			"Name" : "BackPanel",
+			"NeedKey" : false,
+			"NeedMouse" : true,
+			"Skin" : "BackgroundInteractableWide",
+			"Type" : "Widget",
+			"height" : 420,
+			"width" : 380,
+			"x" : 1,
+			"y" : 0
+		}
 	],
-	"InheritsPick" : true,
+	"LayoutRule" : "Absolute",
 	"Name" : "BackPanel",
 	"NeedKey" : false,
-	"NeedMouse" : false,
-	"Skin" : "BackgroundInteractableWide",
+	"NeedMouse" : true,
+	"Skin" : "PanelEmpty",
 	"Type" : "Widget",
-	"height" : 500,
-	"width" : 500,
+	"Visible" : true,
+	"height" : 200,
+	"width" : 380,
 	"x" : 0,
 	"y" : 0
 }
