@@ -1,8 +1,6 @@
 local canvasGUI = {}
 canvasGUI.jsonGuiSetup = { isInteractive = true, needsCursor = true }
 canvasGUI.jsonGuiSetup_hud = { isHud = true, isInteractive = false, needsCursor = false }
-canvasGUI.additionalPixelSize = 1
-canvasGUI.debugCanvas = false
 
 local math_floor = math.floor
 
@@ -25,8 +23,12 @@ local function lFormatColor(color)
 end
 
 function canvasGUI.createGuiTable(x, y, rx, ry, width, height, padding, title, anchor)
-    local pixelSizeX = (width - padding * 2) / rx
-    local pixelSizeY = (height - padding * 2) / ry
+    local pixelSizeX = math.floor((width - padding * 2) / rx)
+    local pixelSizeY = math.floor((height - padding * 2) / ry)
+    local nWidth = (padding * 2) + (pixelSizeX * rx)
+    local nHeight = (padding * 2) + (pixelSizeY * ry)
+    --print("source res: ", width, height)
+    --print("new    res: ", nWidth, nHeight)
 
     return {
         Anchor = anchor,
@@ -48,7 +50,7 @@ function canvasGUI.createGuiTable(x, y, rx, ry, width, height, padding, title, a
                 TextColour = "1 1 1",
                 Type = "TextBox",
                 height = padding,
-                width = width,
+                width = nWidth,
                 x = 0,
                 y = 0,
             },
@@ -60,7 +62,7 @@ function canvasGUI.createGuiTable(x, y, rx, ry, width, height, padding, title, a
         Skin = "BackgroundInteractableWide",
         Type = "Widget",
         x = x, y = y,
-        width = width, height = height,
+        width = nWidth, height = nHeight,
     }
 end
 
@@ -73,17 +75,10 @@ function canvasGUI.createGuiCanvas(x, y, rx, ry, width, height, padding, title, 
     local bufferBase = 0x000000
     local bufferDirty = true
 
-    local pixelSizeX, pixelSizeY, pxExpand, pyExpand
+    local pixelSizeX, pixelSizeY
     local function recalcGeometry()
-        pixelSizeX = (width - padding * 2) / rx
-        pixelSizeY = (height - padding * 2) / ry
-        if canvasGUI.debugCanvas then
-            pxExpand = -2
-            pyExpand = -2
-        else
-            pxExpand = canvasGUI.additionalPixelSize
-            pyExpand = canvasGUI.additionalPixelSize
-        end
+        pixelSizeX = math.floor((width - padding * 2) / rx)
+        pixelSizeY = math.floor((height - padding * 2) / ry)
     end
     recalcGeometry()
 
@@ -186,8 +181,8 @@ function canvasGUI.createGuiCanvas(x, y, rx, ry, width, height, padding, title, 
             widget.Colour = lFormatColor(color)
             widget.x = x * pixelSizeX + padding
             widget.y = y * pixelSizeY + padding
-            widget.width  = w * pixelSizeX + pxExpand
-            widget.height = h * pixelSizeY + pyExpand
+            widget.width  = w * pixelSizeX
+            widget.height = h * pixelSizeY
             childs[idx] = widget
             idx = idx + 1
         end)

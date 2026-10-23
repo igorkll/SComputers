@@ -478,7 +478,9 @@
             "filename" : "$CONTENT_DATA/Scripts/Displays/GuiDisplay.lua",
             "data" : {
                "x" : 256,
-               "y" : 256
+               "y" : 256,
+               "guiSx" : 562,
+               "guiSy" : 562
             }
          },
          "showInInventory" : true,
@@ -508,8 +510,8 @@
                 "pad" : 10,
                 "guiX" : 10,
                 "guiY" : 10,
-                "guiSx" : 200,
-                "guiSy" : 200,
+                "guiSx" : 148,
+                "guiSy" : 148,
                 "anchor" : "Top Left",
                 "setupGUI": true,
                 "autoOpenOnSeat": true
