@@ -614,8 +614,7 @@ function AnyDisplay:cl_pushStack(stack)
         end
         self.sendedData_cl_pushStack = nil
         return
-    --elseif self.stack then
-    elseif self.stack and self.stack[1][1] ~= canvasAPI.draw.clear then --new small optimization
+    elseif self.stack then
 		for _, action in ipairs(stack) do
 			table.insert(self.stack, action)
 		end

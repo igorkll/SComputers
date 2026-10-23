@@ -234,7 +234,7 @@ function GuiDisplay:sv_appleStorageDataSettings(newData, caller)
     self.storageData = newData
     self.storage:save(self.storageData)
 
-    for _, player in ipairs(sm.game.getAllPlayers()) do
+    for _, player in ipairs(sm.player.getAllPlayers()) do
         if player.id ~= caller.id then
             self.network:sendToClient(player, "cl_canvasResponse", newData)
         end
@@ -457,8 +457,7 @@ function GuiDisplay:cl_pushStack(stack)
         end
         self.sendedData_cl_pushStack = nil
         return
-    --elseif self.stack then
-    elseif self.stack and self.stack[1][1] ~= canvasAPI.draw.clear then
+    elseif self.stack then
 		for _, action in ipairs(stack) do
 			table.insert(self.stack, action)
 		end
