@@ -3,7 +3,7 @@ dofile("$CONTENT_DATA/Scripts/Displays/modules/sendStack.lua")
 dofile("$CONTENT_DATA/Scripts/Displays/modules/lagCheck.lua")
 dofile( "$SURVIVAL_DATA/Scripts/util.lua" )
 GuiDisplay = class(canvasAPI.canvasService)
-GuiDisplay.maxParentCount = 1
+GuiDisplay.maxParentCount = 2
 GuiDisplay.maxChildCount = 0
 GuiDisplay.connectionInput = sm.interactable.connectionType.seated + sm.interactable.connectionType.composite
 GuiDisplay.colorNormal = sm.color.new(0xbbbb1aff)
