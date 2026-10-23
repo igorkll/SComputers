@@ -29,6 +29,20 @@ local modesTable = {
     "Bottom_Right"
 }
 
+local modeMulTable = {
+    {1, 1},
+    {0, 1},
+    {-1, 1},
+
+    {1, 0},
+    {0, 0},
+    {-1, 0},
+
+    {1, -1},
+    {0, -1},
+    {-1, -1}
+}
+
 local function createBaseData(self, base, key)
     self[key] = base
     self[key].canvas_override = self[key].canvas_override or {}
