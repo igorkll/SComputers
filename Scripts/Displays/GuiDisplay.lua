@@ -274,8 +274,8 @@ function GuiDisplay:cl_recreateGui()
     self.canvasGUI = canvasGUI.createGuiCanvas(
         x * mulTbl[1],
         y * mulTbl[2],
-        mergedData.x,
-        mergedData.y,
+        self.width or self.data.x,
+        self.height or self.data.y,
         mergedData.guiSx or 500,
         mergedData.guiSy or 500,
         mergedData.pad or 25,
@@ -423,15 +423,16 @@ end
 function GuiDisplay:cl_canvasResponse(data)
     self.cl_storageData = data.storageData
     
+    if not sm.isHost then
+    	self.width, self.height = data.width, data.height
+    end
+
     local tblsum = tableChecksum(self.cl_storageData.canvas_override)
     if tblsum ~= self.canvas_datatbl_checksum then
         self:cl_recreateGui()
         self:cl_updateGui()
         self.canvas_datatbl_checksum = tblsum
     end
-
-	if sm.isHost then return end
-	self.width, self.height = data.width, data.height
 end
 
 function GuiDisplay:cl_pushStack(stack)
