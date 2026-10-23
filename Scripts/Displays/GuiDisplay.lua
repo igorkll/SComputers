@@ -371,20 +371,15 @@ function GuiDisplay:client_onFixedUpdate()
     self.oldComputerConnected = computerConnected
 
     if self.data.autoOpenOnSeat and sm.game.getCurrentTick() - self.startTick > 40 then
-        local parents = self.interactable:getParents()
-        local seated = false
-        local seatInteractable
-        for _, parent in ipairs(parents) do
-            if not scomputers.isComputer(parent) then
-                seated = parent:isActive()
-                seatInteractable = parent
-                break
-            end
-        end
-
         local lockingInteractable = sm.localPlayer.getPlayer().character:getLockingInteractable()
-        if not lockingInteractable or not seatInteractable or lockingInteractable.id ~= seatInteractable.id then
-            seated = false
+        local seated = false
+        if lockingInteractable then
+            for _, parent in ipairs(self.interactable:getParents()) do
+                if parent.id == lockingInteractable.id then
+                    seated = true
+                    break
+                end
+            end
         end
 
         if seated ~= self.oldSeated then
