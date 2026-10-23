@@ -15,13 +15,13 @@ local needPushStack = canvasAPI.needPushStack
 local sendStack = displays_sendStack
 local lagCheck = displays_lagCheck
 
-local function createBaseData(self, key)
-    self[key] = self.storage:load() or {}
+local function createBaseData(self, base, key)
+    self[key] = base
     self[key].canvas_override = self[key].canvas_override or {}
 end
 
 function GuiDisplay:server_onCreate()
-    createBaseData(self, "storageData")
+    createBaseData(self, self.storage:load() or {}, "storageData")
 
     self.lastLagScore = 0
 	self.dataTunnel = {}
@@ -280,7 +280,7 @@ function GuiDisplay:client_onCreate()
     self._old_res_x = self.data.x
     self._old_res_y = self.data.y
 
-    createBaseData(self, "cl_storageData")
+    createBaseData(self, {}, "cl_storageData")
     self:cl_recreateGui()
     self.canvas_datatbl_checksum = tableChecksum(self.cl_storageData.canvas_override)
 
@@ -555,6 +555,6 @@ function GuiDisplay:cl_clk2(state)
     self:cl_onClick(2, state and "pressed" or "released")
 end
 
-function GuiDisplay:cl_g_selectMode(a, b, c)
-    print(a, b, c)
+function GuiDisplay:cl_g_selectMode(newMode)
+    self:cl_selectMode(newMode)
 end
