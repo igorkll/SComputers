@@ -10,6 +10,8 @@ GuiDisplay.colorNormal = sm.color.new(0xbbbb1aff)
 GuiDisplay.colorHighlight = sm.color.new(0xecec1fff)
 GuiDisplay.componentType = "display"
 
+local disableTouchscreen = true
+
 local stackChecksum = canvasAPI.stackChecksum
 local needPushStack = canvasAPI.needPushStack
 local sendStack = displays_sendStack
@@ -27,6 +29,13 @@ local modesTable = {
     "Bottom_Left",
     "Bottom",
     "Bottom_Right"
+}
+
+local renameModeTable = {
+    ["Left"] = "Left Center",
+    ["Right"] = "Right Center",
+    ["Top"] = "Top Center",
+    ["Bottom"] = "Bottom Center"
 }
 
 local modesTableIdx = {}
@@ -260,6 +269,7 @@ function GuiDisplay:cl_recreateGui()
 
     local x, y = mergedData.guiX or 0, mergedData.guiY or 0
     local mulTbl = modeMulTable[modesTableIdx[self.cl_storageData.mode]]
+    local modeName = mergedData.anchor or "Center"
 
     self.canvasGUI = canvasGUI.createGuiCanvas(
         x * mulTbl[1],
@@ -270,7 +280,7 @@ function GuiDisplay:cl_recreateGui()
         mergedData.guiSy or 500,
         mergedData.pad or 25,
         mergedData.title or "Gui Display - BETA (No touchscreen support)",
-        mergedData.anchor or "Center",
+        renameModeTable[modeName] or modeName,
         jsonGuiSetup
     )
 
@@ -380,7 +390,7 @@ function GuiDisplay:client_onFixedUpdate()
 end
 
 function GuiDisplay:cl_processTouchscreen()
-    if (self.data and self.data.noTouch) or (self.c_dataTunnel and not self.c_dataTunnel.clicksAllowed) then
+    if (self.data and self.data.noTouch) or (self.c_dataTunnel and not self.c_dataTunnel.clicksAllowed) or disableTouchscreen then
         return
     end
 
