@@ -1911,7 +1911,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         bufferedEffects[bufferedEffectsIndex] = effect
         bufferedEffectsUpdateTime[bufferedEffectsIndex] = game_getCurrentTick()
         _setPosition(effect, hiddenOffset)
-        effect_stop(effect)
     end
 
     local function hideEffectData(index)
@@ -2377,7 +2376,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
         for effect in pairs(hideList) do
             _setPosition(effect, hiddenOffset)
-            effect_stop(effect)
         end
 
         if clearOnly then
@@ -2480,7 +2478,6 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
         for effect in pairs(hideList) do
             _setPosition(effect, hiddenOffset)
-            effect_stop(effect)
         end
     end
 
