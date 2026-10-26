@@ -112,6 +112,7 @@ local os_clock = os.clock
 local math_sqrt = math.sqrt
 local quat_new = sm.quat.new
 local game_getCurrentTick = sm.game.getCurrentTick
+local sm_exists = sm.exists
 
 local black = color_new(0, 0, 0)
 local white = color_new(1, 1, 1)
@@ -1737,6 +1738,27 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
     end
     updateLayerDistance()
 
+    local setPositionTbl = {}
+    local setPositionTblIndex = 0
+
+    local setPositionTbl2 = {}
+    local setPositionTblIndex2 = 0
+
+    local function flushPositionTbl()
+        for i = 1, setPositionTblIndex2, 2 do
+            local effect = setPositionTbl2[i]
+            if sm_exists(effect) then
+                _setPosition(effect, setPositionTbl2[i + 1])
+            end
+        end
+
+        setPositionTbl2 = setPositionTbl
+        setPositionTblIndex2 = setPositionTblIndex
+
+        setPositionTbl = {}
+        setPositionTblIndex = 0
+    end
+
     local effects = {}
     local nodeEffects = {}
     local effectDatas = {}
@@ -1783,7 +1805,11 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         
         effect_setScale(effect, vec3_new((pixelSize.x * lSizeX) + scaleAddValue, (pixelSize.y * lSizeY) + scaleAddValue, pixelSize.z))
         effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[eindex], alpha))
-        _setPosition(effect, vec3_new(-offset.z - layerDistance_withoutBackplateCheck, ((sizeY / 2) - (posY + 0.5)) * -pixelSize.y, ((sizeX / 2) - (posX + 0.5)) * pixelSize.x))
+        --_setPosition(effect, vec3_new(-offset.z - layerDistance_withoutBackplateCheck, ((sizeY / 2) - (posY + 0.5)) * -pixelSize.y, ((sizeX / 2) - (posX + 0.5)) * pixelSize.x))
+        setPositionTblIndex = setPositionTblIndex + 1
+        setPositionTbl[setPositionTblIndex] = effect
+        setPositionTblIndex = setPositionTblIndex + 1
+        setPositionTbl[setPositionTblIndex] = vec3_new(-offset.z - layerDistance_withoutBackplateCheck, ((sizeY / 2) - (posY + 0.5)) * -pixelSize.y, ((sizeX / 2) - (posX + 0.5)) * pixelSize.x)
     end
 
     local function _setEffectDataParams_defaultRotation(index)
@@ -1796,7 +1822,11 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         
         effect_setScale(effect, vec3_new((pixelSize.x * lSizeX) + scaleAddValue, (pixelSize.y * lSizeY) + scaleAddValue, pixelSize.z))
         effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[eindex], alpha))
-        _setPosition(effect, rotation * (offset + vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck)))
+        --_setPosition(effect, rotation * (offset + vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck)))
+        setPositionTblIndex = setPositionTblIndex + 1
+        setPositionTbl[setPositionTblIndex] = effect
+        setPositionTblIndex = setPositionTblIndex + 1
+        setPositionTbl[setPositionTblIndex] = rotation * (offset + vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck))
     end
 
     local function _setEffectDataParams_altRotation(index)
@@ -1809,7 +1839,11 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         
         effect_setScale(effect, vec3_new((pixelSize.x * lSizeX) + scaleAddValue, (pixelSize.y * lSizeY) + scaleAddValue, pixelSize.z))
         effect_setParameter(effect, "color", color_new_fromSmallNumber(effectDatas[eindex], alpha))
-        _setPosition(effect, offset + (rotation * vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck)))
+        --_setPosition(effect, offset + (rotation * vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck)))
+        setPositionTblIndex = setPositionTblIndex + 1
+        setPositionTbl[setPositionTblIndex] = effect
+        setPositionTblIndex = setPositionTblIndex + 1
+        setPositionTbl[setPositionTblIndex] = offset + (rotation * vec3_new(((posX + 0.5) - (sizeX / 2)) * pixelSize.x, ((posY + 0.5) - (sizeY / 2)) * -pixelSize.y, layerDistance_withoutBackplateCheck))
     end
 
     local setEffectDataParams = _setEffectDataParams_defaultRotation
@@ -1910,7 +1944,12 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         bufferedEffectsIndex = bufferedEffectsIndex + 1
         bufferedEffects[bufferedEffectsIndex] = effect
         bufferedEffectsUpdateTime[bufferedEffectsIndex] = game_getCurrentTick()
-        _setPosition(effect, hiddenOffset)
+        --_setPosition(effect, hiddenOffset)
+
+        setPositionTblIndex = setPositionTblIndex + 1
+        setPositionTbl[setPositionTblIndex] = effect
+        setPositionTblIndex = setPositionTblIndex + 1
+        setPositionTbl[setPositionTblIndex] = hiddenOffset
     end
 
     local function hideEffectData(index)
@@ -2375,7 +2414,11 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         end
 
         for effect in pairs(hideList) do
-            _setPosition(effect, hiddenOffset)
+            --_setPosition(effect, hiddenOffset)
+            setPositionTblIndex = setPositionTblIndex + 1
+            setPositionTbl[setPositionTblIndex] = effect
+            setPositionTblIndex = setPositionTblIndex + 1
+            setPositionTbl[setPositionTblIndex] = hiddenOffset
         end
 
         if clearOnly then
@@ -2477,7 +2520,11 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
         end
 
         for effect in pairs(hideList) do
-            _setPosition(effect, hiddenOffset)
+            --_setPosition(effect, hiddenOffset)
+            setPositionTblIndex = setPositionTblIndex + 1
+            setPositionTbl[setPositionTblIndex] = effect
+            setPositionTblIndex = setPositionTblIndex + 1
+            setPositionTbl[setPositionTblIndex] = hiddenOffset
         end
     end
 
@@ -2555,10 +2602,18 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
 
     local function updateLayersPos()
         if backplate then
-            _setPosition(backplate, rotation * offset)
+            --_setPosition(backplate, rotation * offset)
+            setPositionTblIndex = setPositionTblIndex + 1
+            setPositionTbl[setPositionTblIndex] = backplate
+            setPositionTblIndex = setPositionTblIndex + 1
+            setPositionTbl[setPositionTblIndex] = rotation * offset
         end
         if additionalLayer then
-            _setPosition(additionalLayer, rotation * (offset + vec3_new(0, 0, 0.0015)))
+            --_setPosition(additionalLayer, rotation * (offset + vec3_new(0, 0, 0.0015)))
+            setPositionTblIndex = setPositionTblIndex + 1
+            setPositionTbl[setPositionTblIndex] = additionalLayer
+            setPositionTblIndex = setPositionTblIndex + 1
+            setPositionTbl[setPositionTblIndex] = rotation * (offset + vec3_new(0, 0, 0.0015))
         end
     end
 
@@ -2648,6 +2703,8 @@ function canvasAPI.createCanvas(parent, sizeX, sizeY, pixelSize, offset, rotatio
     local oldOptimizeTime
     local newShowState = true
     function obj.update()
+        flushPositionTbl()
+
         if disable then
             newShowState = false
         elseif dist then
