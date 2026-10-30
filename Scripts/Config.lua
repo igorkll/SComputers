@@ -442,10 +442,13 @@ sc.treesPainted = sm.storage.load("sc_treesPainted") or {}
 function sc.getDefaultVM()
     if better then
         return "betterAPI"
-    elseif custom_loadstring then
-        return "GoogiVM_lua"
+        
     elseif FiOne_lua then
         return "FiOne_lua"
+
+    elseif custom_loadstring then
+        return "GoogiVM_lua"
+
     elseif dlm then
         return "dlm"
     elseif _HENV then    
