@@ -8,6 +8,7 @@ dofile("$SURVIVAL_DATA/Scripts/game/survival_items.lua")
 dofile("examples.lua")
 
 ---- libs
+print("LOADING: libs")
 dofile("base64.lua")
 dofile("$CONTENT_DATA/Scripts/canvasAPI/utf8.lua")
 dofile("json.lua")
@@ -15,6 +16,7 @@ dofile("md5.lua")
 dofile("sha256.lua")
 
 ---- main
+print("LOADING: main")
 dofile "$CONTENT_DATA/Scripts/methods.lua"
 dofile "$CONTENT_DATA/Scripts/FileSystem.lua"
 dofile "$CONTENT_DATA/Scripts/fsmanager.lua"
@@ -24,6 +26,7 @@ dofile "$CONTENT_DATA/Scripts/vnetwork.lua"
 dofile "$CONTENT_DATA/Scripts/localStorage.lua"
 
 ---- lua-in-lua
+print("LOADING: lua-in-lua")
 dofile "$CONTENT_DATA/Scripts/remade-lua-in-lua/lua/scanner.lua"
 dofile "$CONTENT_DATA/Scripts/remade-lua-in-lua/lua/parser.lua"
 dofile "$CONTENT_DATA/Scripts/remade-lua-in-lua/lua/interpreter.lua"
@@ -31,15 +34,19 @@ dofile "$CONTENT_DATA/Scripts/remade-lua-in-lua/lua/fixer.lua"
 ll_Interpreter.MAX_ITERATIONS = math.huge
 
 ---- scrapVM
+print("LOADING: scrapvm")
 dofile("remade-scrapVM/scrapvm.lua")
 
 ---- FiOne_lua
+print("LOADING: FiOne_lua")
 dofile("$CONTENT_DATA/Scripts/FiOne_lua/lib.lua")
 
----- FiOne_lua
+---- GoogiVM_lua
+print("LOADING: GoogiVM_lua")
 dofile("$CONTENT_DATA/Scripts/GoogiVM_lua/custom_loadstring_full.lua")
 
 ---- encryptVM
+print("LOADING: encryptVM")
 dofile("$CONTENT_DATA/Scripts/encryptVM/encryptVM.lua")
 
 -------------------------------------------------------

@@ -33,10 +33,14 @@ local type = type
 local error = error
 local pcall = pcall
 local select = select
-local setmetatable = setmetatable
-local getfenv = getfenv
-local setfenv = setfenv
-local getmetatable = getmetatable
+--local setmetatable = setmetatable
+local setmetatable = nil
+--local getfenv = getfenv
+--local setfenv = setfenv
+local getfenv = nil
+local setfenv = nil
+--local getmetatable = getmetatable
+local getmetatable = nil
 local next = next
 local ipairs = ipairs
 local ipairs_iter = ipairs and select(1, ipairs({}))
@@ -46,7 +50,14 @@ local function pack(...)
     return { n = select("#", ...), ... }
 end
 
-local closure_info = setmetatable({}, { __mode = "k" })
+local function emptyMt(metatable)
+    local customClass = class(metatable)
+    customClass.__index = metatable.__index
+    return customClass()
+end
+
+--local closure_info = setmetatable({}, { __mode = "k" })
+local closure_info = emptyMt({ __mode = "k" })
 
 -- Default execution policy. All limits can be overridden per chunk through
 -- the optional third argument to custom_loadstring.
@@ -242,7 +253,8 @@ local function sandbox_message(err)
 end
 
 local last_native_fn = nil
-local native_name_cache = setmetatable({}, { __mode = "k" })
+--local native_name_cache = setmetatable({}, { __mode = "k" })
+local native_name_cache = emptyMt({ __mode = "k" })
 
 local function native_name_of(fn, env)
     if type(fn) ~= "function" or type(env) ~= "table" then
@@ -1384,6 +1396,7 @@ run_closure = function(fn, trace, ...)
                                         if type(a) == "number" and type(b) == "number" then
                                             S[dest] = S[dest] + (a + b)
                                             pc = pc + 24
+                                            --[[
                                         elseif getmetatable then
                                             local mt = (type(a) == "table" and getmetatable(a)) or
                                                        (type(b) == "table" and getmetatable(b))
@@ -1443,7 +1456,7 @@ run_closure = function(fn, trace, ...)
                                             else
                                                 S[dest] = S[dest] + (a + b)
                                                 pc = pc + 24
-                                            end
+                                            end]]
                                         else
                                             S[dest] = S[dest] + (a + b)
                                             pc = pc + 24
@@ -5070,4 +5083,4 @@ local function custom_loadstring(source, env, opts)
     return make_closure(proto, {}, env, true)
 end
 
-return custom_loadstring
+_G.custom_loadstring = custom_loadstring
