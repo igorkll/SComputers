@@ -337,6 +337,12 @@ function load_code(self, chunk, chunkname, mode, env, serviceTable)
 		end
 	elseif vm == "advancedExecuter" and sm.advancedExecuter then
 		return sm.advancedExecuter.loadstring(chunk, chunkname, mode, env)
+    elseif vm == "GoogiVM_lua" and custom_loadstring then
+        local opts = {
+            sourceName = chunkname
+        }
+
+        return custom_loadstring(chunk, env, opts)
 	elseif FiOne_lua then
 		if chunkname and chunkname:sub(1, 1) == "=" then
 			chunkname = chunkname:sub(2, #chunkname)

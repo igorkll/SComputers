@@ -36,6 +36,9 @@ dofile("remade-scrapVM/scrapvm.lua")
 ---- FiOne_lua
 dofile("$CONTENT_DATA/Scripts/FiOne_lua/lib.lua")
 
+---- FiOne_lua
+dofile("$CONTENT_DATA/Scripts/GoogiVM_lua/custom_loadstring_full.lua")
+
 ---- encryptVM
 dofile("$CONTENT_DATA/Scripts/encryptVM/encryptVM.lua")
 
@@ -432,6 +435,8 @@ sc.treesPainted = sm.storage.load("sc_treesPainted") or {}
 function sc.getDefaultVM()
     if better then
         return "betterAPI"
+    elseif custom_loadstring then
+        return "GoogiVM_lua"
     elseif FiOne_lua then
         return "FiOne_lua"
     elseif dlm then

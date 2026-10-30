@@ -494,7 +494,7 @@ function PermissionTool.client_onLuaVmPress(self)
 
     --local vms = {"luaInLua", "scrapVM", "advancedExecuter", "dlm", "fullLuaEnv", "hsandbox"}
     --local vms = {"luaInLua", "betterAPI", "dlm", "fullLuaEnv"}
-    local vms = {"FiOne_lua", "betterAPI"}
+    local vms = {"GoogiVM_lua", "FiOne_lua", "betterAPI"}
     
     local currentIndex
     for index, value in ipairs(vms) do
